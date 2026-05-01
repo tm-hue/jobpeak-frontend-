@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Builder - Jobpeak</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FAFBFC;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --accent: #0EA5E9;
+            --accent-hover: #0284C7;
+            --success: #10B981;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            font-family: 'Archivo', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .logo-dot {
+            color: var(--accent);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-family: 'Archivo', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .label-optional {
+            font-weight: 400;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Work Sans', sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        /* Two Column Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Radius Selector */
+        .radius-selector {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .radius-option {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-secondary);
+        }
+
+        .radius-option:hover {
+            border-color: var(--accent);
+        }
+
+        .radius-option input[type="radio"] {
+            display: none;
+        }
+
+        .radius-option input[type="radio"]:checked + .radius-label {
+            color: var(--accent);
+        }
+
+        .radius-option input[type="radio"]:checked ~ * {
+            color: var(--accent);
+        }
+
+        .radius-option.selected {
+            border-color: var(--accent);
+            background: rgba(14, 165, 233, 0.05);
+        }
+
+        .radius-label {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Archivo', sans-serif;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .radius-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Generated Locations Preview */
+        .locations-preview {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .locations-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .locations-preview-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .locations-count {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(14, 165, 233, 0.1);
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+        }
+
+        .location-chip {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .location-chip.primary {
+            border-color: var(--accent);
+            background: rgba(14, 165, 233, 0.05);
+        }
+
+        .location-distance {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
+        .primary-badge {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        button {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Work Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:disabled {
+            background: var(--border);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Success State */
+        .success-message {
+            display: none;
+            background: var(--bg-secondary);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Archivo', sans-serif;
+            margin-bottom: 8px;
+        }
+
+        .success-description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">jobpeak<span class="logo-dot">.</span></div>
+            <div class="subtitle">Smart Job Builder</div>
+        </header>
+
+        <div class="form-card">
+            <form id="jobForm">
+                <!-- Basic Job Info -->
+                <div class="form-section">
+                    <h2 class="section-title">Job Details</h2>
+                    <p class="section-description">Tell us about the position you're hiring for</p>
+
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title *</label>
+                        <input type="text" id="jobTitle" required 
+                               placeholder="e.g., CDL A Local Driver - Home Every Night">
+                        <div class="input-hint">Be specific and clear about the role</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="companyName">Company Name *</label>
+                        <input type="text" id="companyName" required 
+                               placeholder="e.g., Midwest Distribution Co">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Job Description *</label>
+                        <textarea id="description" required 
+                                  placeholder="Describe the role, responsibilities, requirements, and what makes this job great..."></textarea>
+                        <div class="input-hint">Include daily responsibilities, requirements, and company culture</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category">Category *</label>
+                            <select id="category" required>
+                                <option value="">Select category...</option>
+                                <option value="trucking">Trucking / CDL</option>
+                                <option value="hvac">HVAC</option>
+                                <option value="nursing">Nursing / Healthcare</option>
+                                <option value="warehouse">Warehouse / Logistics</option>
+                                <option value="construction">Construction / Trades</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="retail">Retail</option>
+                                <option value="hospitality">Hospitality</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jobType">Job Type *</label>
+                            <select id="jobType" required>
+                                <option value="full-time">Full-time</option>
+                                <option value="part-time">Part-time</option>
+                                <option value="contract">Contract</option>
+                                <option value="temporary">Temporary</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="salaryMin">Salary Range <span class="label-optional">(optional but recommended)</span></label>
+                            <input type="text" id="salary" 
+                                   placeholder="e.g., $75,000 - $85,000">
+                            <div class="input-hint">Transparent pay = more quality applicants</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="applyUrl">Application URL *</label>
+                            <input type="url" id="applyUrl" required 
+                                   placeholder="https://yourcompany.com/apply">
+                            <div class="input-hint">Where should candidates apply?</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location & Radius -->
+                <div class="form-section">
+                    <h2 class="section-title">Hiring Location & Radius</h2>
+                    <p class="section-description">Where is this job located, and how far should we advertise it?</p>
+
+                    <div class="form-group">
+                        <label for="hiringLocation">Hiring Location *</label>
+                        <input type="text" id="hiringLocation" required 
+                               placeholder="e.g., Columbus, OH or 43215 or 123 Main St, Columbus, OH">
+                        <div class="input-hint">City, state or full address - we'll geocode it automatically</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Advertising Radius *</label>
+                        <div class="input-hint" style="margin-top: 0; margin-bottom: 12px;">
+                            How far from the hiring location should we show this job?
+                        </div>
+                        <div class="radius-selector">
+                            <label class="radius-option" data-radius="25">
+                                <input type="radio" name="radius" value="25" required>
+                                <span class="radius-label">25mi</span>
+                                <span class="radius-desc">Local area</span>
+                            </label>
+                            <label class="radius-option selected" data-radius="50">
+                                <input type="radio" name="radius" value="50" checked required>
+                                <span class="radius-label">50mi</span>
+                                <span class="radius-desc">Regional</span>
+                            </label>
+                            <label class="radius-option" data-radius="100">
+                                <input type="radio" name="radius" value="100" required>
+                                <span class="radius-label">100mi</span>
+                                <span class="radius-desc">Wider reach</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Generated Locations Preview -->
+                    <div id="locationsPreview" class="locations-preview" style="display: none;">
+                        <div class="locations-preview-header">
+                            <div class="locations-preview-title">We'll advertise this job in:</div>
+                            <div class="locations-count">
+                                <span id="locationsCount">0</span> locations
+                            </div>
+                        </div>
+                        <div id="locationsGrid" class="locations-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="button-group">
+                    <button type="button" class="btn-secondary">Save as Draft</button>
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        Post Job & Generate Locations
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="success-message">
+            <div class="success-icon">✓</div>
+            <h3 class="success-title">Job Posted Successfully!</h3>
+            <p class="success-description">
+                Your job has been posted to <strong id="finalLocationCount">0</strong> locations 
+                and is now live on Jobpeak. XML feeds to Talroo and Whatjobs will sync within 15 minutes.
+            </p>
+            <button type="button" class="btn-primary" onclick="location.reload()">Post Another Job</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Generating advertising locations...</div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data - in production, this comes from your Python backend
+        const MOCK_CITIES = [
+            {"city": "Columbus", "state": "OH", "lat": 39.9612, "lon": -82.9988, "pop": 905748},
+            {"city": "Cleveland", "state": "OH", "lat": 41.4993, "lon": -81.6944, "pop": 372624},
+            {"city": "Cincinnati", "state": "OH", "lat": 39.1031, "lon": -84.5120, "pop": 309317},
+            {"city": "Toledo", "state": "OH", "lat": 41.6528, "lon": -83.5379, "pop": 270871},
+            {"city": "Akron", "state": "OH", "lat": 41.0814, "lon": -81.5190, "pop": 190469},
+            {"city": "Dayton", "state": "OH", "lat": 39.7589, "lon": -84.1916, "pop": 140407},
+            {"city": "Newark", "state": "OH", "lat": 40.0581, "lon": -82.4013, "pop": 49934},
+            {"city": "Mansfield", "state": "OH", "lat": 40.7584, "lon": -82.5154, "pop": 46454},
+            {"city": "Springfield", "state": "OH", "lat": 39.9242, "lon": -83.8088, "pop": 58662},
+            {"city": "Lancaster", "state": "OH", "lat": 39.7137, "lon": -82.5993, "pop": 40552},
+            {"city": "Delaware", "state": "OH", "lat": 40.2987, "lon": -83.0680, "pop": 41302},
+            {"city": "Dublin", "state": "OH", "lat": 40.0992, "lon": -83.1141, "pop": 49328},
+            {"city": "Grove City", "state": "OH", "lat": 39.8814, "lon": -83.0930, "pop": 41252},
+            {"city": "Westerville", "state": "OH", "lat": 40.1262, "lon": -82.9291, "pop": 39190},
+        ];
+
+        // Radius selector
+        document.querySelectorAll('.radius-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.radius-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+                
+                // Re-generate locations preview if location is filled
+                const location = document.getElementById('hiringLocation').value;
+                if (location) {
+                    generateLocationsPreview();
+                }
+            });
+        });
+
+        // Generate locations preview when location changes
+        document.getElementById('hiringLocation').addEventListener('blur', generateLocationsPreview);
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 3959; // Earth's radius in miles
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                     Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        async function geocodeLocation(location) {
+            // In production, call Google Maps Geocoding API or your backend
+            // For demo, we'll match against known cities
+            const parts = location.split(',').map(s => s.trim());
+            const city = parts[0];
+            
+            const match = MOCK_CITIES.find(c => 
+                c.city.toLowerCase() === city.toLowerCase()
+            );
+            
+            if (match) {
+                return { lat: match.lat, lon: match.lon };
+            }
+            
+            // Default to Columbus if no match
+            return { lat: 39.9612, lon: -82.9988 };
+        }
+
+        async function generateLocationsPreview() {
+            const location = document.getElementById('hiringLocation').value.trim();
+            if (!location) return;
+
+            const radiusEl = document.querySelector('input[name="radius"]:checked');
+            const radius = radiusEl ? parseInt(radiusEl.value) : 50;
+
+            try {
+                // Geocode the hiring location
+                const coords = await geocodeLocation(location);
+                
+                // Find all cities within radius
+                const citiesInRadius = MOCK_CITIES
+                    .map(city => {
+                        const distance = calculateDistance(
+                            coords.lat, coords.lon,
+                            city.lat, city.lon
+                        );
+                        return {
+                            ...city,
+                            distance: Math.round(distance),
+                            isPrimary: distance < 5
+                        };
+                    })
+                    .filter(city => city.distance <= radius)
+                    .sort((a, b) => b.pop - a.pop)
+                    .slice(0, 20);
+
+                // Display preview
+                const preview = document.getElementById('locationsPreview');
+                const grid = document.getElementById('locationsGrid');
+                const count = document.getElementById('locationsCount');
+
+                count.textContent = citiesInRadius.length;
+                
+                grid.innerHTML = citiesInRadius.map(city => `
+                    <div class="location-chip ${city.isPrimary ? 'primary' : ''}">
+                        ${city.isPrimary ? '<span class="primary-badge">Primary</span>' : ''}
+                        <span>${city.city}, ${city.state}</span>
+                        <span class="location-distance">${city.distance}mi</span>
+                    </div>
+                `).join('');
+
+                preview.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error generating locations:', error);
+            }
+        }
+
+        // Form submission
+        document.getElementById('jobForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const successMessage = document.getElementById('successMessage');
+            const formCard = document.querySelector('.form-card');
+
+            // Show loading
+            loadingOverlay.classList.add('active');
+
+            // Collect form data
+            const formData = {
+                title: document.getElementById('jobTitle').value,
+                company: document.getElementById('companyName').value,
+                description: document.getElementById('description').value,
+                category: document.getElementById('category').value,
+                jobType: document.getElementById('jobType').value,
+                salary: document.getElementById('salary').value,
+                applyUrl: document.getElementById('applyUrl').value,
+                hiringLocation: document.getElementById('hiringLocation').value,
+                radius: parseInt(document.querySelector('input[name="radius"]:checked').value)
+            };
+
+            try {
+                // In production, POST to your API:
+                // const response = await fetch('/api/jobs', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(formData)
+                // });
+                // const result = await response.json();
+
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Hide loading
+                loadingOverlay.classList.remove('active');
+
+                // Show success
+                const locationCount = document.getElementById('locationsCount').textContent;
+                document.getElementById('finalLocationCount').textContent = locationCount;
+                
+                formCard.style.display = 'none';
+                successMessage.classList.add('active');
+
+                // In production, you'd get back:
+                // - job_id
+                // - advertising_locations array
+                // - confirmation that XML feeds are queued
+
+            } catch (error) {
+                loadingOverlay.classList.remove('active');
+                alert('Error posting job. Please try again.');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
