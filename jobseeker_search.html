@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
     <title>Jobpeak - Search Jobs Like a Human</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Lexend:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #FAFAFA;
@@ -20,478 +21,74 @@
             --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
             --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'DM Sans', -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Header */
-        header {
-            padding: 24px 0;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'Lexend', sans-serif;
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text-primary);
-            letter-spacing: -0.02em;
-        }
-
-        .logo-dot {
-            color: var(--accent);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 120px 0 80px;
-            text-align: center;
-        }
-
-        h1 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 64px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            letter-spacing: -0.03em;
-        }
-
-        .subtitle {
-            font-size: 20px;
-            color: var(--text-secondary);
-            margin-bottom: 60px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Search Box */
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto 40px;
-            position: relative;
-        }
-
-        .search-wrapper {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 8px;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .search-wrapper:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
-        }
-
-        .search-input {
-            width: 100%;
-            border: none;
-            outline: none;
-            font-size: 18px;
-            padding: 20px 24px;
-            font-family: 'DM Sans', sans-serif;
-            background: transparent;
-            color: var(--text-primary);
-            resize: none;
-            min-height: 60px;
-        }
-
-        .search-input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .search-button {
-            width: 100%;
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 18px 32px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'DM Sans', sans-serif;
-        }
-
-        .search-button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
-
-        .search-button:active {
-            transform: translateY(0);
-        }
-
-        .search-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* Example Queries */
-        .examples {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .examples-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 500;
-        }
-
-        .example-chips {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .example-chip {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 10px 20px;
-            border-radius: 100px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .example-chip:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        /* Results Section */
-        .results-section {
-            max-width: 900px;
-            margin: 60px auto;
-            display: none;
-        }
-
-        .results-section.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .results-header {
-            margin-bottom: 32px;
-        }
-
-        .results-count {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .results-query {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        /* Conversation Refinement */
-        .conversation-refine {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 32px;
-            margin-bottom: 32px;
-        }
-
-        .refine-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .refine-suggestions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .refine-chip {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .refine-chip:hover {
-            border-color: var(--accent);
-            background: white;
-            transform: translateY(-1px);
-        }
-
-        .refine-input-wrapper {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .refine-input {
-            flex: 1;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-size: 15px;
-            font-family: 'DM Sans', sans-serif;
-            resize: vertical;
-            min-height: 44px;
-            transition: all 0.2s;
-        }
-
-        .refine-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .refine-button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'DM Sans', sans-serif;
-            white-space: nowrap;
-        }
-
-        .refine-button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
-
-        .refine-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* Conversation History */
-        .conversation-history {
-            margin-bottom: 24px;
-        }
-
-        .conversation-turn {
-            margin-bottom: 16px;
-            padding: 16px;
-            border-radius: 10px;
-            background: var(--bg-primary);
-        }
-
-        .conversation-turn.user {
-            background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%);
-            border-left: 3px solid var(--accent);
-        }
-
-        .conversation-turn.assistant {
-            background: var(--bg-primary);
-        }
-
-        .turn-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .turn-content {
-            font-size: 15px;
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        /* Job Cards */
-        .job-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            margin-bottom: 16px;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .job-card:hover {
-            border-color: var(--accent);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .job-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 16px;
-        }
-
-        .job-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .company-name {
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .match-score {
-            background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .job-details {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .job-detail {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .job-description {
-            font-size: 15px;
-            color: var(--text-primary);
-            line-height: 1.7;
-            margin-bottom: 16px;
-        }
-
-        .job-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .job-tag {
-            background: var(--bg-primary);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            display: none;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .loading-spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 16px;
-            color: var(--text-secondary);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* Responsive */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Work Sans', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        header { padding: 24px 0; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Archivo', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
+        .logo-dot { color: #F97316; }
+        .hero { padding: 120px 0 80px; text-align: center; }
+        h1 { font-family: 'Archivo', sans-serif; font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.03em; }
+        .subtitle { font-size: 20px; color: var(--text-secondary); margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .search-container { max-width: 800px; margin: 0 auto 40px; position: relative; }
+        .search-wrapper { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 16px; padding: 8px; box-shadow: var(--shadow-lg); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .search-wrapper:focus-within { border-color: var(--accent); box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15); }
+        .search-input { width: 100%; border: none; outline: none; font-size: 18px; padding: 20px 24px; font-family: 'Work Sans', sans-serif; background: transparent; color: var(--text-primary); resize: none; min-height: 60px; }
+        .search-input::placeholder { color: var(--text-secondary); }
+        .search-button { width: 100%; background: var(--accent); color: white; border: none; padding: 18px 32px; font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Work Sans', sans-serif; }
+        .search-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .search-button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .examples { text-align: center; margin-bottom: 80px; }
+        .examples-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+        .example-chips { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .example-chip { background: var(--bg-secondary); border: 1px solid var(--border); padding: 10px 20px; border-radius: 100px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .example-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+        .results-section { max-width: 900px; margin: 60px auto; display: none; }
+        .results-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .results-header { margin-bottom: 32px; }
+        .results-count { font-size: 16px; color: var(--text-secondary); margin-bottom: 8px; }
+        .results-query { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+        .conversation-refine { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; margin-bottom: 32px; }
+        .refine-label { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .refine-suggestions { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .refine-chip { background: var(--bg-primary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .refine-chip:hover { border-color: var(--accent); background: white; transform: translateY(-1px); }
+        .refine-input-wrapper { display: flex; gap: 12px; align-items: flex-start; }
+        .refine-input { flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 15px; font-family: 'Work Sans', sans-serif; resize: vertical; min-height: 44px; transition: all 0.2s; }
+        .refine-input:focus { outline: none; border-color: var(--accent); }
+        .refine-button { background: var(--accent); color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-family: 'Work Sans', sans-serif; white-space: nowrap; }
+        .refine-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .refine-button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .conversation-history { margin-bottom: 24px; }
+        .conversation-turn { margin-bottom: 16px; padding: 16px; border-radius: 10px; background: var(--bg-primary); }
+        .conversation-turn.user { background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%); border-left: 3px solid var(--accent); }
+        .turn-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .turn-content { font-size: 15px; color: var(--text-primary); line-height: 1.6; }
+        /* Job cards as links */
+        .job-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 16px; transition: all 0.2s; cursor: pointer; display: block; text-decoration: none; color: inherit; }
+        .job-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .job-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px; }
+        .job-title { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .company-name { font-size: 16px; color: var(--text-secondary); font-weight: 500; }
+        .match-score { background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%); color: white; padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+        .job-details { display: flex; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+        .job-detail { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-secondary); }
+        .job-description { font-size: 15px; color: var(--text-primary); line-height: 1.7; margin-bottom: 16px; }
+        .job-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .job-tag { background: var(--bg-primary); padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); }
+        .loading { text-align: center; padding: 60px 20px; display: none; }
+        .loading.active { display: block; }
+        .loading-spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-size: 16px; color: var(--text-secondary); }
+        footer { text-align: center; padding: 60px 20px; color: var(--text-secondary); font-size: 14px; }
         @media (max-width: 768px) {
-            h1 {
-                font-size: 40px;
-            }
-
-            .subtitle {
-                font-size: 18px;
-            }
-
-            .search-input {
-                font-size: 16px;
-                padding: 16px 20px;
-            }
-
-            .job-header {
-                flex-direction: column;
-                gap: 12px;
-            }
+            h1 { font-size: 40px; }
+            .subtitle { font-size: 18px; }
+            .search-input { font-size: 16px; padding: 16px 20px; }
+            .job-header { flex-direction: column; gap: 12px; }
         }
     </style>
 </head>
@@ -509,19 +106,12 @@
             <div class="container">
                 <h1>Stop searching like it's 2010</h1>
                 <p class="subtitle">Talk like a human. Get jobs that actually match.</p>
-
                 <div class="search-container">
                     <div class="search-wrapper">
-                        <textarea 
-                            class="search-input" 
-                            id="searchInput"
-                            placeholder="I'm a CDL A driver in Columbus. I want local routes, home every night, no touch freight..."
-                            rows="1"
-                        ></textarea>
+                        <textarea class="search-input" id="searchInput" placeholder="I'm a CDL A driver in Columbus. I want local routes, home every night, no touch freight..." rows="1"></textarea>
                         <button class="search-button" id="searchButton">Search Jobs</button>
                     </div>
                 </div>
-
                 <div class="examples">
                     <div class="examples-label">Try these examples</div>
                     <div class="example-chips">
@@ -546,7 +136,6 @@
                     <div class="results-count" id="resultsCount"></div>
                     <div class="results-query" id="resultsQuery"></div>
                 </div>
-
                 <div class="conversation-refine">
                     <div class="refine-label">Refine your search</div>
                     <div class="refine-suggestions" id="refineSuggestions">
@@ -556,280 +145,46 @@
                         <div class="refine-chip" data-refine="Tell me more about company culture">Company culture</div>
                     </div>
                     <div class="refine-input-wrapper">
-                        <textarea 
-                            class="refine-input" 
-                            id="refineInput"
-                            placeholder="Ask anything... 'Which has best benefits?' or 'Show ones closer to downtown' or 'What about remote options?'"
-                            rows="1"
-                        ></textarea>
+                        <textarea class="refine-input" id="refineInput" placeholder="Ask anything... 'Which has best benefits?' or 'Show ones closer to downtown'" rows="1"></textarea>
                         <button class="refine-button" id="refineButton">Ask</button>
                     </div>
                 </div>
-
                 <div class="conversation-history" id="conversationHistory"></div>
-
                 <div id="jobResults"></div>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 Jobpeak. Built to fix job search.</p>
-        </div>
+        <div class="container"><p>&copy; 2026 Jobpeak. Built to fix job search.</p></div>
     </footer>
 
     <script>
-        // Load jobs from API
+        const API = 'https://jobpeak-production.up.railway.app';
+
         let jobDatabase = [];
-        fetch('https://jobpeak-production.up.railway.app/jobs')
+        fetch(`${API}/jobs`)
             .then(r => r.json())
             .then(jobs => {
                 jobDatabase = jobs.map(j => ({
+                    id: j.id,
                     title: j.title || '',
                     company: j.company || '',
-                    location: j.location || '',
-                    salary: j.salary_min ? '$' + j.salary_min + ' - $' + j.salary_max : '',
+                    location: j.hiring_location || j.location || '',
+                    salary: j.salary || (j.salary_min ? '$' + j.salary_min + ' - $' + j.salary_max : ''),
                     type: j.job_type || 'Full-time',
-                    description: j.description || '',
-                    tags: []
+                    description: j.description ? j.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : '',
+                    tags: [],
+                    bonus: j.bonus || null,
+                    logoUrl: j.logo_url || null,
+                    category: j.category || '',
                 }));
             })
             .catch(e => console.error('Failed to load jobs:', e));
-        // Sample job database (backup)
-        const _oldJobDatabase = [
-            {
-                title: "CDL A Local Delivery Driver",
-                company: "Midwest Distribution Co",
-                location: "Columbus, OH",
-                salary: "$75,000 - $85,000",
-                type: "Full-time",
-                description: "Home every night, Monday-Friday schedule. Modern fleet, no-touch freight. Respected local company with excellent benefits and driver appreciation culture. Average 50 hours/week with predictable routes.",
-                tags: ["Local Routes", "Home Daily", "No Touch", "Benefits", "Weekends Off"]
-            },
-            {
-                title: "Regional CDL A Driver - Dedicated Route",
-                company: "Buckeye Logistics",
-                location: "Columbus, OH",
-                salary: "$70,000 - $80,000",
-                type: "Full-time",
-                description: "Dedicated account with consistent schedule. Home weekends guaranteed. Drop and hook only, clean freight. Small family-owned company that knows your name. 401k match and health insurance.",
-                tags: ["Regional", "Home Weekends", "Drop & Hook", "Family Owned"]
-            },
-            {
-                title: "CDL A Tanker Driver",
-                company: "Ohio Fuel Transport",
-                location: "Columbus, OH",
-                salary: "$80,000 - $95,000",
-                type: "Full-time",
-                description: "Local fuel delivery routes. Home nightly. Tanker endorsement required. Premium pay for hazmat work. Excellent safety bonuses and comprehensive training program. Company values work-life balance.",
-                tags: ["Tanker", "Hazmat", "Local", "Safety Bonus", "Training"]
-            },
-            {
-                title: "HVAC Service Technician - Residential",
-                company: "Comfort Solutions HVAC",
-                location: "Cincinnati, OH",
-                salary: "$60,000 - $80,000",
-                type: "Full-time",
-                description: "Join our residential service team. Company van, tools, and gas card provided. Focus on customer relationships and quality service. No on-call rotation on weekends. Great benefits and ongoing training.",
-                tags: ["Residential", "Company Van", "Tools Provided", "No Weekends", "Training"]
-            },
-            {
-                title: "HVAC Install Technician",
-                company: "Cincinnati Climate Control",
-                location: "Cincinnati, OH",
-                salary: "$55,000 - $75,000",
-                type: "Full-time",
-                description: "Residential HVAC installations with a tight-knit crew. All equipment provided. Monday-Friday schedule. Family-owned business that treats employees right. EPA certification preferred but will train the right person.",
-                tags: ["Residential Install", "Equipment Provided", "M-F", "Will Train"]
-            },
-            {
-                title: "Lead HVAC Technician",
-                company: "Tri-State Mechanical",
-                location: "Cincinnati, OH",
-                salary: "$70,000 - $90,000",
-                type: "Full-time",
-                description: "Lead tech position for residential service calls. Fully stocked company truck. Build your own route and client base. Premium pay for experience. Profit-sharing program. Company that rewards loyalty.",
-                tags: ["Lead Tech", "Company Truck", "Build Clientele", "Profit Sharing"]
-            },
-            {
-                title: "Family Practice Nurse - Clinic",
-                company: "Riverside Family Health",
-                location: "Columbus, OH",
-                salary: "$65,000 - $75,000",
-                type: "Full-time",
-                description: "Join our patient-centered clinic where you'll see the same families year after year. Monday-Friday 8am-5pm, no weekends or holidays. Supportive physician team, reasonable patient loads, time to actually care.",
-                tags: ["Clinic", "M-F", "No Weekends", "Patient Continuity", "Work-Life Balance"]
-            },
-            {
-                title: "Pediatric Nurse",
-                company: "Children's Health Clinic",
-                location: "Columbus, OH",
-                salary: "$60,000 - $70,000",
-                type: "Full-time",
-                description: "Outpatient pediatric clinic with consistent schedule. Build relationships with families. No hospital politics, collaborative team environment. Flexible scheduling options available.",
-                tags: ["Pediatrics", "Outpatient", "No Weekends", "Flexible", "Team Environment"]
-            },
-            {
-                title: "School Nurse",
-                company: "Columbus City Schools",
-                location: "Columbus, OH",
-                salary: "$55,000 - $65,000",
-                type: "Full-time",
-                description: "Elementary school nurse position. School calendar schedule - summers off! Make a difference in kids' lives daily. No nights, no weekends, no holidays. Excellent benefits and pension.",
-                tags: ["School Nurse", "Summers Off", "M-F", "Benefits", "Pension"]
-            },
-            {
-                title: "Warehouse Supervisor",
-                company: "Midwest Distribution Center",
-                location: "Columbus, OH",
-                salary: "$55,000 - $65,000",
-                type: "Full-time",
-                description: "Lead a team of 15 in our modern warehouse. Day shift only. Company promotes from within and values people over profits. Excellent benefits, annual bonuses based on team performance.",
-                tags: ["Supervisor", "Day Shift", "Promote From Within", "Bonus", "Benefits"]
-            },
-            {
-                title: "Forklift Operator - Certified",
-                company: "Central Ohio Logistics",
-                location: "Columbus, OH",
-                salary: "$40,000 - $50,000",
-                type: "Full-time",
-                description: "Climate-controlled warehouse, modern equipment. Consistent Monday-Friday schedule. Overtime available but never required. Safety-first culture with regular training and new equipment.",
-                tags: ["Forklift", "Climate Controlled", "M-F", "OT Optional", "Safety First"]
-            },
-            {
-                title: "Quality Control Inspector",
-                company: "Precision Manufacturing",
-                location: "Columbus, OH",
-                salary: "$45,000 - $55,000",
-                type: "Full-time",
-                description: "Day shift QC position in clean manufacturing environment. Detailed work with measuring instruments. Company invests in employee development and offers tuition reimbursement.",
-                tags: ["QC", "Day Shift", "Clean Environment", "Tuition Reimbursement"]
-            },
-            {
-                title: "CDL A OTR Driver - Starter Position",
-                company: "National Transport",
-                location: "Columbus, OH",
-                salary: "$55,000 - $65,000",
-                type: "Full-time",
-                description: "Recent CDL grad friendly. 2-3 weeks out, paid training program. Modern fleet with APUs. Not ideal for home-every-night but great for building experience with supportive dispatch.",
-                tags: ["OTR", "New CDL OK", "Training", "Modern Fleet"]
-            },
-            {
-                title: "HVAC Apprentice",
-                company: "Ohio HVAC Academy",
-                location: "Cincinnati, OH",
-                salary: "$35,000 - $45,000",
-                type: "Full-time",
-                description: "Earn while you learn. Formal apprenticeship program leading to journeyman certification. All tools and training provided. Company invests heavily in developing technicians.",
-                tags: ["Apprentice", "Will Train", "Tools Provided", "Certification Path"]
-            },
-            {
-                title: "Medical Assistant - Primary Care",
-                company: "Ohio Health Partners",
-                location: "Columbus, OH",
-                salary: "$38,000 - $45,000",
-                type: "Full-time",
-                description: "Work alongside caring physicians in primary care setting. Room patients, take vitals, assist with procedures. Great for nurses wanting less stress or healthcare professionals seeking better hours.",
-                tags: ["Medical Assistant", "Primary Care", "Regular Hours", "Supportive Team"]
-            },
-            {
-                title: "Delivery Driver - Box Truck",
-                company: "Local Delivery Solutions",
-                location: "Columbus, OH",
-                salary: "$45,000 - $55,000",
-                type: "Full-time",
-                description: "26ft box truck, no CDL required. Home every night. Residential furniture delivery with helper. Physical but rewarding. Tips average $100-200/week. Monday-Friday schedule.",
-                tags: ["No CDL", "Home Daily", "Tips", "Helper Provided", "M-F"]
-            },
-            {
-                title: "Electrician - Residential Service",
-                company: "Bright Electric Co",
-                location: "Columbus, OH",
-                salary: "$60,000 - $80,000",
-                type: "Full-time",
-                description: "Service calls in residential settings. Company van and all tools provided. Build your own customer base. On-call rotation is fair (one week per month). Family business that treats people right.",
-                tags: ["Electrician", "Residential", "Company Van", "Fair On-Call", "Family Owned"]
-            },
-            {
-                title: "Plumber - Service & Repair",
-                company: "Columbus Plumbing Pros",
-                location: "Columbus, OH",
-                salary: "$65,000 - $85,000",
-                type: "Full-time",
-                description: "Residential service plumber. Stocked company truck. Customers respect skilled tradespeople. No new construction chaos. Excellent benefits and retirement plan.",
-                tags: ["Plumber", "Service", "Company Truck", "Residential", "Benefits"]
-            },
-            {
-                title: "Diesel Mechanic",
-                company: "Fleet Maintenance Solutions",
-                location: "Columbus, OH",
-                salary: "$60,000 - $75,000",
-                type: "Full-time",
-                description: "Work on our own fleet of trucks. Clean shop, modern diagnostic equipment. Day shift, Monday-Friday. Company values work-life balance and provides ongoing training on new technologies.",
-                tags: ["Diesel Mechanic", "Fleet", "Day Shift", "Modern Equipment", "Training"]
-            },
-            {
-                title: "Construction Laborer",
-                company: "Midwest Builders",
-                location: "Columbus, OH",
-                salary: "$40,000 - $50,000",
-                type: "Full-time",
-                description: "Residential construction crew. Learn from experienced tradespeople. Potential to specialize in carpentry, masonry, or other trades. Company promotes from within and pays for certifications.",
-                tags: ["Construction", "Will Train", "Promote Within", "Certifications Paid"]
-            },
-            {
-                title: "Account Manager - B2B Sales",
-                company: "Regional Supply Co",
-                location: "Columbus, OH",
-                salary: "$50,000 - $70,000 + commission",
-                type: "Full-time",
-                description: "Manage existing accounts, no cold calling. Build relationships with local businesses. Base salary plus commission. Monday-Friday office hours. Company car provided for client visits.",
-                tags: ["B2B", "Account Management", "No Cold Calling", "Company Car", "Commission"]
-            },
-            {
-                title: "Office Manager",
-                company: "Midwest Medical Group",
-                location: "Columbus, OH",
-                salary: "$45,000 - $55,000",
-                type: "Full-time",
-                description: "Run day-to-day operations for busy medical office. Supervise front desk team, manage scheduling, handle billing questions. Monday-Friday 8-5. No weekends. Great benefits.",
-                tags: ["Office Manager", "Healthcare", "M-F", "No Weekends", "Benefits"]
-            },
-            {
-                title: "Customer Service Rep - Inbound",
-                company: "Ohio Customer Solutions",
-                location: "Columbus, OH (Remote Options)",
-                salary: "$35,000 - $42,000",
-                type: "Full-time",
-                description: "Help customers with product questions and orders. Inbound calls only, no sales quotas. Hybrid or remote options available. Comprehensive training provided. Great entry-level opportunity.",
-                tags: ["Customer Service", "Inbound", "Remote Option", "No Sales", "Entry Level"]
-            },
-            {
-                title: "Property Maintenance Technician",
-                company: "Columbus Apartment Management",
-                location: "Columbus, OH",
-                salary: "$42,000 - $52,000",
-                type: "Full-time",
-                description: "Maintain apartment community. HVAC, plumbing, electrical repairs. On-call rotation is reasonable. Company provides truck, tools, and phone. Free apartment included as benefit.",
-                tags: ["Maintenance", "Apartment Included", "Tools Provided", "Benefits"]
-            },
-            {
-                title: "Restaurant Manager",
-                company: "Local Eatery Group",
-                location: "Columbus, OH",
-                salary: "$50,000 - $60,000",
-                type: "Full-time",
-                description: "Manage casual dining restaurant. Locally-owned group that values work-life balance. Closed Sundays. No corporate red tape. Bonus based on restaurant performance.",
-                tags: ["Restaurant", "Closed Sundays", "Locally Owned", "Bonus", "Work-Life Balance"]
-            }
-        ];
 
-        // Conversation state
         let conversationHistory = [];
         let currentResults = [];
 
-        // Auto-resize textarea
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
             this.style.height = 'auto';
@@ -842,73 +197,45 @@
             this.style.height = Math.min(this.scrollHeight, 150) + 'px';
         });
 
-        // Example chip clicks
         document.querySelectorAll('.example-chip').forEach(chip => {
             chip.addEventListener('click', function() {
-                const query = this.getAttribute('data-query');
-                searchInput.value = query;
+                searchInput.value = this.getAttribute('data-query');
                 searchInput.style.height = 'auto';
                 searchInput.style.height = Math.min(searchInput.scrollHeight, 200) + 'px';
                 performSearch();
             });
         });
 
-        // Refine chip clicks
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('refine-chip')) {
-                const refineQuery = e.target.getAttribute('data-refine');
-                refineInput.value = refineQuery;
+                refineInput.value = e.target.getAttribute('data-refine');
                 refineInput.style.height = 'auto';
                 refineInput.style.height = Math.min(refineInput.scrollHeight, 150) + 'px';
                 performRefinement();
             }
         });
 
-        // Refine button click
         document.getElementById('refineButton').addEventListener('click', performRefinement);
-
-        // Enter key to refine
-        refineInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                performRefinement();
-            }
-        });
-
-        // Search button click
+        refineInput.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); performRefinement(); } });
         document.getElementById('searchButton').addEventListener('click', performSearch);
-
-        // Enter key to search
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                performSearch();
-            }
-        });
+        searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); performSearch(); } });
 
         async function performSearch() {
             const query = searchInput.value.trim();
             if (!query) return;
 
-            // Reset conversation for new search
             conversationHistory = [];
             currentResults = [];
 
-            // Show loading
             document.getElementById('loadingSection').classList.add('active');
             document.getElementById('resultsSection').classList.remove('active');
             document.getElementById('searchButton').disabled = true;
-
-            // Scroll to loading
             document.getElementById('loadingSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             try {
-                // Call Claude API to analyze query and match jobs
-                const response = await fetch('https://jobpeak-production.up.railway.app/ai-search', {
+                const response = await fetch(`${API}/ai-search`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'claude-sonnet-4-20250514',
                         max_tokens: 1000,
@@ -922,7 +249,7 @@ Available jobs (index: title - key details):
 ${jobDatabase.map((job, i) => `${i}: ${job.title} at ${job.company} - ${job.location} - ${job.tags.join(', ')}`).join('\n')}
 
 Return ONLY valid JSON array format like: [5, 2, 8, 1]
-Include 3-8 best matches. Consider location, job type, preferences mentioned (schedule, company culture, etc).
+Include 3-8 best matches. Consider location, job type, preferences mentioned.
 DO NOT include any explanation, just the JSON array.`
                         }]
                     })
@@ -930,37 +257,19 @@ DO NOT include any explanation, just the JSON array.`
 
                 const data = await response.json();
                 let matchedIndices = [];
-                
-                // Extract the JSON array from Claude's response
                 const responseText = data.content.find(item => item.type === 'text')?.text || '';
                 const jsonMatch = responseText.match(/\[[\d,\s]+\]/);
-                
                 if (jsonMatch) {
                     matchedIndices = JSON.parse(jsonMatch[0]);
                 } else {
-                    // Fallback: simple keyword matching
                     matchedIndices = simpleMatch(query);
                 }
-
-                // Save to conversation history
-                conversationHistory.push({
-                    role: 'user',
-                    content: query
-                });
-
+                conversationHistory.push({ role: 'user', content: query });
                 displayResults(query, matchedIndices);
-
             } catch (error) {
                 console.error('Search error:', error);
-                // Fallback to simple matching
-                const matchedIndices = simpleMatch(query);
-                
-                conversationHistory.push({
-                    role: 'user',
-                    content: query
-                });
-                
-                displayResults(query, matchedIndices);
+                conversationHistory.push({ role: 'user', content: query });
+                displayResults(query, simpleMatch(query));
             }
 
             document.getElementById('searchButton').disabled = false;
@@ -970,196 +279,102 @@ DO NOT include any explanation, just the JSON array.`
             const queryLower = query.toLowerCase();
             const scored = jobDatabase.map((job, index) => {
                 let score = 0;
-                const searchText = `${job.title} ${job.company} ${job.location} ${job.description} ${job.tags.join(' ')}`.toLowerCase();
-                
-                // Keyword matching
+                const searchText = `${job.title} ${job.company} ${job.location} ${job.description}`.toLowerCase();
                 if (queryLower.includes('cdl') && searchText.includes('cdl')) score += 10;
                 if (queryLower.includes('hvac') && searchText.includes('hvac')) score += 10;
                 if (queryLower.includes('nurse') && searchText.includes('nurse')) score += 10;
                 if (queryLower.includes('local') && searchText.includes('local')) score += 5;
-                if (queryLower.includes('home') && (searchText.includes('home') || searchText.includes('m-f'))) score += 5;
+                if (queryLower.includes('home') && searchText.includes('home')) score += 5;
                 if (queryLower.includes('columbus') && searchText.includes('columbus')) score += 3;
                 if (queryLower.includes('cincinnati') && searchText.includes('cincinnati')) score += 3;
-                
                 return { index, score };
             });
+            return scored.filter(i => i.score > 0).sort((a, b) => b.score - a.score).slice(0, 8).map(i => i.index);
+        }
 
-            return scored
-                .filter(item => item.score > 0)
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 8)
-                .map(item => item.index);
+        function renderJobCard(job, index) {
+            const matchScore = Math.max(95 - (index * 5), 75);
+            const bonusBadge = job.bonus ? `<span style="background:#FFF3EC;border:1px solid #FF6B2B;color:#FF6B2B;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;margin-left:8px">🎁 ${job.bonus}</span>` : '';
+            const logoHtml = job.logoUrl ? `<img src="${job.logoUrl}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid #E5E5E5;margin-right:12px;flex-shrink:0" alt="">` : '';
+            const detailUrl = job.id ? `job_detail.html?id=${job.id}` : '#';
+            return `
+                <a class="job-card" href="${detailUrl}">
+                    <div class="job-header">
+                        <div style="display:flex;align-items:flex-start">
+                            ${logoHtml}
+                            <div>
+                                <div class="job-title">${job.title}</div>
+                                <div class="company-name">${job.company}${bonusBadge}</div>
+                            </div>
+                        </div>
+                        <div class="match-score">${matchScore}% match</div>
+                    </div>
+                    <div class="job-details">
+                        <div class="job-detail">📍 ${job.location}</div>
+                        <div class="job-detail">💰 ${job.salary || 'Competitive'}</div>
+                        <div class="job-detail">⏰ ${job.type}</div>
+                    </div>
+                    <div class="job-description">${job.description}</div>
+                    <div class="job-tags">${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}</div>
+                </a>
+            `;
         }
 
         function displayResults(query, matchedIndices) {
-            const matchedJobs = matchedIndices.map(i => jobDatabase[i]);
+            const matchedJobs = matchedIndices.map(i => jobDatabase[i]).filter(Boolean);
             currentResults = matchedJobs;
-            
             document.getElementById('resultsCount').textContent = `${matchedJobs.length} matches found`;
             document.getElementById('resultsQuery').textContent = `"${query}"`;
-            
-            const resultsHtml = matchedJobs.map((job, index) => {
-                const matchScore = Math.max(95 - (index * 5), 75);
-                return `
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div>
-                                <div class="job-title">${job.title}</div>
-                                <div class="company-name">${job.company}</div>
-                            </div>
-                            <div class="match-score">${matchScore}% match</div>
-                        </div>
-                        <div class="job-details">
-                            <div class="job-detail">📍 ${job.location}</div>
-                            <div class="job-detail">💰 ${job.salary}</div>
-                            <div class="job-detail">⏰ ${job.type}</div>
-                        </div>
-                        <div class="job-description">${job.description}</div>
-                        <div class="job-tags">
-                            ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            document.getElementById('jobResults').innerHTML = resultsHtml;
-            
-            // Clear conversation history display
+            document.getElementById('jobResults').innerHTML = matchedJobs.map((job, i) => renderJobCard(job, i)).join('');
             document.getElementById('conversationHistory').innerHTML = '';
-            
-            // Hide loading, show results
             document.getElementById('loadingSection').classList.remove('active');
             document.getElementById('resultsSection').classList.add('active');
-            
-            // Clear refine input
             refineInput.value = '';
-            
-            // Scroll to results
-            setTimeout(() => {
-                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
+            setTimeout(() => { document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
         }
 
         async function performRefinement() {
             const refineQuery = refineInput.value.trim();
             if (!refineQuery) return;
-
             document.getElementById('refineButton').disabled = true;
-
-            // Add user question to conversation
-            conversationHistory.push({
-                role: 'user',
-                content: refineQuery
-            });
-
-            // Show loading state in conversation
+            conversationHistory.push({ role: 'user', content: refineQuery });
             updateConversationDisplay();
+
             const loadingTurn = document.createElement('div');
             loadingTurn.className = 'conversation-turn assistant';
-            loadingTurn.innerHTML = `
-                <div class="turn-label">Jobpeak</div>
-                <div class="turn-content">Analyzing...</div>
-            `;
+            loadingTurn.innerHTML = `<div class="turn-label">Jobpeak</div><div class="turn-content">Analyzing...</div>`;
             document.getElementById('conversationHistory').appendChild(loadingTurn);
 
             try {
-                // Build conversation context for Claude
-                const messages = conversationHistory.map(turn => ({
-                    role: turn.role,
-                    content: turn.content
-                }));
-
-                // Add system context about current results
-                const currentJobsSummary = currentResults.map((job, i) => 
-                    `Job ${i+1}: ${job.title} at ${job.company} - ${job.location} - ${job.salary} - ${job.description.substring(0, 100)}...`
+                const messages = conversationHistory.map(turn => ({ role: turn.role, content: turn.content }));
+                const currentJobsSummary = currentResults.map((job, i) =>
+                    `Job ${i+1}: ${job.title} at ${job.company} - ${job.location} - ${job.salary}`
                 ).join('\n');
+                messages[messages.length - 1].content = `Current search results:\n${currentJobsSummary}\n\nUser question: ${refineQuery}\n\nInstructions: Answer naturally about these jobs. If they want to filter, return {"filter": [1, 3, 5]}. Be concise.`;
 
-                messages[messages.length - 1].content = `Current search results (${currentResults.length} jobs):
-${currentJobsSummary}
-
-User question: ${refineQuery}
-
-Instructions:
-- Answer naturally and helpfully about these specific jobs
-- If they ask "which has X", analyze the jobs and give specific recommendations
-- If they want to filter (e.g., "show only ones with Y"), return a JSON array of job numbers to show: {"filter": [1, 3, 5]}
-- If it's a question, just answer conversationally
-- Be concise but helpful`;
-
-                const response = await fetch('https://jobpeak-production.up.railway.app/ai-search', {
+                const response = await fetch(`${API}/ai-search`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'claude-sonnet-4-20250514',
-                        max_tokens: 1500,
-                        messages: messages
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages })
                 });
 
                 const data = await response.json();
                 const responseText = data.content.find(item => item.type === 'text')?.text || 'I can help with that!';
-
-                // Check if response includes a filter
                 const filterMatch = responseText.match(/\{"filter":\s*\[[\d,\s]+\]\}/);
-                
+
                 if (filterMatch) {
-                    const filterData = JSON.parse(filterMatch[0]);
-                    const filteredJobs = filterData.filter.map(i => currentResults[i - 1]).filter(Boolean);
-                    
-                    // Update results
+                    const filteredJobs = JSON.parse(filterMatch[0]).filter.map(i => currentResults[i - 1]).filter(Boolean);
                     currentResults = filteredJobs;
-                    
-                    const resultsHtml = filteredJobs.map((job, index) => {
-                        const matchScore = Math.max(95 - (index * 5), 75);
-                        return `
-                            <div class="job-card">
-                                <div class="job-header">
-                                    <div>
-                                        <div class="job-title">${job.title}</div>
-                                        <div class="company-name">${job.company}</div>
-                                    </div>
-                                    <div class="match-score">${matchScore}% match</div>
-                                </div>
-                                <div class="job-details">
-                                    <div class="job-detail">📍 ${job.location}</div>
-                                    <div class="job-detail">💰 ${job.salary}</div>
-                                    <div class="job-detail">⏰ ${job.type}</div>
-                                </div>
-                                <div class="job-description">${job.description}</div>
-                                <div class="job-tags">
-                                    ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                    
-                    document.getElementById('jobResults').innerHTML = resultsHtml;
+                    document.getElementById('jobResults').innerHTML = filteredJobs.map((job, i) => renderJobCard(job, i)).join('');
                     document.getElementById('resultsCount').textContent = `${filteredJobs.length} matches found`;
-                    
-                    // Add assistant response
                     const cleanResponse = responseText.replace(/\{"filter":\s*\[[\d,\s]+\]\}/, '').trim();
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: cleanResponse || `Filtered to ${filteredJobs.length} jobs that match your criteria.`
-                    });
+                    conversationHistory.push({ role: 'assistant', content: cleanResponse || `Filtered to ${filteredJobs.length} jobs.` });
                 } else {
-                    // Just a conversational response
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: responseText
-                    });
+                    conversationHistory.push({ role: 'assistant', content: responseText });
                 }
-
                 updateConversationDisplay();
-
             } catch (error) {
-                console.error('Refinement error:', error);
-                conversationHistory.push({
-                    role: 'assistant',
-                    content: "I can help you refine these results. Try asking about specific criteria like salary, location, or work-life balance."
-                });
+                conversationHistory.push({ role: 'assistant', content: "Try asking about salary, location, or schedule." });
                 updateConversationDisplay();
             }
 
@@ -1169,20 +384,14 @@ Instructions:
         }
 
         function updateConversationDisplay() {
-            const html = conversationHistory.map(turn => `
+            document.getElementById('conversationHistory').innerHTML = conversationHistory.map(turn => `
                 <div class="conversation-turn ${turn.role}">
                     <div class="turn-label">${turn.role === 'user' ? 'You' : 'Jobpeak'}</div>
                     <div class="turn-content">${turn.content}</div>
                 </div>
             `).join('');
-            
-            document.getElementById('conversationHistory').innerHTML = html;
-            
-            // Scroll to latest
             const lastTurn = document.querySelector('.conversation-turn:last-child');
-            if (lastTurn) {
-                lastTurn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
+            if (lastTurn) lastTurn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     </script>
 </body>
