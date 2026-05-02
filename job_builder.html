@@ -1,755 +1,1667 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Builder - Jobpeak</title>
+    <title>Job Builder — Jobpeak</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #FAFBFC;
-            --bg-secondary: #FFFFFF;
-            --text-primary: #0F172A;
-            --text-secondary: #64748B;
-            --border: #E2E8F0;
-            --accent: #0EA5E9;
-            --accent-hover: #0284C7;
-            --success: #10B981;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --bg: #F4F5F7;
+            --surface: #FFFFFF;
+            --surface-2: #F8F9FA;
+            --border: #E4E6EA;
+            --border-focus: #0A84FF;
+            --text: #111318;
+            --text-2: #545B6B;
+            --text-3: #8892A4;
+            --accent: #0A84FF;
+            --accent-2: #E8F3FF;
+            --success: #00C07F;
+            --warn: #FF6B2B;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+            --shadow-lg: 0 4px 24px rgba(0,0,0,.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family: 'Work Sans', -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 24px;
+        /* TOP NAV */
+        .topnav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-
-        /* Header */
-        header {
-            margin-bottom: 48px;
-        }
-
-        .logo {
+        .brand {
             font-family: 'Archivo', sans-serif;
-            font-size: 32px;
+            font-size: 22px;
             font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 12px;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -.5px;
         }
-
-        .logo-dot {
-            color: var(--accent);
-        }
-
-        .subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Form Card */
-        .form-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
-        }
-
-        .form-section {
-            margin-bottom: 40px;
-        }
-
-        .form-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .section-title {
-            font-family: 'Archivo', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .section-description {
+        .brand span { color: #F97316; }
+        .nav-links { display:flex; gap:8px; align-items:center; }
+        .nav-link {
             font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
+            font-weight: 500;
+            color: var(--text-2);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background .15s;
+        }
+        .nav-link:hover { background: var(--bg); color: var(--text); }
+
+        /* LAYOUT */
+        .page { max-width: 840px; margin: 0 auto; padding: 36px 24px 80px; }
+
+        .page-header { margin-bottom: 28px; }
+        .page-title {
+            font-family: 'Archivo', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+            margin-bottom: 4px;
+        }
+        .page-subtitle { font-size: 15px; color: var(--text-2); }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        .card-title {
+            font-family: 'Archivo', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title .icon {
+            width: 28px; height: 28px;
+            background: var(--accent-2);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
         }
 
-        /* Form Fields */
-        .form-group {
-            margin-bottom: 24px;
-        }
-
+        /* FORM ELEMENTS */
+        .field { margin-bottom: 18px; }
+        .field:last-child { margin-bottom: 0; }
         label {
             display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .label-optional {
-            font-weight: 400;
-            color: var(--text-secondary);
             font-size: 13px;
+            font-weight: 600;
+            color: var(--text-2);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+        label .opt {
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            color: var(--text-3);
         }
 
         input[type="text"],
-        input[type="email"],
         input[type="url"],
         input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: 'Work Sans', sans-serif;
-            color: var(--text-primary);
-            background: var(--bg-secondary);
-            transition: all 0.2s;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-        }
-
+        input[type="email"],
+        select,
         textarea {
-            min-height: 120px;
-            resize: vertical;
+            width: 100%;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px 14px;
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            appearance: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(10,132,255,.12);
+        }
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23545B6B' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor:pointer; }
+        textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+        ::placeholder { color: var(--text-3); }
+
+        /* HINT */
+        .hint { font-size: 12px; color: var(--text-3); margin-top: 5px; }
+
+        /* ROW LAYOUT */
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) {
+            .row-2, .row-3 { grid-template-columns: 1fr; }
         }
 
-        .input-hint {
+        /* PAY TYPE PILLS */
+        .pay-type-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        .pay-pill {
+            padding: 7px 16px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
             font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-2);
+            background: var(--surface);
+            transition: all .15s;
+            user-select: none;
         }
+        .pay-pill:hover { border-color: var(--accent); color: var(--accent); }
+        .pay-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-        /* Two Column Layout */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        /* QUILL EDITOR */
+        .ql-container { font-family: 'Work Sans', sans-serif !important; font-size: 15px !important; border-bottom-left-radius: var(--radius) !important; border-bottom-right-radius: var(--radius) !important; border-color: var(--border) !important; }
+        .ql-toolbar { border-top-left-radius: var(--radius) !important; border-top-right-radius: var(--radius) !important; border-color: var(--border) !important; background: var(--surface-2) !important; }
+        .ql-editor { min-height: 160px; }
+        .ql-editor.ql-blank::before { color: var(--text-3) !important; font-style: normal !important; }
 
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Radius Selector */
-        .radius-selector {
-            display: flex;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .radius-option {
-            flex: 1;
-            padding: 16px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
+        /* UPLOAD AREAS */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
-            background: var(--bg-secondary);
+            transition: all .2s;
+            position: relative;
         }
+        .upload-area:hover { border-color: var(--accent); background: var(--accent-2); }
+        .upload-area.has-file { border-style: solid; border-color: var(--success); background: #F0FFF8; }
+        .upload-area input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .upload-icon { font-size: 28px; margin-bottom: 8px; }
+        .upload-label { font-size: 14px; font-weight: 600; color: var(--text-2); }
+        .upload-sublabel { font-size: 12px; color: var(--text-3); margin-top: 3px; }
+        .upload-preview { max-width: 100%; max-height: 120px; border-radius: 8px; margin-top: 12px; display: none; }
+        .upload-filename { font-size: 13px; font-weight: 600; color: var(--success); margin-top: 8px; display: none; }
 
-        .radius-option:hover {
-            border-color: var(--accent);
-        }
-
-        .radius-option input[type="radio"] {
-            display: none;
-        }
-
-        .radius-option input[type="radio"]:checked + .radius-label {
-            color: var(--accent);
-        }
-
-        .radius-option input[type="radio"]:checked ~ * {
-            color: var(--accent);
-        }
-
-        .radius-option.selected {
-            border-color: var(--accent);
-            background: rgba(14, 165, 233, 0.05);
-        }
-
-        .radius-label {
-            font-size: 24px;
-            font-weight: 700;
-            font-family: 'Archivo', sans-serif;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .radius-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        /* Generated Locations Preview */
-        .locations-preview {
-            background: var(--bg-primary);
+        /* LOCATIONS */
+        .locations-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .loc-chip {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--surface-2);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 24px;
-        }
-
-        .locations-preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .locations-preview-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .locations-count {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
-            background: rgba(14, 165, 233, 0.1);
-            padding: 4px 12px;
-            border-radius: 100px;
-        }
-
-        .locations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 8px;
-        }
-
-        .location-chip {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: var(--text-primary);
+            color: var(--text-2);
             display: flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .location-chip.primary {
-            border-color: var(--accent);
-            background: rgba(14, 165, 233, 0.05);
-        }
-
-        .location-distance {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-left: auto;
-        }
-
-        .primary-badge {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Buttons */
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 40px;
-            padding-top: 32px;
-            border-top: 1px solid var(--border);
-        }
-
-        button {
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            font-family: 'Work Sans', sans-serif;
             cursor: pointer;
-            transition: all 0.2s;
-            border: none;
+            transition: all .15s;
         }
+        .loc-chip.checked { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .loc-chip.primary { background: #FFF3EC; border-color: var(--warn); color: var(--warn); }
+        .loc-chip.primary.checked { background: var(--warn); color: #fff; }
+        .loc-chip input[type="checkbox"] { display: none; }
 
+        /* RADIUS SELECTOR */
+        .radius-opts { display: flex; gap: 8px; }
+        .r-opt {
+            flex: 1;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .r-opt:hover { border-color: var(--accent); }
+        .r-opt.active { border-color: var(--accent); background: var(--accent-2); }
+        .r-opt input { display: none; }
+        .r-val { font-size: 18px; font-weight: 700; font-family: 'Archivo', sans-serif; color: var(--text); }
+        .r-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+        /* SUBMIT AREA */
+        .submit-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: var(--shadow);
+        }
+        .submit-info { font-size: 13px; color: var(--text-2); }
+        .submit-info strong { color: var(--text); font-weight: 600; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 11px 22px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .btn-ghost { background: var(--bg); color: var(--text-2); border: 1.5px solid var(--border); }
+        .btn-ghost:hover { background: var(--border); }
         .btn-primary {
             background: var(--accent);
-            color: white;
-            flex: 1;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(10,132,255,.3);
         }
+        .btn-primary:hover { background: #0070E0; transform: translateY(-1px); }
+        .btn-primary:disabled { background: var(--text-3); box-shadow: none; transform: none; cursor: not-allowed; }
 
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-primary:disabled {
-            background: var(--border);
-            color: var(--text-secondary);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--text-primary);
-            color: var(--text-primary);
-        }
-
-        /* Loading State */
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.9);
+        /* LOADING */
+        .overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.5);
+            backdrop-filter: blur(4px);
+            z-index: 200;
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
         }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .loading-content {
+        .overlay.show { display: flex; }
+        .loading-box {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 40px;
             text-align: center;
+            max-width: 340px;
+            width: 90%;
         }
-
         .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--border);
+            width: 44px; height: 44px;
+            border: 3px solid var(--border);
             border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin .7s linear infinite;
             margin: 0 auto 16px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-title { font-family: 'Archivo',sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .loading-sub { font-size: 14px; color: var(--text-2); }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Success State */
-        .success-message {
+        /* SUCCESS */
+        .success-box {
             display: none;
-            background: var(--bg-secondary);
-            border: 2px solid var(--success);
-            border-radius: 12px;
-            padding: 32px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 48px;
             text-align: center;
-            margin-top: 24px;
+            box-shadow: var(--shadow-lg);
         }
-
-        .success-message.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .success-icon {
-            width: 64px;
-            height: 64px;
+        .success-box.show { display: block; }
+        .success-icon-wrap {
+            width: 64px; height: 64px;
             background: var(--success);
             border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 20px;
+        }
+        .success-title { font-family: 'Archivo',sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .success-sub { font-size: 15px; color: var(--text-2); margin-bottom: 24px; }
+        .success-meta { display: flex; justify-content: center; gap: 24px; margin-bottom: 28px; }
+        .s-stat { text-align: center; }
+        .s-stat-val { font-family: 'Archivo',sans-serif; font-size: 28px; font-weight: 800; color: var(--accent); }
+        .s-stat-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+        /* CDL-SPECIFIC TOGGLE */
+        .cdl-fields { display: none; }
+        .cdl-fields.show { display: block; }
+
+        /* LOCATION PREVIEW HEADER */
+        .loc-preview-hdr {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 32px;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
-
-        .success-title {
-            font-size: 24px;
+        .loc-count-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 12px;
             font-weight: 700;
-            font-family: 'Archivo', sans-serif;
-            margin-bottom: 8px;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .loc-actions { display: flex; gap: 8px; }
+        .loc-action-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .loc-action-btn:hover { background: var(--accent-2); }
+
+        /* SECTION TOGGLE */
+        .section-toggle { cursor: pointer; }
+        .section-toggle::after {
+            content: '▾';
+            font-size: 12px;
+            margin-left: auto;
+            color: var(--text-3);
         }
 
-        .success-description {
-            font-size: 15px;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
+        /* Progress steps */
+        .steps-bar { display: flex; align-items: center; gap: 0; margin-bottom: 28px; }
+        .step { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-3); }
+        .step.active { color: var(--accent); }
+        .step.done { color: var(--success); }
+        .step-num {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+            color: var(--text-3);
         }
+        .step.active .step-num { background: var(--accent); color: #fff; }
+        .step.done .step-num { background: var(--success); color: #fff; }
+        .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 8px; }
+    
+        /* ── CLICK BUNDLE PICKER ── */
+        .payment-step {
+            display: none;
+            animation: fadeIn .3s ease;
+        }
+        .payment-step.show { display: block; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+        .bundle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+        @media (max-width: 600px) { .bundle-grid { grid-template-columns: 1fr; } }
+
+        .bundle-card {
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .15s;
+            position: relative;
+            background: var(--surface);
+        }
+        .bundle-card:hover { border-color: var(--accent); background: var(--accent-2); }
+        .bundle-card.selected { border-color: var(--accent); background: var(--accent-2); }
+        .bundle-card.best { border-color: #F97316; }
+        .bundle-card.best.selected { background: #FFF3EC; }
+
+        .bundle-badge {
+            position: absolute;
+            top: -11px; left: 50%; transform: translateX(-50%);
+            background: #F97316; color: #fff;
+            font-size: 11px; font-weight: 700;
+            padding: 3px 10px; border-radius: 20px;
+            white-space: nowrap;
+        }
+        .bundle-clicks { font-family: 'Archivo', sans-serif; font-size: 32px; font-weight: 800; color: var(--text); line-height: 1; }
+        .bundle-clicks-label { font-size: 12px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin: 2px 0 10px; }
+        .bundle-price { font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
+        .bundle-cpc { font-size: 12px; color: var(--text-3); }
+        .bundle-divider { height: 1px; background: var(--border); margin: 12px 0; }
+        .bundle-features { font-size: 12px; color: var(--text-2); line-height: 1.8; }
+
+        .payment-summary {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        .payment-summary-row { display: flex; justify-content: space-between; margin-bottom: 6px; color: var(--text-2); }
+        .payment-summary-row.total { font-weight: 700; color: var(--text); font-size: 16px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); margin-bottom: 0; }
+
+        .stripe-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 16px; font-weight: 700;
+            padding: 15px 24px;
+            border-radius: var(--radius);
+            border: none; cursor: pointer;
+            transition: all .15s;
+            box-shadow: 0 3px 12px rgba(10,132,255,.3);
+        }
+        .stripe-btn:hover { background: #0070E0; transform: translateY(-1px); }
+        .stripe-btn:disabled { background: var(--text-3); box-shadow: none; transform: none; cursor: not-allowed; }
+        .stripe-btn svg { flex-shrink: 0; }
+
+        .back-link { font-size: 13px; color: var(--text-3); cursor: pointer; text-align: center; margin-top: 10px; }
+        .back-link:hover { color: var(--accent); }
+
+        .secure-note { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--text-3); margin-top: 10px; }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">jobpeak<span class="logo-dot">.</span></div>
-            <div class="subtitle">Smart Job Builder</div>
-        </header>
 
-        <div class="form-card">
-            <form id="jobForm">
-                <!-- Basic Job Info -->
-                <div class="form-section">
-                    <h2 class="section-title">Job Details</h2>
-                    <p class="section-description">Tell us about the position you're hiring for</p>
+<nav class="topnav">
+    <a href="/" class="brand">jobpeak<span>.</span></a>
+    <div class="nav-links">
+        <a href="jobseeker_search.html" class="nav-link">🔍 Find Jobs</a>
+        <a href="job_builder.html" class="nav-link" style="color:var(--accent)">+ Post Job</a>
+    </div>
+</nav>
 
-                    <div class="form-group">
-                        <label for="jobTitle">Job Title *</label>
-                        <input type="text" id="jobTitle" required 
-                               placeholder="e.g., CDL A Local Driver - Home Every Night">
-                        <div class="input-hint">Be specific and clear about the role</div>
-                    </div>
+<div class="page">
+    <div class="page-header">
+        <div class="page-title">Smart Job Builder</div>
+        <div class="page-subtitle">Post once · Advertise everywhere · Fill faster</div>
+    </div>
 
-                    <div class="form-group">
-                        <label for="companyName">Company Name *</label>
-                        <input type="text" id="companyName" required 
-                               placeholder="e.g., Midwest Distribution Co">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Job Description *</label>
-                        <textarea id="description" required 
-                                  placeholder="Describe the role, responsibilities, requirements, and what makes this job great..."></textarea>
-                        <div class="input-hint">Include daily responsibilities, requirements, and company culture</div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="category">Category *</label>
-                            <select id="category" required>
-                                <option value="">Select category...</option>
-                                <option value="trucking">Trucking / CDL</option>
-                                <option value="hvac">HVAC</option>
-                                <option value="nursing">Nursing / Healthcare</option>
-                                <option value="warehouse">Warehouse / Logistics</option>
-                                <option value="construction">Construction / Trades</option>
-                                <option value="manufacturing">Manufacturing</option>
-                                <option value="retail">Retail</option>
-                                <option value="hospitality">Hospitality</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="jobType">Job Type *</label>
-                            <select id="jobType" required>
-                                <option value="full-time">Full-time</option>
-                                <option value="part-time">Part-time</option>
-                                <option value="contract">Contract</option>
-                                <option value="temporary">Temporary</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="salaryMin">Salary Range <span class="label-optional">(optional but recommended)</span></label>
-                            <input type="text" id="salary" 
-                                   placeholder="e.g., $75,000 - $85,000">
-                            <div class="input-hint">Transparent pay = more quality applicants</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="applyUrl">Application URL *</label>
-                            <input type="url" id="applyUrl" required 
-                                   placeholder="https://yourcompany.com/apply">
-                            <div class="input-hint">Where should candidates apply?</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Location & Radius -->
-                <div class="form-section">
-                    <h2 class="section-title">Hiring Location & Radius</h2>
-                    <p class="section-description">Where is this job located, and how far should we advertise it?</p>
-
-                    <div class="form-group">
-                        <label for="hiringLocation">Hiring Location *</label>
-                        <input type="text" id="hiringLocation" required 
-                               placeholder="e.g., Columbus, OH or 43215 or 123 Main St, Columbus, OH">
-                        <div class="input-hint">City, state or full address - we'll geocode it automatically</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Advertising Radius *</label>
-                        <div class="input-hint" style="margin-top: 0; margin-bottom: 12px;">
-                            How far from the hiring location should we show this job?
-                        </div>
-                        <div class="radius-selector">
-                            <label class="radius-option" data-radius="25">
-                                <input type="radio" name="radius" value="25" required>
-                                <span class="radius-label">25mi</span>
-                                <span class="radius-desc">Local area</span>
-                            </label>
-                            <label class="radius-option selected" data-radius="50">
-                                <input type="radio" name="radius" value="50" checked required>
-                                <span class="radius-label">50mi</span>
-                                <span class="radius-desc">Regional</span>
-                            </label>
-                            <label class="radius-option" data-radius="100">
-                                <input type="radio" name="radius" value="100" required>
-                                <span class="radius-label">100mi</span>
-                                <span class="radius-desc">Wider reach</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Generated Locations Preview -->
-                    <div id="locationsPreview" class="locations-preview" style="display: none;">
-                        <div class="locations-preview-header">
-                            <div class="locations-preview-title">We'll advertise this job in:</div>
-                            <div class="locations-count">
-                                <span id="locationsCount">0</span> locations
-                            </div>
-                        </div>
-                        <div id="locationsGrid" class="locations-grid"></div>
-                    </div>
-                </div>
-
-                <!-- Submit -->
-                <div class="button-group">
-                    <button type="button" class="btn-secondary">Save as Draft</button>
-                    <button type="submit" class="btn-primary" id="submitBtn">
-                        Post Job & Generate Locations
-                    </button>
-                </div>
-            </form>
+    <!-- Success State (hidden initially) -->
+    <div class="success-box" id="successBox">
+        <div class="success-icon-wrap">✓</div>
+        <div class="success-title">Job Posted!</div>
+        <div class="success-sub">Your job is live and advertising across <strong id="successLocCount">0</strong> locations. XML feeds to Talroo & WhatJobs sync in ~15 minutes.</div>
+        <div class="success-meta">
+            <div class="s-stat"><div class="s-stat-val" id="sLocations">0</div><div class="s-stat-label">Locations</div></div>
+            <div class="s-stat"><div class="s-stat-val" id="sFeeds">2</div><div class="s-stat-label">XML Feeds</div></div>
         </div>
-
-        <!-- Success Message -->
-        <div id="successMessage" class="success-message">
-            <div class="success-icon">✓</div>
-            <h3 class="success-title">Job Posted Successfully!</h3>
-            <p class="success-description">
-                Your job has been posted to <strong id="finalLocationCount">0</strong> locations 
-                and is now live on Jobpeak. XML feeds to Talroo and Whatjobs will sync within 15 minutes.
-            </p>
-            <button type="button" class="btn-primary" onclick="location.reload()">Post Another Job</button>
+        <div class="btn-group" style="justify-content:center">
+            <button class="btn btn-ghost" onclick="location.reload()">Post Another Job</button>
+            <a href="jobseeker_search.html" class="btn btn-primary" style="text-decoration:none">View Job Board →</a>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-content">
-            <div class="spinner"></div>
-            <div class="loading-text">Generating advertising locations...</div>
+
+    <!-- Payment Step (shown after job saved, before Stripe) -->
+    <div class="payment-step" id="paymentStep">
+        <div class="page-header">
+            <div class="page-title">Choose Your Click Package</div>
+            <div class="page-subtitle">Your job is saved — pick a package to go live. Clicks are shared across all your active jobs.</div>
+        <div style="margin-top:8px;font-size:14px;font-weight:600;color:var(--accent)" id="categoryRateDisplay"></div>
+        </div>
+
+        <div class="bundle-grid">
+            <div class="bundle-card" id="bundle-100" onclick="selectBundle(100)">
+                <div class="bundle-clicks" id="clicks-100">—</div>
+                <div class="bundle-clicks-label">Clicks</div>
+                <div class="bundle-price">$100</div>
+                <div class="bundle-cpc" id="cpc-100">Select a category first</div>
+                <div class="bundle-divider"></div>
+                <div class="bundle-features">Great for testing<br>~1–2 weeks of traffic</div>
+            </div>
+
+            <div class="bundle-card best" id="bundle-250" onclick="selectBundle(250)">
+                <div class="bundle-badge">Most Popular</div>
+                <div class="bundle-clicks" id="clicks-250">—</div>
+                <div class="bundle-clicks-label">Clicks</div>
+                <div class="bundle-price">$225</div>
+                <div class="bundle-cpc" id="cpc-250">Select a category first</div>
+                <div class="bundle-divider"></div>
+                <div class="bundle-features">Best for active hiring<br>~3–4 weeks of traffic</div>
+            </div>
+
+            <div class="bundle-card" id="bundle-500" onclick="selectBundle(500)">
+                <div class="bundle-clicks" id="clicks-500">—</div>
+                <div class="bundle-clicks-label">Clicks</div>
+                <div class="bundle-price">$400</div>
+                <div class="bundle-cpc" id="cpc-500">Select a category first</div>
+                <div class="bundle-divider"></div>
+                <div class="bundle-features">Best value for campaigns<br>~6–8 weeks of traffic</div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="card" style="margin-top:0">
+            <div class="payment-summary" id="paymentSummary" style="display:none">
+                <div class="payment-summary-row"><span>Job:</span><span id="summaryJob">—</span></div>
+                <div class="payment-summary-row"><span>Click package:</span><span id="summaryClicks">—</span></div>
+                <div class="payment-summary-row"><span>Price per click:</span><span id="summaryCpc">—</span></div>
+                <div class="payment-summary-row total"><span>Total</span><span id="summaryTotal">—</span></div>
+            </div>
+
+            <button class="stripe-btn" id="checkoutBtn" onclick="goToCheckout()" disabled>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Select a package to continue
+            </button>
+            <div class="secure-note">
+                🔒 Secure payment via Stripe · No subscription · Buy more anytime
+            </div>
+            <div class="back-link" onclick="backToForm()">← Edit job details</div>
         </div>
     </div>
 
-    <script>
-        // Mock data - in production, this comes from your Python backend
-        const MOCK_CITIES = [
-            {"city": "Columbus", "state": "OH", "lat": 39.9612, "lon": -82.9988, "pop": 905748},
-            {"city": "Cleveland", "state": "OH", "lat": 41.4993, "lon": -81.6944, "pop": 372624},
-            {"city": "Cincinnati", "state": "OH", "lat": 39.1031, "lon": -84.5120, "pop": 309317},
-            {"city": "Toledo", "state": "OH", "lat": 41.6528, "lon": -83.5379, "pop": 270871},
-            {"city": "Akron", "state": "OH", "lat": 41.0814, "lon": -81.5190, "pop": 190469},
-            {"city": "Dayton", "state": "OH", "lat": 39.7589, "lon": -84.1916, "pop": 140407},
-            {"city": "Newark", "state": "OH", "lat": 40.0581, "lon": -82.4013, "pop": 49934},
-            {"city": "Mansfield", "state": "OH", "lat": 40.7584, "lon": -82.5154, "pop": 46454},
-            {"city": "Springfield", "state": "OH", "lat": 39.9242, "lon": -83.8088, "pop": 58662},
-            {"city": "Lancaster", "state": "OH", "lat": 39.7137, "lon": -82.5993, "pop": 40552},
-            {"city": "Delaware", "state": "OH", "lat": 40.2987, "lon": -83.0680, "pop": 41302},
-            {"city": "Dublin", "state": "OH", "lat": 40.0992, "lon": -83.1141, "pop": 49328},
-            {"city": "Grove City", "state": "OH", "lat": 39.8814, "lon": -83.0930, "pop": 41252},
-            {"city": "Westerville", "state": "OH", "lat": 40.1262, "lon": -82.9291, "pop": 39190},
-        ];
+    <!-- Main Form -->
+    <div id="formWrap">
 
-        // Radius selector
-        document.querySelectorAll('.radius-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.radius-option').forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-                this.querySelector('input[type="radio"]').checked = true;
-                
-                // Re-generate locations preview if location is filled
-                const location = document.getElementById('hiringLocation').value;
-                if (location) {
-                    generateLocationsPreview();
-                }
-            });
-        });
+        <!-- CARD 1: BASIC INFO -->
+        <div class="card">
+            <div class="card-title"><span class="icon">📝</span>Job Details</div>
 
-        // Generate locations preview when location changes
-        document.getElementById('hiringLocation').addEventListener('blur', generateLocationsPreview);
+            <div class="row-2">
+                <div class="field">
+                    <label>Job Title *</label>
+                    <input type="text" id="jobTitle" placeholder="e.g., CDL-A OTR Driver" required>
+                </div>
+                <div class="field">
+                    <label>Company Name *</label>
+                    <input type="text" id="companyName" placeholder="e.g., Midwest Freight Co." required>
+                </div>
+            </div>
 
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 3959; // Earth's radius in miles
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                     Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
+            <div class="row-2">
+                <div class="field">
+                    <label>Category *</label>
+                    <select id="category" required onchange="handleCategoryChange()">
+                        <option value="">Select category…</option>
+                        <option value="trucking">🚛 Trucking / CDL</option>
+                        <option value="hvac">🔧 HVAC</option>
+                        <option value="nursing">🏥 Nursing / Healthcare</option>
+                        <option value="warehouse">📦 Warehouse / Logistics</option>
+                        <option value="construction">🏗️ Construction / Trades</option>
+                        <option value="manufacturing">🏭 Manufacturing</option>
+                        <option value="retail">🛍️ Retail</option>
+                        <option value="hospitality">🏨 Hospitality</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Job Type</label>
+                    <select id="jobType">
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                        <option value="temporary">Temporary</option>
+                    </select>
+                </div>
+            </div>
 
-        async function geocodeLocation(location) {
-            
-            // For demo, we'll match against known cities
-            const parts = location.split(',').map(s => s.trim());
-            const city = parts[0];
-            
-            const match = MOCK_CITIES.find(c => 
-                c.city.toLowerCase() === city.toLowerCase()
-            );
-            
-            if (match) {
-                return { lat: match.lat, lon: match.lon };
-            }
-            
-            // Default to Columbus if no match
-            return { lat: 39.9612, lon: -82.9988 };
-        }
+            <div class="field">
+                <label>Job Description *</label>
+                <div id="quillEditor"></div>
+            </div>
+        </div>
 
-        async function generateLocationsPreview() {
-            const location = document.getElementById('hiringLocation').value.trim();
-            if (!location) return;
+        <!-- CARD 2: PAY & BENEFITS -->
+        <div class="card">
+            <div class="card-title"><span class="icon">💰</span>Pay & Benefits</div>
 
-            const radiusEl = document.querySelector('input[name="radius"]:checked');
-            const radius = radiusEl ? parseInt(radiusEl.value) : 50;
+            <div class="field">
+                <label>Pay Type</label>
+                <div class="pay-type-group" id="payTypeGroup">
+                    <div class="pay-pill active" data-val="hourly">Hourly</div>
+                    <div class="pay-pill" data-val="weekly">Weekly</div>
+                    <div class="pay-pill" data-val="annual">Annual/Salary</div>
+                    <div class="pay-pill" data-val="cpm">CPM (¢/Mile)</div>
+                    <div class="pay-pill" data-val="flat">Flat Rate</div>
+                </div>
+                <input type="hidden" id="payType" value="hourly">
+            </div>
 
-            try {
-                // Geocode the hiring location
-                const coords = await geocodeLocation(location);
-                
-                // Find all cities within radius
-                const citiesInRadius = MOCK_CITIES
-                    .map(city => {
-                        const distance = calculateDistance(
-                            coords.lat, coords.lon,
-                            city.lat, city.lon
-                        );
-                        return {
-                            ...city,
-                            distance: Math.round(distance),
-                            isPrimary: distance < 5
-                        };
-                    })
-                    .filter(city => city.distance <= radius)
-                    .sort((a, b) => b.pop - a.pop)
-                    .slice(0, 20);
+            <div class="row-3">
+                <div class="field">
+                    <label>Pay Min *</label>
+                    <input type="text" id="payMin" placeholder="e.g., $22">
+                </div>
+                <div class="field">
+                    <label>Pay Max <span class="opt">(optional)</span></label>
+                    <input type="text" id="payMax" placeholder="e.g., $28">
+                </div>
+                <div class="field">
+                    <label>Signing Bonus <span class="opt">(optional)</span></label>
+                    <input type="text" id="bonus" placeholder="e.g., $2,500">
+                    <div class="hint">Include in job card — boosts applications</div>
+                </div>
+            </div>
+        </div>
 
-                // Display preview
-                const preview = document.getElementById('locationsPreview');
-                const grid = document.getElementById('locationsGrid');
-                const count = document.getElementById('locationsCount');
+        <!-- CARD 3: CDL SPECIFICS (shown for trucking) -->
+        <div class="card cdl-fields" id="cdlCard">
+            <div class="card-title"><span class="icon">🚛</span>CDL / Trucking Details</div>
+            <div class="row-3">
+                <div class="field">
+                    <label>CDL Class Required</label>
+                    <select id="cdlClass">
+                        <option value="">Any / Not Required</option>
+                        <option value="A">Class A</option>
+                        <option value="B">Class B</option>
+                        <option value="C">Class C</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Home Time</label>
+                    <select id="homeTime">
+                        <option value="">Unspecified</option>
+                        <option value="daily">Daily — Home Every Night</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Every 2 Weeks</option>
+                        <option value="otr">OTR — 2-3 Weeks Out</option>
+                        <option value="regional">Regional</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Route Type</label>
+                    <select id="routeType">
+                        <option value="">Unspecified</option>
+                        <option value="local">Local</option>
+                        <option value="regional">Regional</option>
+                        <option value="otr">OTR</option>
+                        <option value="dedicated">Dedicated</option>
+                        <option value="team">Team</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field" style="max-width:200px">
+                <label>Minimum Experience <span class="opt">(years)</span></label>
+                <input type="number" id="experienceYears" placeholder="e.g., 1" min="0" max="20">
+            </div>
+        </div>
 
-                count.textContent = citiesInRadius.length;
-                
-                grid.innerHTML = citiesInRadius.map(city => `
-                    <div class="location-chip ${city.isPrimary ? 'primary' : ''}">
-                        ${city.isPrimary ? '<span class="primary-badge">Primary</span>' : ''}
-                        <span>${city.city}, ${city.state}</span>
-                        <span class="location-distance">${city.distance}mi</span>
+        <!-- CARD 4: APPLY URL -->
+        <div class="card">
+            <div class="card-title"><span class="icon">🔗</span>Application Link</div>
+            <div class="field">
+                <label>Apply URL *</label>
+                <input type="url" id="applyUrl" placeholder="https://yourcompany.com/apply or GHL form link" required>
+                <div class="hint">Candidates click "Apply Now" and land here. Paste your GHL form, Indeed, or company page link.</div>
+            </div>
+        </div>
+
+        <!-- CARD 5: BRANDING -->
+        <div class="card">
+            <div class="card-title"><span class="icon">🎨</span>Branding <span style="font-weight:400;font-size:13px;color:var(--text-3);margin-left:4px">optional</span></div>
+            <div class="row-2">
+                <div class="field">
+                    <label>Company Logo</label>
+                    <div class="upload-area" id="logoArea">
+                        <input type="file" id="logoFile" accept="image/*" onchange="handleUpload('logo')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-label">Upload Logo</div>
+                        <div class="upload-sublabel">PNG, JPG — shown on job card</div>
+                        <img id="logoPreview" class="upload-preview" alt="Logo preview">
+                        <div id="logoFilename" class="upload-filename"></div>
                     </div>
-                `).join('');
+                </div>
+                <div class="field">
+                    <label>Recruitment Flyer <span class="opt">(optional)</span></label>
+                    <div class="upload-area" id="flyerArea">
+                        <input type="file" id="flyerFile" accept="image/*,application/pdf" onchange="handleUpload('flyer')">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-label">Upload Flyer</div>
+                        <div class="upload-sublabel">PDF or image — shown on job detail page</div>
+                        <img id="flyerPreview" class="upload-preview" alt="Flyer preview">
+                        <div id="flyerFilename" class="upload-filename"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                preview.style.display = 'block';
-                
-            } catch (error) {
-                console.error('Error generating locations:', error);
-            }
+        <!-- CARD 6: LOCATION & RADIUS -->
+        <div class="card">
+            <div class="card-title"><span class="icon">📍</span>Location & Advertising Radius</div>
+
+            <div class="row-2">
+                <div class="field">
+                    <label>Hiring Location *</label>
+                    <input type="text" id="hiringLocation" placeholder="e.g., Columbus, OH" required onblur="generateLocations()" onkeydown="if(event.key==='Enter'){event.preventDefault();generateLocations();}">
+                    <div class="hint">Where the job is based — we'll expand automatically</div>
+                </div>
+                <div class="field">
+                    <label>Advertising Radius</label>
+                    <div class="radius-opts">
+                        <label class="r-opt" data-r="25">
+                            <input type="radio" name="radius" value="25">
+                            <div class="r-val">25mi</div>
+                            <div class="r-desc">Local</div>
+                        </label>
+                        <label class="r-opt active" data-r="50">
+                            <input type="radio" name="radius" value="50" checked>
+                            <div class="r-val">50mi</div>
+                            <div class="r-desc">Regional</div>
+                        </label>
+                        <label class="r-opt" data-r="100">
+                            <input type="radio" name="radius" value="100">
+                            <div class="r-val">100mi</div>
+                            <div class="r-desc">Wide</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations preview -->
+            <div id="locPreview" style="display:none">
+                <div class="loc-preview-hdr">
+                    <div style="font-size:13px;font-weight:600;color:var(--text-2)">Advertising in <span class="loc-count-badge" id="locCount">0</span></div>
+                    <div class="loc-actions">
+                        <button class="loc-action-btn" onclick="selectAllLocs(true)">Select All</button>
+                        <button class="loc-action-btn" onclick="selectAllLocs(false)">Clear All</button>
+                    </div>
+                </div>
+                <div class="locations-grid" id="locGrid"></div>
+                <div class="hint" style="margin-top:8px">Uncheck any locations you don't want to advertise in</div>
+            </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="submit-bar">
+            <div class="submit-info">
+                Posting to <strong id="submitLocCount">—</strong> locations · XML feeds sync in ~15 min
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-ghost" type="button" onclick="saveDraft()">Save Draft</button>
+                <button class="btn btn-primary" id="submitBtn" type="button" onclick="submitJob()">
+                    Post Job →
+                </button>
+            </div>
+        </div>
+
+    </div><!-- /formWrap -->
+</div>
+
+<!-- Loading Overlay -->
+<div class="overlay" id="overlay">
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <div class="loading-title" id="loadingTitle">Posting your job…</div>
+        <div class="loading-sub" id="loadingSub">Uploading files & saving to database</div>
+    </div>
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script>
+const API = 'https://jobpeak-production.up.railway.app';
+
+// ── Quill rich text editor ──
+const quill = new Quill('#quillEditor', {
+    theme: 'snow',
+    placeholder: 'Describe the role, daily responsibilities, requirements, benefits, and what makes this opportunity great…',
+    modules: {
+        toolbar: [
+            ['bold','italic','underline'],
+            [{'list':'ordered'},{'list':'bullet'}],
+            ['clean']
+        ]
+    }
+});
+
+// ── Pay type pills ──
+document.querySelectorAll('.pay-pill').forEach(p => {
+    p.addEventListener('click', () => {
+        document.querySelectorAll('.pay-pill').forEach(x => x.classList.remove('active'));
+        p.classList.add('active');
+        document.getElementById('payType').value = p.dataset.val;
+        updatePayPlaceholders(p.dataset.val);
+    });
+});
+
+function updatePayPlaceholders(type) {
+    const minEl = document.getElementById('payMin');
+    const maxEl = document.getElementById('payMax');
+    const map = {
+        hourly: ['$22','$28'],
+        weekly: ['$1,200','$1,600'],
+        annual: ['$65,000','$85,000'],
+        cpm: ['0.52¢','0.58¢'],
+        flat: ['$150','$250']
+    };
+    minEl.placeholder = `e.g., ${map[type]?.[0] || ''}`;
+    maxEl.placeholder = `e.g., ${map[type]?.[1] || ''}`;
+}
+
+// ── CDL card toggle ──
+function handleCategoryChange() {
+    const cat = document.getElementById('category').value;
+    document.getElementById('cdlCard').classList.toggle('show', cat === 'trucking');
+}
+
+// ── Radius selector ──
+document.querySelectorAll('.r-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+        document.querySelectorAll('.r-opt').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        opt.querySelector('input').checked = true;
+        if (document.getElementById('hiringLocation').value.trim()) generateLocations();
+    });
+});
+
+// ── File uploads ──
+function handleUpload(type) {
+    const file = document.getElementById(`${type}File`).files[0];
+    if (!file) return;
+    const area = document.getElementById(`${type}Area`);
+    const preview = document.getElementById(`${type}Preview`);
+    const filename = document.getElementById(`${type}Filename`);
+    area.classList.add('has-file');
+    filename.textContent = '✓ ' + file.name;
+    filename.style.display = 'block';
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+        reader.readAsDataURL(file);
+    }
+}
+
+// ── Location generation ──
+const CITIES_DB = [
+    // Ohio
+    {city:'Columbus',state:'OH',lat:39.9612,lon:-82.9988,pop:905748},
+    {city:'Cleveland',state:'OH',lat:41.4993,lon:-81.6944,pop:372624},
+    {city:'Cincinnati',state:'OH',lat:39.1031,lon:-84.5120,pop:309317},
+    {city:'Toledo',state:'OH',lat:41.6528,lon:-83.5379,pop:270871},
+    {city:'Akron',state:'OH',lat:41.0814,lon:-81.5190,pop:190469},
+    {city:'Dayton',state:'OH',lat:39.7589,lon:-84.1916,pop:140407},
+    {city:'Parma',state:'OH',lat:41.3845,lon:-81.7229,pop:78103},
+    {city:'Canton',state:'OH',lat:40.7989,lon:-81.3784,pop:70458},
+    {city:'Youngstown',state:'OH',lat:41.0998,lon:-80.6495,pop:60068},
+    {city:'Lorain',state:'OH',lat:41.4523,lon:-82.1824,pop:63710},
+    {city:'Hamilton',state:'OH',lat:39.3995,lon:-84.5613,pop:62258},
+    {city:'Springfield',state:'OH',lat:39.9242,lon:-83.8088,pop:58662},
+    {city:'Kettering',state:'OH',lat:39.6895,lon:-84.1688,pop:54855},
+    {city:'Elyria',state:'OH',lat:41.3684,lon:-82.1077,pop:53757},
+    {city:'Newark',state:'OH',lat:40.0581,lon:-82.4013,pop:49934},
+    {city:'Middletown',state:'OH',lat:39.5151,lon:-84.3983,pop:48694},
+    {city:'Mansfield',state:'OH',lat:40.7584,lon:-82.5154,pop:46454},
+    {city:'Mentor',state:'OH',lat:41.6661,lon:-81.3395,pop:47006},
+    {city:'Euclid',state:'OH',lat:41.5931,lon:-81.5268,pop:46008},
+    {city:'Cuyahoga Falls',state:'OH',lat:41.1339,lon:-81.4845,pop:51233},
+    {city:'Dublin',state:'OH',lat:40.0992,lon:-83.1141,pop:49328},
+    {city:'Westerville',state:'OH',lat:40.1262,lon:-82.9291,pop:39190},
+    {city:'Grove City',state:'OH',lat:39.8814,lon:-83.0930,pop:41252},
+    {city:'Hilliard',state:'OH',lat:40.0334,lon:-83.1577,pop:38117},
+    {city:'Gahanna',state:'OH',lat:40.0167,lon:-82.8688,pop:35469},
+    {city:'Lancaster',state:'OH',lat:39.7137,lon:-82.5993,pop:40552},
+    {city:'Delaware',state:'OH',lat:40.2987,lon:-83.0680,pop:41302},
+    {city:'Marion',state:'OH',lat:40.5887,lon:-83.1285,pop:35318},
+    {city:'Zanesville',state:'OH',lat:39.9403,lon:-82.0132,pop:24662},
+    {city:'Lima',state:'OH',lat:40.7423,lon:-84.1052,pop:36103},
+    {city:'Findlay',state:'OH',lat:41.0442,lon:-83.6499,pop:40213},
+    {city:'Fairborn',state:'OH',lat:39.8270,lon:-84.0191,pop:33572},
+    {city:'Beavercreek',state:'OH',lat:39.7259,lon:-84.0633,pop:45193},
+    {city:'Huber Heights',state:'OH',lat:39.8437,lon:-84.1238,pop:38932},
+    {city:'Reynoldsburg',state:'OH',lat:39.9548,lon:-82.8185,pop:39028},
+    {city:'Pickerington',state:'OH',lat:39.8887,lon:-82.7568,pop:22888},
+    {city:'Marysville',state:'OH',lat:40.2365,lon:-83.3674,pop:25500},
+    {city:'Circleville',state:'OH',lat:39.5998,lon:-82.9474,pop:14600},
+    {city:'Wooster',state:'OH',lat:40.8051,lon:-81.9351,pop:26765},
+    {city:'Steubenville',state:'OH',lat:40.3698,lon:-80.6340,pop:17987},
+    {city:'Chillicothe',state:'OH',lat:39.3328,lon:-82.9824,pop:21901},
+    {city:'Portsmouth',state:'OH',lat:38.7318,lon:-82.9977,pop:19617},
+    // Pennsylvania
+    {city:'Philadelphia',state:'PA',lat:39.9526,lon:-75.1652,pop:1584064},
+    {city:'Pittsburgh',state:'PA',lat:40.4406,lon:-79.9959,pop:302971},
+    {city:'Allentown',state:'PA',lat:40.6084,lon:-75.4902,pop:125845},
+    {city:'Erie',state:'PA',lat:42.1292,lon:-80.0851,pop:94831},
+    {city:'Reading',state:'PA',lat:40.3356,lon:-75.9269,pop:95112},
+    {city:'Scranton',state:'PA',lat:41.4090,lon:-75.6624,pop:76328},
+    {city:'Bethlehem',state:'PA',lat:40.6259,lon:-75.3705,pop:75781},
+    {city:'Lancaster',state:'PA',lat:40.0379,lon:-76.3055,pop:59322},
+    {city:'Harrisburg',state:'PA',lat:40.2732,lon:-76.8867,pop:49528},
+    {city:'York',state:'PA',lat:39.9626,lon:-76.7277,pop:44862},
+    {city:'Altoona',state:'PA',lat:40.5187,lon:-78.3947,pop:44161},
+    {city:'Wilkes-Barre',state:'PA',lat:41.2459,lon:-75.8813,pop:40144},
+    {city:'Norristown',state:'PA',lat:40.1215,lon:-75.3399,pop:34324},
+    {city:'Levittown',state:'PA',lat:40.1551,lon:-74.8307,pop:52983},
+    {city:'McKeesport',state:'PA',lat:40.3465,lon:-79.8443,pop:19267},
+    // New York
+    {city:'New York',state:'NY',lat:40.7128,lon:-74.0060,pop:8336817},
+    {city:'Buffalo',state:'NY',lat:42.8864,lon:-78.8784,pop:255284},
+    {city:'Rochester',state:'NY',lat:43.1566,lon:-77.6088,pop:206284},
+    {city:'Yonkers',state:'NY',lat:40.9312,lon:-73.8988,pop:200807},
+    {city:'Syracuse',state:'NY',lat:43.0481,lon:-76.1474,pop:142553},
+    {city:'Albany',state:'NY',lat:42.6526,lon:-73.7562,pop:98251},
+    {city:'New Rochelle',state:'NY',lat:40.9115,lon:-73.7826,pop:79726},
+    {city:'Mount Vernon',state:'NY',lat:40.9126,lon:-73.8371,pop:68224},
+    {city:'Schenectady',state:'NY',lat:42.8142,lon:-73.9396,pop:65273},
+    {city:'Utica',state:'NY',lat:43.1009,lon:-75.2327,pop:59750},
+    {city:'White Plains',state:'NY',lat:41.0340,lon:-73.7629,pop:58109},
+    {city:'Troy',state:'NY',lat:42.7284,lon:-73.6918,pop:50444},
+    {city:'Niagara Falls',state:'NY',lat:43.0962,lon:-79.0377,pop:48682},
+    {city:'Binghamton',state:'NY',lat:42.0987,lon:-75.9180,pop:45011},
+    {city:'Cheektowaga',state:'NY',lat:42.8934,lon:-78.7548,pop:75178},
+    {city:'Amherst',state:'NY',lat:42.9870,lon:-78.7987,pop:126082},
+    // New Jersey
+    {city:'Newark',state:'NJ',lat:40.7357,lon:-74.1724,pop:311549},
+    {city:'Jersey City',state:'NJ',lat:40.7178,lon:-74.0431,pop:292449},
+    {city:'Paterson',state:'NJ',lat:40.9168,lon:-74.1718,pop:159732},
+    {city:'Elizabeth',state:'NJ',lat:40.6640,lon:-74.2107,pop:137298},
+    {city:'Edison',state:'NJ',lat:40.5187,lon:-74.4121,pop:107694},
+    {city:'Woodbridge',state:'NJ',lat:40.5576,lon:-74.2843,pop:102680},
+    {city:'Lakewood',state:'NJ',lat:40.0976,lon:-74.2177,pop:135158},
+    {city:'Toms River',state:'NJ',lat:39.9537,lon:-74.1979,pop:92982},
+    {city:'Hamilton',state:'NJ',lat:40.2287,lon:-74.7596,pop:92297},
+    {city:'Trenton',state:'NJ',lat:40.2171,lon:-74.7429,pop:90871},
+    {city:'Clifton',state:'NJ',lat:40.8584,lon:-74.1638,pop:89915},
+    {city:'Camden',state:'NJ',lat:39.9259,lon:-75.1196,pop:71791},
+    {city:'Bayonne',state:'NJ',lat:40.6687,lon:-74.1143,pop:71522},
+    {city:'Passaic',state:'NJ',lat:40.8568,lon:-74.1284,pop:70397},
+    {city:'Vineland',state:'NJ',lat:39.4862,lon:-75.0254,pop:61381},
+    {city:'New Brunswick',state:'NJ',lat:40.4862,lon:-74.4518,pop:56100},
+    {city:'Hoboken',state:'NJ',lat:40.7440,lon:-74.0324,pop:53635},
+    {city:'Hackensack',state:'NJ',lat:40.8859,lon:-74.0435,pop:44227},
+    // Illinois
+    {city:'Chicago',state:'IL',lat:41.8781,lon:-87.6298,pop:2693976},
+    {city:'Aurora',state:'IL',lat:41.7606,lon:-88.3201,pop:199326},
+    {city:'Joliet',state:'IL',lat:41.5250,lon:-88.0817,pop:150362},
+    {city:'Naperville',state:'IL',lat:41.7508,lon:-88.1535,pop:148449},
+    {city:'Rockford',state:'IL',lat:42.2711,lon:-89.0940,pop:145609},
+    {city:'Springfield',state:'IL',lat:39.7817,lon:-89.6501,pop:114394},
+    {city:'Elgin',state:'IL',lat:42.0354,lon:-88.2826,pop:112456},
+    {city:'Peoria',state:'IL',lat:40.6936,lon:-89.5890,pop:109802},
+    {city:'Champaign',state:'IL',lat:40.1164,lon:-88.2434,pop:88302},
+    {city:'Waukegan',state:'IL',lat:42.3636,lon:-87.8448,pop:89078},
+    {city:'Bloomington',state:'IL',lat:40.4842,lon:-88.9937,pop:78902},
+    {city:'Bolingbrook',state:'IL',lat:41.6986,lon:-88.0684,pop:74393},
+    {city:'Arlington Heights',state:'IL',lat:42.0884,lon:-87.9806,pop:77676},
+    {city:'Evanston',state:'IL',lat:42.0450,lon:-87.6877,pop:74486},
+    {city:'Schaumburg',state:'IL',lat:42.0334,lon:-88.0834,pop:75936},
+    {city:'Decatur',state:'IL',lat:39.8403,lon:-88.9548,pop:71889},
+    {city:'Palatine',state:'IL',lat:42.1103,lon:-88.0342,pop:69350},
+    {city:'Skokie',state:'IL',lat:42.0334,lon:-87.7334,pop:63348},
+    {city:'Des Plaines',state:'IL',lat:42.0336,lon:-87.8834,pop:58720},
+    {city:'Orland Park',state:'IL',lat:41.6031,lon:-87.8539,pop:58590},
+    {city:'Tinley Park',state:'IL',lat:41.5731,lon:-87.7867,pop:57282},
+    {city:'Oak Lawn',state:'IL',lat:41.7198,lon:-87.7479,pop:55245},
+    {city:'Berwyn',state:'IL',lat:41.8506,lon:-87.7937,pop:54819},
+    {city:'Cicero',state:'IL',lat:41.8456,lon:-87.7539,pop:85268},
+    // Indiana
+    {city:'Indianapolis',state:'IN',lat:39.7684,lon:-86.1581,pop:876862},
+    {city:'Fort Wayne',state:'IN',lat:41.0793,lon:-85.1394,pop:267633},
+    {city:'Evansville',state:'IN',lat:37.9716,lon:-87.5711,pop:117979},
+    {city:'South Bend',state:'IN',lat:41.6764,lon:-86.2520,pop:101190},
+    {city:'Carmel',state:'IN',lat:39.9784,lon:-86.1180,pop:99757},
+    {city:'Fishers',state:'IN',lat:39.9567,lon:-85.9669,pop:98492},
+    {city:'Bloomington',state:'IN',lat:39.1653,lon:-86.5264,pop:84067},
+    {city:'Hammond',state:'IN',lat:41.5834,lon:-87.5000,pop:76341},
+    {city:'Gary',state:'IN',lat:41.5934,lon:-87.3462,pop:69093},
+    {city:'Muncie',state:'IN',lat:40.1934,lon:-85.3864,pop:65320},
+    {city:'Lafayette',state:'IN',lat:40.4167,lon:-86.8753,pop:72629},
+    {city:'Terre Haute',state:'IN',lat:39.4667,lon:-87.4139,pop:58437},
+    {city:'Anderson',state:'IN',lat:40.1053,lon:-85.6803,pop:54516},
+    {city:'Noblesville',state:'IN',lat:40.0456,lon:-86.0086,pop:69604},
+    {city:'Greenwood',state:'IN',lat:39.6134,lon:-86.1067,pop:63647},
+    {city:'Kokomo',state:'IN',lat:40.4864,lon:-86.1336,pop:57800},
+    {city:'Plainfield',state:'IN',lat:39.7042,lon:-86.3994,pop:34243},
+    // Michigan
+    {city:'Detroit',state:'MI',lat:42.3314,lon:-83.0458,pop:632464},
+    {city:'Grand Rapids',state:'MI',lat:42.9634,lon:-85.6681,pop:198917},
+    {city:'Warren',state:'MI',lat:42.5145,lon:-83.0146,pop:135358},
+    {city:'Sterling Heights',state:'MI',lat:42.5803,lon:-83.0302,pop:132438},
+    {city:'Ann Arbor',state:'MI',lat:42.2808,lon:-83.7430,pop:123851},
+    {city:'Lansing',state:'MI',lat:42.7325,lon:-84.5555,pop:112644},
+    {city:'Flint',state:'MI',lat:43.0125,lon:-83.6875,pop:95538},
+    {city:'Dearborn',state:'MI',lat:42.3223,lon:-83.1763,pop:94750},
+    {city:'Livonia',state:'MI',lat:42.3684,lon:-83.3527,pop:93970},
+    {city:'Westland',state:'MI',lat:42.3242,lon:-83.4002,pop:82579},
+    {city:'Troy',state:'MI',lat:42.6064,lon:-83.1498,pop:83280},
+    {city:'Southfield',state:'MI',lat:42.4734,lon:-83.2219,pop:73006},
+    {city:'Kalamazoo',state:'MI',lat:42.2917,lon:-85.5872,pop:71897},
+    {city:'Pontiac',state:'MI',lat:42.6389,lon:-83.2910,pop:61081},
+    {city:'Rochester Hills',state:'MI',lat:42.6584,lon:-83.1499,pop:74273},
+    {city:'Farmington Hills',state:'MI',lat:42.4859,lon:-83.3777,pop:82668},
+    {city:'Canton',state:'MI',lat:42.3087,lon:-83.4819,pop:98360},
+    {city:'Macomb',state:'MI',lat:42.6686,lon:-82.9238,pop:85300},
+    {city:'Shelby Township',state:'MI',lat:42.6825,lon:-83.0341,pop:76970},
+    {city:'Novi',state:'MI',lat:42.4806,lon:-83.4755,pop:65440},
+    {city:'Taylor',state:'MI',lat:42.2409,lon:-83.2696,pop:60285},
+    {city:'St. Clair Shores',state:'MI',lat:42.4975,lon:-82.8963,pop:58974},
+    // Wisconsin
+    {city:'Milwaukee',state:'WI',lat:43.0389,lon:-87.9065,pop:577222},
+    {city:'Madison',state:'WI',lat:43.0731,lon:-89.4012,pop:259680},
+    {city:'Green Bay',state:'WI',lat:44.5133,lon:-88.0133,pop:107395},
+    {city:'Kenosha',state:'WI',lat:42.5847,lon:-87.8212,pop:100150},
+    {city:'Racine',state:'WI',lat:42.7261,lon:-87.7829,pop:77816},
+    {city:'Appleton',state:'WI',lat:44.2619,lon:-88.4154,pop:75644},
+    {city:'Waukesha',state:'WI',lat:43.0117,lon:-88.2315,pop:72419},
+    {city:'Oshkosh',state:'WI',lat:44.0247,lon:-88.5426,pop:66083},
+    {city:'Eau Claire',state:'WI',lat:44.8113,lon:-91.4985,pop:69955},
+    {city:'Janesville',state:'WI',lat:42.6828,lon:-89.0187,pop:66444},
+    {city:'West Allis',state:'WI',lat:43.0167,lon:-88.0070,pop:60697},
+    {city:'Wauwatosa',state:'WI',lat:43.0495,lon:-88.0076,pop:48387},
+    // Minnesota
+    {city:'Minneapolis',state:'MN',lat:44.9778,lon:-93.2650,pop:429606},
+    {city:'St. Paul',state:'MN',lat:44.9537,lon:-93.0900,pop:311527},
+    {city:'Rochester',state:'MN',lat:44.0121,lon:-92.4802,pop:121395},
+    {city:'Duluth',state:'MN',lat:46.7867,lon:-92.1005,pop:90872},
+    {city:'Brooklyn Park',state:'MN',lat:45.0941,lon:-93.3563,pop:86478},
+    {city:'Plymouth',state:'MN',lat:45.0105,lon:-93.4555,pop:81026},
+    {city:'Maple Grove',state:'MN',lat:45.0724,lon:-93.4557,pop:73954},
+    {city:'Woodbury',state:'MN',lat:44.9239,lon:-92.9594,pop:75102},
+    {city:'Blaine',state:'MN',lat:45.1608,lon:-93.2349,pop:70222},
+    {city:'St. Cloud',state:'MN',lat:45.5608,lon:-94.1622,pop:67910},
+    {city:'Eagan',state:'MN',lat:44.8041,lon:-93.1669,pop:68000},
+    {city:'Coon Rapids',state:'MN',lat:45.1230,lon:-93.3105,pop:63000},
+    {city:'Burnsville',state:'MN',lat:44.7677,lon:-93.2777,pop:64317},
+    {city:'Eden Prairie',state:'MN',lat:44.8547,lon:-93.4708,pop:64198},
+    {city:'Bloomington',state:'MN',lat:44.8408,lon:-93.3477,pop:89987},
+    {city:'Lakeville',state:'MN',lat:44.6497,lon:-93.2428,pop:67000},
+    // Texas
+    {city:'Houston',state:'TX',lat:29.7604,lon:-95.3698,pop:2304580},
+    {city:'San Antonio',state:'TX',lat:29.4241,lon:-98.4936,pop:1434625},
+    {city:'Dallas',state:'TX',lat:32.7767,lon:-96.7970,pop:1304379},
+    {city:'Austin',state:'TX',lat:30.2672,lon:-97.7431,pop:961855},
+    {city:'Fort Worth',state:'TX',lat:32.7555,lon:-97.3308,pop:741206},
+    {city:'El Paso',state:'TX',lat:31.7619,lon:-106.4850,pop:678815},
+    {city:'Arlington',state:'TX',lat:32.7357,lon:-97.1081,pop:394266},
+    {city:'Corpus Christi',state:'TX',lat:27.8006,lon:-97.3964,pop:326586},
+    {city:'Plano',state:'TX',lat:33.0198,lon:-96.6989,pop:287677},
+    {city:'Lubbock',state:'TX',lat:33.5779,lon:-101.8552,pop:258862},
+    {city:'Garland',state:'TX',lat:32.9126,lon:-96.6389,pop:238002},
+    {city:'Irving',state:'TX',lat:32.8140,lon:-96.9489,pop:239798},
+    {city:'Amarillo',state:'TX',lat:35.2220,lon:-101.8313,pop:199371},
+    {city:'McKinney',state:'TX',lat:33.1972,lon:-96.6397,pop:199177},
+    {city:'Grand Prairie',state:'TX',lat:32.7460,lon:-97.0191,pop:196100},
+    {city:'Frisco',state:'TX',lat:33.1506,lon:-96.8236,pop:200509},
+    {city:'Pasadena',state:'TX',lat:29.6911,lon:-95.2091,pop:153166},
+    {city:'Mesquite',state:'TX',lat:32.7668,lon:-96.5992,pop:143484},
+    {city:'Carrollton',state:'TX',lat:32.9537,lon:-96.8903,pop:138871},
+    {city:'Denton',state:'TX',lat:33.2148,lon:-97.1331,pop:143060},
+    {city:'Killeen',state:'TX',lat:31.1171,lon:-97.7278,pop:153095},
+    {city:'Midland',state:'TX',lat:31.9973,lon:-102.0779,pop:146038},
+    {city:'Waco',state:'TX',lat:31.5493,lon:-97.1467,pop:138486},
+    {city:'Beaumont',state:'TX',lat:30.0802,lon:-94.1266,pop:118228},
+    {city:'Round Rock',state:'TX',lat:30.5082,lon:-97.6789,pop:133372},
+    {city:'Lewisville',state:'TX',lat:33.0462,lon:-96.9942,pop:106586},
+    {city:'Sugar Land',state:'TX',lat:29.6197,lon:-95.6349,pop:111026},
+    {city:'Allen',state:'TX',lat:33.1032,lon:-96.6705,pop:105623},
+    {city:'Conroe',state:'TX',lat:30.3119,lon:-95.4560,pop:91079},
+    {city:'The Woodlands',state:'TX',lat:30.1658,lon:-95.4613,pop:114436},
+    {city:'Pearland',state:'TX',lat:29.5636,lon:-95.2860,pop:125817},
+    {city:'Richardson',state:'TX',lat:32.9483,lon:-96.7299,pop:121323},
+    {city:'Tyler',state:'TX',lat:32.3513,lon:-95.3011,pop:104798},
+    {city:'League City',state:'TX',lat:29.5075,lon:-95.0949,pop:104731},
+    {city:'Cedar Park',state:'TX',lat:30.5052,lon:-97.8203,pop:82220},
+    {city:'Georgetown',state:'TX',lat:30.6332,lon:-97.6779,pop:75000},
+    {city:'New Braunfels',state:'TX',lat:29.7030,lon:-98.1245,pop:90000},
+    // Florida
+    {city:'Jacksonville',state:'FL',lat:30.3322,lon:-81.6557,pop:911507},
+    {city:'Miami',state:'FL',lat:25.7617,lon:-80.1918,pop:467963},
+    {city:'Tampa',state:'FL',lat:27.9506,lon:-82.4572,pop:399700},
+    {city:'Orlando',state:'FL',lat:28.5383,lon:-81.3792,pop:307573},
+    {city:'St. Petersburg',state:'FL',lat:27.7731,lon:-82.6400,pop:265351},
+    {city:'Hialeah',state:'FL',lat:25.8576,lon:-80.2781,pop:236387},
+    {city:'Port St. Lucie',state:'FL',lat:27.2939,lon:-80.3503,pop:229781},
+    {city:'Cape Coral',state:'FL',lat:26.5629,lon:-81.9495,pop:194495},
+    {city:'Tallahassee',state:'FL',lat:30.4518,lon:-84.2807,pop:196169},
+    {city:'Fort Lauderdale',state:'FL',lat:26.1224,lon:-80.1373,pop:182437},
+    {city:'Pembroke Pines',state:'FL',lat:26.0078,lon:-80.2963,pop:171178},
+    {city:'Hollywood',state:'FL',lat:26.0112,lon:-80.1495,pop:153627},
+    {city:'Miramar',state:'FL',lat:25.9871,lon:-80.3326,pop:140823},
+    {city:'Gainesville',state:'FL',lat:29.6516,lon:-82.3248,pop:141085},
+    {city:'Coral Springs',state:'FL',lat:26.2712,lon:-80.2706,pop:134394},
+    {city:'Lakeland',state:'FL',lat:28.0395,lon:-81.9498,pop:112641},
+    {city:'Palm Bay',state:'FL',lat:28.0345,lon:-80.5887,pop:119760},
+    {city:'Pompano Beach',state:'FL',lat:26.2379,lon:-80.1248,pop:114801},
+    {city:'West Palm Beach',state:'FL',lat:26.7153,lon:-80.0534,pop:111955},
+    {city:'Clearwater',state:'FL',lat:27.9659,lon:-82.8001,pop:117292},
+    {city:'Kissimmee',state:'FL',lat:28.2920,lon:-81.4076,pop:86445},
+    {city:'Daytona Beach',state:'FL',lat:29.2108,lon:-81.0228,pop:68671},
+    {city:'Brandon',state:'FL',lat:27.9378,lon:-82.2859,pop:116549},
+    {city:'Spring Hill',state:'FL',lat:28.4797,lon:-82.5440,pop:113000},
+    {city:'Deltona',state:'FL',lat:28.9005,lon:-81.2637,pop:94806},
+    {city:'Ocala',state:'FL',lat:29.1872,lon:-82.1401,pop:67610},
+    {city:'Fort Myers',state:'FL',lat:26.6406,lon:-81.8723,pop:84753},
+    {city:'Sarasota',state:'FL',lat:27.3364,lon:-82.5307,pop:58285},
+    // Georgia
+    {city:'Atlanta',state:'GA',lat:33.7490,lon:-84.3880,pop:498715},
+    {city:'Columbus',state:'GA',lat:32.4610,lon:-84.9877,pop:194058},
+    {city:'Augusta',state:'GA',lat:33.4735,lon:-82.0105,pop:202081},
+    {city:'Macon',state:'GA',lat:32.8407,lon:-83.6324,pop:153159},
+    {city:'Savannah',state:'GA',lat:32.0809,lon:-81.0912,pop:147780},
+    {city:'Athens',state:'GA',lat:33.9519,lon:-83.3576,pop:127315},
+    {city:'Sandy Springs',state:'GA',lat:33.9304,lon:-84.3733,pop:108080},
+    {city:'Roswell',state:'GA',lat:34.0232,lon:-84.3616,pop:94034},
+    {city:'Johns Creek',state:'GA',lat:34.0289,lon:-84.1986,pop:83570},
+    {city:'Warner Robins',state:'GA',lat:32.6130,lon:-83.5996,pop:80308},
+    {city:'Alpharetta',state:'GA',lat:34.0754,lon:-84.2941,pop:67213},
+    {city:'Marietta',state:'GA',lat:33.9526,lon:-84.5499,pop:60972},
+    {city:'Smyrna',state:'GA',lat:33.8840,lon:-84.5144,pop:56046},
+    {city:'Peachtree City',state:'GA',lat:33.3965,lon:-84.5958,pop:38073},
+    // North Carolina
+    {city:'Charlotte',state:'NC',lat:35.2271,lon:-80.8431,pop:874579},
+    {city:'Raleigh',state:'NC',lat:35.7796,lon:-78.6382,pop:467665},
+    {city:'Greensboro',state:'NC',lat:36.0726,lon:-79.7910,pop:296710},
+    {city:'Durham',state:'NC',lat:35.9940,lon:-78.8986,pop:278993},
+    {city:'Winston-Salem',state:'NC',lat:36.0999,lon:-80.2442,pop:249545},
+    {city:'Fayetteville',state:'NC',lat:35.0527,lon:-78.8784,pop:211657},
+    {city:'Cary',state:'NC',lat:35.7915,lon:-78.7811,pop:170282},
+    {city:'Wilmington',state:'NC',lat:34.2257,lon:-77.9447,pop:123784},
+    {city:'High Point',state:'NC',lat:35.9557,lon:-80.0053,pop:112791},
+    {city:'Concord',state:'NC',lat:35.4088,lon:-80.5796,pop:105240},
+    {city:'Gastonia',state:'NC',lat:35.2621,lon:-81.1873,pop:80411},
+    {city:'Chapel Hill',state:'NC',lat:35.9132,lon:-79.0558,pop:61960},
+    {city:'Huntersville',state:'NC',lat:35.4107,lon:-80.8428,pop:58278},
+    {city:'Burlington',state:'NC',lat:36.0957,lon:-79.4378,pop:54143},
+    {city:'Apex',state:'NC',lat:35.7326,lon:-78.8502,pop:60000},
+    // Virginia
+    {city:'Virginia Beach',state:'VA',lat:36.8529,lon:-75.9780,pop:459470},
+    {city:'Norfolk',state:'VA',lat:36.8508,lon:-76.2859,pop:242803},
+    {city:'Chesapeake',state:'VA',lat:36.7682,lon:-76.2875,pop:249422},
+    {city:'Richmond',state:'VA',lat:37.5407,lon:-77.4360,pop:226610},
+    {city:'Newport News',state:'VA',lat:37.0871,lon:-76.4730,pop:185749},
+    {city:'Alexandria',state:'VA',lat:38.8048,lon:-77.0469,pop:159428},
+    {city:'Hampton',state:'VA',lat:37.0299,lon:-76.3452,pop:136836},
+    {city:'Roanoke',state:'VA',lat:37.2710,lon:-79.9414,pop:100011},
+    {city:'Lynchburg',state:'VA',lat:37.4138,lon:-79.1422,pop:82959},
+    {city:'Suffolk',state:'VA',lat:36.7282,lon:-76.5836,pop:93380},
+    {city:'Harrisonburg',state:'VA',lat:38.4496,lon:-78.8689,pop:53346},
+    // Tennessee
+    {city:'Nashville',state:'TN',lat:36.1627,lon:-86.7816,pop:669053},
+    {city:'Memphis',state:'TN',lat:35.1495,lon:-90.0490,pop:650618},
+    {city:'Knoxville',state:'TN',lat:35.9606,lon:-83.9207,pop:187603},
+    {city:'Chattanooga',state:'TN',lat:35.0456,lon:-85.3097,pop:181099},
+    {city:'Clarksville',state:'TN',lat:36.5298,lon:-87.3595,pop:166722},
+    {city:'Murfreesboro',state:'TN',lat:35.8456,lon:-86.3903,pop:152769},
+    {city:'Franklin',state:'TN',lat:35.9251,lon:-86.8689,pop:83454},
+    {city:'Brentwood',state:'TN',lat:36.0331,lon:-86.7827,pop:45369},
+    {city:'Hendersonville',state:'TN',lat:36.3020,lon:-86.6199,pop:59536},
+    {city:'Smyrna',state:'TN',lat:35.9829,lon:-86.5186,pop:52044},
+    {city:'Bartlett',state:'TN',lat:35.2045,lon:-89.8742,pop:59329},
+    {city:'Collierville',state:'TN',lat:35.0423,lon:-89.6645,pop:51978},
+    {city:'Spring Hill',state:'TN',lat:35.7517,lon:-86.9300,pop:47800},
+    // Kentucky
+    {city:'Louisville',state:'KY',lat:38.2527,lon:-85.7585,pop:617638},
+    {city:'Lexington',state:'KY',lat:38.0406,lon:-84.5037,pop:322570},
+    {city:'Bowling Green',state:'KY',lat:36.9685,lon:-86.4808,pop:72294},
+    {city:'Owensboro',state:'KY',lat:37.7719,lon:-87.1112,pop:59279},
+    {city:'Covington',state:'KY',lat:39.0837,lon:-84.5086,pop:40640},
+    {city:'Florence',state:'KY',lat:38.9989,lon:-84.6266,pop:32635},
+    {city:'Georgetown',state:'KY',lat:38.2098,lon:-84.5577,pop:34025},
+    // Missouri
+    {city:'Kansas City',state:'MO',lat:39.0997,lon:-94.5786,pop:508090},
+    {city:'St. Louis',state:'MO',lat:38.6270,lon:-90.1994,pop:302838},
+    {city:'Springfield',state:'MO',lat:37.2090,lon:-93.2923,pop:167319},
+    {city:'Columbia',state:'MO',lat:38.9517,lon:-92.3341,pop:126143},
+    {city:'Independence',state:'MO',lat:39.0911,lon:-94.4155,pop:123399},
+    {city:"Lee's Summit",state:'MO',lat:38.9108,lon:-94.3822,pop:101108},
+    {city:"O'Fallon",state:'MO',lat:38.8106,lon:-90.6998,pop:91078},
+    {city:'St. Joseph',state:'MO',lat:39.7675,lon:-94.8467,pop:76780},
+    {city:'St. Charles',state:'MO',lat:38.7881,lon:-90.4974,pop:69626},
+    {city:'Blue Springs',state:'MO',lat:39.0170,lon:-94.2816,pop:55967},
+    // Maryland
+    {city:'Baltimore',state:'MD',lat:39.2904,lon:-76.6122,pop:585708},
+    {city:'Frederick',state:'MD',lat:39.4143,lon:-77.4105,pop:78000},
+    {city:'Rockville',state:'MD',lat:39.0840,lon:-77.1528,pop:67117},
+    {city:'Gaithersburg',state:'MD',lat:39.1434,lon:-77.2014,pop:68177},
+    {city:'Bowie',state:'MD',lat:38.9429,lon:-76.7291,pop:61478},
+    {city:'Hagerstown',state:'MD',lat:39.6418,lon:-77.7200,pop:43000},
+    {city:'Silver Spring',state:'MD',lat:38.9940,lon:-77.0261,pop:81015},
+    // DC area
+    {city:'Washington',state:'DC',lat:38.9072,lon:-77.0369,pop:689545},
+    {city:'Arlington',state:'VA',lat:38.8799,lon:-77.1067,pop:236842},
+    {city:'Bethesda',state:'MD',lat:38.9807,lon:-77.1003,pop:68056},
+    // Massachusetts
+    {city:'Boston',state:'MA',lat:42.3601,lon:-71.0589,pop:694583},
+    {city:'Worcester',state:'MA',lat:42.2626,lon:-71.8023,pop:206518},
+    {city:'Springfield',state:'MA',lat:42.1015,lon:-72.5898,pop:153991},
+    {city:'Lowell',state:'MA',lat:42.6334,lon:-71.3162,pop:115554},
+    {city:'Cambridge',state:'MA',lat:42.3736,lon:-71.1097,pop:118403},
+    {city:'New Bedford',state:'MA',lat:41.6362,lon:-70.9342,pop:101079},
+    {city:'Brockton',state:'MA',lat:42.0834,lon:-71.0184,pop:97645},
+    {city:'Quincy',state:'MA',lat:42.2529,lon:-71.0023,pop:101636},
+    {city:'Lynn',state:'MA',lat:42.4668,lon:-70.9495,pop:101253},
+    {city:'Fall River',state:'MA',lat:41.7015,lon:-71.1550,pop:94942},
+    {city:'Newton',state:'MA',lat:42.3370,lon:-71.2092,pop:88923},
+    {city:'Framingham',state:'MA',lat:42.2793,lon:-71.4162,pop:72032},
+    {city:'Somerville',state:'MA',lat:42.3876,lon:-71.0995,pop:81045},
+    {city:'Waltham',state:'MA',lat:42.3765,lon:-71.2356,pop:62927},
+    // Connecticut
+    {city:'Bridgeport',state:'CT',lat:41.1865,lon:-73.1952,pop:148654},
+    {city:'New Haven',state:'CT',lat:41.3083,lon:-72.9279,pop:130250},
+    {city:'Hartford',state:'CT',lat:41.7658,lon:-72.6851,pop:122587},
+    {city:'Stamford',state:'CT',lat:41.0534,lon:-73.5387,pop:135470},
+    {city:'Waterbury',state:'CT',lat:41.5582,lon:-73.0515,pop:113479},
+    {city:'Norwalk',state:'CT',lat:41.1177,lon:-73.4082,pop:91184},
+    {city:'Danbury',state:'CT',lat:41.3948,lon:-73.4540,pop:84694},
+    {city:'New Britain',state:'CT',lat:41.6612,lon:-72.7795,pop:72939},
+    {city:'Meriden',state:'CT',lat:41.5382,lon:-72.7870,pop:59462},
+    {city:'West Haven',state:'CT',lat:41.2710,lon:-72.9471,pop:55564},
+    {city:'Milford',state:'CT',lat:41.2223,lon:-73.0573,pop:54090},
+    // Colorado
+    {city:'Denver',state:'CO',lat:39.7392,lon:-104.9903,pop:715522},
+    {city:'Colorado Springs',state:'CO',lat:38.8339,lon:-104.8214,pop:478961},
+    {city:'Aurora',state:'CO',lat:39.7294,lon:-104.8319,pop:366623},
+    {city:'Fort Collins',state:'CO',lat:40.5853,lon:-105.0844,pop:164397},
+    {city:'Lakewood',state:'CO',lat:39.7047,lon:-105.0814,pop:155984},
+    {city:'Thornton',state:'CO',lat:39.8680,lon:-104.9719,pop:138900},
+    {city:'Arvada',state:'CO',lat:39.8028,lon:-105.0875,pop:117453},
+    {city:'Westminster',state:'CO',lat:39.8367,lon:-105.0372,pop:114714},
+    {city:'Pueblo',state:'CO',lat:38.2544,lon:-104.6091,pop:111127},
+    {city:'Boulder',state:'CO',lat:40.0150,lon:-105.2705,pop:105112},
+    {city:'Centennial',state:'CO',lat:39.5807,lon:-104.8772,pop:108418},
+    {city:'Highlands Ranch',state:'CO',lat:39.5480,lon:-104.9697,pop:96713},
+    {city:'Castle Rock',state:'CO',lat:39.3722,lon:-104.8561,pop:66441},
+    {city:'Longmont',state:'CO',lat:40.1672,lon:-105.1019,pop:94167},
+    {city:'Loveland',state:'CO',lat:40.3978,lon:-105.0749,pop:77000},
+    {city:'Broomfield',state:'CO',lat:39.9205,lon:-105.0867,pop:70465},
+    // Arizona
+    {city:'Phoenix',state:'AZ',lat:33.4484,lon:-112.0740,pop:1608139},
+    {city:'Tucson',state:'AZ',lat:32.2226,lon:-110.9747,pop:548073},
+    {city:'Mesa',state:'AZ',lat:33.4152,lon:-111.8315,pop:504258},
+    {city:'Chandler',state:'AZ',lat:33.3062,lon:-111.8413,pop:261165},
+    {city:'Scottsdale',state:'AZ',lat:33.4942,lon:-111.9261,pop:258069},
+    {city:'Gilbert',state:'AZ',lat:33.3528,lon:-111.7890,pop:254114},
+    {city:'Glendale',state:'AZ',lat:33.5387,lon:-112.1860,pop:248325},
+    {city:'Tempe',state:'AZ',lat:33.4255,lon:-111.9400,pop:195805},
+    {city:'Peoria',state:'AZ',lat:33.5806,lon:-112.2374,pop:190985},
+    {city:'Surprise',state:'AZ',lat:33.6292,lon:-112.3679,pop:143913},
+    {city:'Goodyear',state:'AZ',lat:33.4353,lon:-112.3576,pop:86840},
+    {city:'Avondale',state:'AZ',lat:33.4356,lon:-112.3496,pop:88117},
+    {city:'Flagstaff',state:'AZ',lat:35.1983,lon:-111.6513,pop:76831},
+    // California
+    {city:'Los Angeles',state:'CA',lat:34.0522,lon:-118.2437,pop:3976322},
+    {city:'San Diego',state:'CA',lat:32.7157,lon:-117.1611,pop:1423851},
+    {city:'San Jose',state:'CA',lat:37.3382,lon:-121.8863,pop:1013240},
+    {city:'San Francisco',state:'CA',lat:37.7749,lon:-122.4194,pop:881549},
+    {city:'Fresno',state:'CA',lat:36.7378,lon:-119.7871,pop:542107},
+    {city:'Sacramento',state:'CA',lat:38.5816,lon:-121.4944,pop:513624},
+    {city:'Long Beach',state:'CA',lat:33.7701,lon:-118.1937,pop:466742},
+    {city:'Oakland',state:'CA',lat:37.8044,lon:-122.2712,pop:433031},
+    {city:'Bakersfield',state:'CA',lat:35.3733,lon:-119.0187,pop:403455},
+    {city:'Anaheim',state:'CA',lat:33.8366,lon:-117.9143,pop:350365},
+    {city:'Santa Ana',state:'CA',lat:33.7455,lon:-117.8677,pop:334136},
+    {city:'Riverside',state:'CA',lat:33.9806,lon:-117.3755,pop:331360},
+    {city:'Stockton',state:'CA',lat:37.9577,lon:-121.2908,pop:311026},
+    {city:'Chula Vista',state:'CA',lat:32.6401,lon:-117.0842,pop:274492},
+    {city:'Irvine',state:'CA',lat:33.6846,lon:-117.8265,pop:307670},
+    {city:'Fremont',state:'CA',lat:37.5485,lon:-121.9886,pop:241110},
+    {city:'San Bernardino',state:'CA',lat:34.1083,lon:-117.2898,pop:222101},
+    {city:'Modesto',state:'CA',lat:37.6391,lon:-120.9969,pop:218464},
+    {city:'Fontana',state:'CA',lat:34.0922,lon:-117.4350,pop:214547},
+    {city:'Oxnard',state:'CA',lat:34.1975,lon:-119.1771,pop:210037},
+    {city:'Glendale',state:'CA',lat:34.1425,lon:-118.2551,pop:200167},
+    {city:'Huntington Beach',state:'CA',lat:33.6603,lon:-117.9992,pop:198711},
+    {city:'Santa Clarita',state:'CA',lat:34.3917,lon:-118.5426,pop:228673},
+    {city:'Rancho Cucamonga',state:'CA',lat:34.1064,lon:-117.5931,pop:177751},
+    {city:'Ontario',state:'CA',lat:34.0633,lon:-117.6509,pop:175265},
+    {city:'Elk Grove',state:'CA',lat:38.4088,lon:-121.3716,pop:176124},
+    {city:'Corona',state:'CA',lat:33.8753,lon:-117.5664,pop:169868},
+    {city:'Roseville',state:'CA',lat:38.7521,lon:-121.2880,pop:147773},
+    {city:'Hayward',state:'CA',lat:37.6688,lon:-122.0808,pop:162954},
+    {city:'Sunnyvale',state:'CA',lat:37.3688,lon:-122.0363,pop:153185},
+    {city:'Pasadena',state:'CA',lat:34.1478,lon:-118.1445,pop:137122},
+    {city:'Santa Rosa',state:'CA',lat:38.4404,lon:-122.7141,pop:178127},
+    {city:'Concord',state:'CA',lat:37.9780,lon:-122.0311,pop:129295},
+    {city:'Visalia',state:'CA',lat:36.3302,lon:-119.2921,pop:141384},
+    {city:'Simi Valley',state:'CA',lat:34.2694,lon:-118.7815,pop:126503},
+    // Washington State
+    {city:'Seattle',state:'WA',lat:47.6062,lon:-122.3321,pop:737255},
+    {city:'Spokane',state:'WA',lat:47.6587,lon:-117.4260,pop:222081},
+    {city:'Tacoma',state:'WA',lat:47.2529,lon:-122.4443,pop:219346},
+    {city:'Vancouver',state:'WA',lat:45.6387,lon:-122.6615,pop:190915},
+    {city:'Bellevue',state:'WA',lat:47.6101,lon:-122.2015,pop:148164},
+    {city:'Kent',state:'WA',lat:47.3809,lon:-122.2348,pop:136588},
+    {city:'Everett',state:'WA',lat:47.9790,lon:-122.2021,pop:112024},
+    {city:'Renton',state:'WA',lat:47.4829,lon:-122.2171,pop:106785},
+    {city:'Kirkland',state:'WA',lat:47.6769,lon:-122.2060,pop:92175},
+    {city:'Federal Way',state:'WA',lat:47.3223,lon:-122.3126,pop:98590},
+    {city:'Bellingham',state:'WA',lat:48.7519,lon:-122.4787,pop:92314},
+    {city:'Yakima',state:'WA',lat:46.6021,lon:-120.5059,pop:96968},
+    // Oregon
+    {city:'Portland',state:'OR',lat:45.5051,lon:-122.6750,pop:652503},
+    {city:'Eugene',state:'OR',lat:44.0521,lon:-123.0868,pop:172622},
+    {city:'Salem',state:'OR',lat:44.9429,lon:-123.0351,pop:174365},
+    {city:'Gresham',state:'OR',lat:45.4985,lon:-122.4302,pop:113103},
+    {city:'Hillsboro',state:'OR',lat:45.5229,lon:-122.9898,pop:106447},
+    {city:'Beaverton',state:'OR',lat:45.4871,lon:-122.8037,pop:97590},
+    {city:'Bend',state:'OR',lat:44.0582,lon:-121.3153,pop:94520},
+    {city:'Medford',state:'OR',lat:42.3265,lon:-122.8756,pop:86006},
+    // Nevada
+    {city:'Las Vegas',state:'NV',lat:36.1699,lon:-115.1398,pop:641903},
+    {city:'Henderson',state:'NV',lat:36.0395,lon:-114.9817,pop:320189},
+    {city:'Reno',state:'NV',lat:39.5296,lon:-119.8138,pop:255601},
+    {city:'North Las Vegas',state:'NV',lat:36.1989,lon:-115.1175,pop:262527},
+    {city:'Sparks',state:'NV',lat:39.5349,lon:-119.7527,pop:102895},
+    // Remaining states
+    {city:'Omaha',state:'NE',lat:41.2565,lon:-95.9345,pop:486051},
+    {city:'Lincoln',state:'NE',lat:40.8136,lon:-96.7026,pop:292657},
+    {city:'Bellevue',state:'NE',lat:41.1544,lon:-95.8946,pop:64176},
+    {city:'Wichita',state:'KS',lat:37.6872,lon:-97.3301,pop:389902},
+    {city:'Overland Park',state:'KS',lat:38.9822,lon:-94.6708,pop:195494},
+    {city:'Kansas City',state:'KS',lat:39.1142,lon:-94.6275,pop:155564},
+    {city:'Olathe',state:'KS',lat:38.8814,lon:-94.8191,pop:141290},
+    {city:'Topeka',state:'KS',lat:39.0558,lon:-95.6890,pop:125904},
+    {city:'Oklahoma City',state:'OK',lat:35.4676,lon:-97.5164,pop:681054},
+    {city:'Tulsa',state:'OK',lat:36.1539,lon:-95.9928,pop:401190},
+    {city:'Norman',state:'OK',lat:35.2226,lon:-97.4395,pop:128026},
+    {city:'Broken Arrow',state:'OK',lat:36.0526,lon:-95.7908,pop:113540},
+    {city:'Edmond',state:'OK',lat:35.6528,lon:-97.4781,pop:94428},
+    {city:'Des Moines',state:'IA',lat:41.5868,lon:-93.6250,pop:214133},
+    {city:'Cedar Rapids',state:'IA',lat:41.9779,lon:-91.6656,pop:135479},
+    {city:'Davenport',state:'IA',lat:41.5236,lon:-90.5776,pop:101724},
+    {city:'Sioux City',state:'IA',lat:42.4999,lon:-96.4003,pop:83881},
+    {city:'Salt Lake City',state:'UT',lat:40.7608,lon:-111.8910,pop:200544},
+    {city:'West Valley City',state:'UT',lat:40.6916,lon:-112.0010,pop:140230},
+    {city:'Provo',state:'UT',lat:40.2338,lon:-111.6585,pop:115264},
+    {city:'West Jordan',state:'UT',lat:40.6097,lon:-111.9391,pop:116961},
+    {city:'Orem',state:'UT',lat:40.2969,lon:-111.6946,pop:98129},
+    {city:'Ogden',state:'UT',lat:41.2230,lon:-111.9738,pop:87321},
+    {city:'Layton',state:'UT',lat:41.0602,lon:-111.9711,pop:79053},
+    {city:'Albuquerque',state:'NM',lat:35.0844,lon:-106.6504,pop:564559},
+    {city:'Las Cruces',state:'NM',lat:32.3199,lon:-106.7637,pop:111385},
+    {city:'Rio Rancho',state:'NM',lat:35.2328,lon:-106.6630,pop:104046},
+    {city:'Columbia',state:'SC',lat:34.0007,lon:-81.0348,pop:134309},
+    {city:'Charleston',state:'SC',lat:32.7765,lon:-79.9311,pop:150227},
+    {city:'Greenville',state:'SC',lat:34.8526,lon:-82.3940,pop:72885},
+    {city:'Rock Hill',state:'SC',lat:34.9249,lon:-81.0251,pop:75048},
+    {city:'Birmingham',state:'AL',lat:33.5186,lon:-86.8104,pop:212237},
+    {city:'Montgomery',state:'AL',lat:32.3668,lon:-86.3000,pop:199518},
+    {city:'Huntsville',state:'AL',lat:34.7304,lon:-86.5861,pop:215006},
+    {city:'Mobile',state:'AL',lat:30.6954,lon:-88.0399,pop:187041},
+    {city:'Tuscaloosa',state:'AL',lat:33.2098,lon:-87.5692,pop:104384},
+    {city:'Hoover',state:'AL',lat:33.4053,lon:-86.8113,pop:92606},
+    {city:'Jackson',state:'MS',lat:32.2988,lon:-90.1848,pop:153701},
+    {city:'New Orleans',state:'LA',lat:29.9511,lon:-90.0715,pop:393292},
+    {city:'Baton Rouge',state:'LA',lat:30.4515,lon:-91.1871,pop:227549},
+    {city:'Shreveport',state:'LA',lat:32.5252,lon:-93.7502,pop:179854},
+    {city:'Lafayette',state:'LA',lat:30.2241,lon:-92.0198,pop:130215},
+    {city:'Little Rock',state:'AR',lat:34.7465,lon:-92.2896,pop:202591},
+    {city:'Fort Smith',state:'AR',lat:35.3859,lon:-94.3985,pop:89343},
+    {city:'Fayetteville',state:'AR',lat:36.0626,lon:-94.1574,pop:93949},
+    {city:'Boise',state:'ID',lat:43.6150,lon:-116.2023,pop:235684},
+    {city:'Nampa',state:'ID',lat:43.5407,lon:-116.5635,pop:100200},
+    {city:'Meridian',state:'ID',lat:43.6121,lon:-116.3915,pop:114195},
+    {city:'Fargo',state:'ND',lat:46.8772,lon:-96.7898,pop:125990},
+    {city:'Bismarck',state:'ND',lat:46.8083,lon:-100.7837,pop:73622},
+    {city:'Sioux Falls',state:'SD',lat:43.5460,lon:-96.7313,pop:192517},
+    {city:'Rapid City',state:'SD',lat:44.0805,lon:-103.2310,pop:80000},
+    {city:'Billings',state:'MT',lat:45.7833,lon:-108.5007,pop:117116},
+    {city:'Missoula',state:'MT',lat:46.8787,lon:-113.9966,pop:74428},
+    {city:'Cheyenne',state:'WY',lat:41.1400,lon:-104.8202,pop:63957},
+    {city:'Anchorage',state:'AK',lat:61.2181,lon:-149.9003,pop:291247},
+    {city:'Honolulu',state:'HI',lat:21.3069,lon:-157.8583,pop:350964},
+    {city:'Charleston',state:'WV',lat:38.3498,lon:-81.6326,pop:46536},
+    {city:'Huntington',state:'WV',lat:38.4193,lon:-82.4452,pop:45112},
+    {city:'Providence',state:'RI',lat:41.8240,lon:-71.4128,pop:180393},
+    {city:'Warwick',state:'RI',lat:41.7001,lon:-71.4162,pop:82823},
+    {city:'Manchester',state:'NH',lat:42.9956,lon:-71.4548,pop:115644},
+    {city:'Nashua',state:'NH',lat:42.7654,lon:-71.4676,pop:91322},
+    {city:'Portland',state:'ME',lat:43.6591,lon:-70.2568,pop:68408},
+    {city:'Burlington',state:'VT',lat:44.4759,lon:-73.2121,pop:44743},
+];
+    renderLocations();
+}
+function selectAllLocs(v) {
+    selectedLocations.forEach(l => l.checked = v);
+    renderLocations();
+}
+
+// ── Upload file to backend → Cloudinary ──
+async function uploadFile(file, type) {
+    const fd = new FormData();
+    fd.append(type, file);
+    const res = await fetch(`${API}/upload/${type}`, { method: 'POST', body: fd });
+    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+    return data.url;
+}
+
+// ── Draft save ──
+function saveDraft() {
+    alert('Draft saved! (Coming soon — drafts will be saved to your account)');
+}
+
+// ── Submit ──
+async function submitJob() {
+    // Validate
+    const required = ['jobTitle','companyName','hiringLocation','applyUrl'];
+    for (const id of required) {
+        if (!document.getElementById(id).value.trim()) {
+            document.getElementById(id).focus();
+            alert('Please fill in all required fields.');
+            return;
+        }
+    }
+    const desc = quill.root.innerHTML;
+    if (quill.getText().trim().length < 10) {
+        alert('Please add a job description.');
+        return;
+    }
+    if (selectedLocations.filter(l => l.checked).length === 0) {
+        alert('Please enter a hiring location to generate advertising locations.');
+        return;
+    }
+
+    // Show loading
+    const overlay = document.getElementById('overlay');
+    overlay.classList.add('show');
+
+    try {
+        let logoUrl = null;
+        let flyerUrl = null;
+
+        // Upload logo
+        const logoFile = document.getElementById('logoFile').files[0];
+        if (logoFile) {
+            document.getElementById('loadingSub').textContent = 'Uploading logo…';
+            logoUrl = await uploadFile(logoFile, 'logo');
         }
 
-        // Form submission
-        document.getElementById('jobForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // Upload flyer
+        const flyerFile = document.getElementById('flyerFile').files[0];
+        if (flyerFile) {
+            document.getElementById('loadingSub').textContent = 'Uploading flyer…';
+            flyerUrl = await uploadFile(flyerFile, 'flyer');
+        }
 
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const successMessage = document.getElementById('successMessage');
-            const formCard = document.querySelector('.form-card');
+        document.getElementById('loadingSub').textContent = 'Saving job & generating locations…';
 
-            // Show loading
-            loadingOverlay.classList.add('active');
+        const checkedLocs = selectedLocations.filter(l => l.checked);
 
-            // Collect form data
-            const formData = {
-                title: document.getElementById('jobTitle').value,
-                company: document.getElementById('companyName').value,
-                description: document.getElementById('description').value,
-                category: document.getElementById('category').value,
-                jobType: document.getElementById('jobType').value,
-                salary: document.getElementById('salary').value,
-                applyUrl: document.getElementById('applyUrl').value,
-                hiringLocation: document.getElementById('hiringLocation').value,
-                radius: parseInt(document.querySelector('input[name="radius"]:checked').value)
-            };
+        const payload = {
+            title: document.getElementById('jobTitle').value.trim(),
+            company: document.getElementById('companyName').value.trim(),
+            description: desc,
+            category: document.getElementById('category').value,
+            jobType: document.getElementById('jobType').value,
+            payType: document.getElementById('payType').value,
+            salary: [document.getElementById('payMin').value, document.getElementById('payMax').value].filter(Boolean).join(' – '),
+            bonus: document.getElementById('bonus').value.trim(),
+            applyUrl: document.getElementById('applyUrl').value.trim(),
+            hiringLocation: document.getElementById('hiringLocation').value.trim(),
+            radius: parseInt(document.querySelector('input[name="radius"]:checked').value),
+            targetLocations: JSON.stringify(checkedLocs.map(l => `${l.city}, ${l.state}`)),
+            logoUrl,
+            flyerUrl,
+            // CDL fields
+            cdlClass: document.getElementById('cdlClass')?.value || null,
+            homeTime: document.getElementById('homeTime')?.value || null,
+            routeType: document.getElementById('routeType')?.value || null,
+            experienceYears: document.getElementById('experienceYears')?.value ? parseInt(document.getElementById('experienceYears').value) : null,
+        };
 
-            try {
-                // In production, POST to your API:
-                const response = await fetch('https://jobpeak-production.up.railway.app/jobs', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                const result = await response.json();
-
-                // Simulate API call
-                
-
-                // Hide loading
-                loadingOverlay.classList.remove('active');
-
-                // Show success
-                const locationCount = document.getElementById('locationsCount').textContent;
-                document.getElementById('finalLocationCount').textContent = locationCount;
-                
-                formCard.style.display = 'none';
-                successMessage.classList.add('active');
-
-                // In production, you'd get back:
-                // - job_id
-                // - advertising_locations array
-                // - confirmation that XML feeds are queued
-
-            } catch (error) {
-                loadingOverlay.classList.remove('active');
-                alert('Error posting job. Please try again.');
-                console.error(error);
-            }
+        const res = await fetch(`${API}/jobs`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
-    </script>
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || 'Server error');
+        }
+
+        const result = await res.json();
+        overlay.classList.remove('show');
+
+        // Store job info for payment step
+        window._pendingJobId = result.job?.id;
+        window._pendingJobTitle = payload.title;
+        window._pendingLocCount = checkedLocs.length;
+        window._pendingCategory = payload.category || 'other';
+        updateBundleCards(window._pendingCategory);
+
+        // Show payment step
+        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('paymentStep').classList.add('show');
+        document.getElementById('summaryJob').textContent = payload.title;
+
+    } catch (err) {
+        overlay.classList.remove('show');
+        console.error(err);
+        alert('Error posting job: ' + err.message + '\n\nCheck the browser console for details.');
+    }
+}
+
+
+// ── Category CPC rates ──
+const CATEGORY_CPC = {
+    'trucking':     2.65,
+    'hvac':         2.35,
+    'nursing':      2.35,
+    'warehouse':    1.75,
+    'construction': 1.75,
+    'manufacturing':1.75,
+    'retail':       1.35,
+    'hospitality':  1.35,
+    'other':        1.75,
+};
+
+const BUNDLE_PRICES = { 100: 100, 250: 225, 500: 400 };
+
+// Category display names
+const CATEGORY_LABELS = {
+    'trucking': 'Trucking / CDL',
+    'hvac': 'HVAC',
+    'nursing': 'Nursing / Healthcare',
+    'warehouse': 'Warehouse / Logistics',
+    'construction': 'Construction / Trades',
+    'manufacturing': 'Manufacturing',
+    'retail': 'Retail',
+    'hospitality': 'Hospitality',
+    'other': 'General',
+};
+
+function getCpc(category) {
+    return CATEGORY_CPC[category] || 1.75;
+}
+
+function calcClicks(budget, cpc) {
+    return Math.floor(budget / cpc);
+}
+
+function updateBundleCards(category) {
+    const cpc = getCpc(category);
+    const label = CATEGORY_LABELS[category] || 'this category';
+
+    // Update rate display
+    const rateEl = document.getElementById('categoryRateDisplay');
+    if (rateEl) rateEl.textContent = `${label} rate: $${cpc.toFixed(2)} per click`;
+
+    // Update each card
+    [100, 250, 500].forEach(budget => {
+        const clicks = calcClicks(BUNDLE_PRICES[budget], cpc);
+        const perClick = (BUNDLE_PRICES[budget] / clicks).toFixed(2);
+        const savings = budget === 250 ? ` — save $${(100*cpc - BUNDLE_PRICES[100]/calcClicks(BUNDLE_PRICES[100],cpc)*100).toFixed(0)}` : budget === 500 ? ' — best value' : '';
+
+        const clicksEl = document.getElementById('clicks-' + budget);
+        const cpcEl = document.getElementById('cpc-' + budget);
+        if (clicksEl) clicksEl.textContent = clicks;
+        if (cpcEl) cpcEl.textContent = `$${perClick}/click${budget === 250 ? ' · most popular' : budget === 500 ? ' · best value' : ''}`;
+    });
+}
+
+// ── Click bundle selection ──
+let _selectedBundle = null;
+
+function selectBundle(budget) {
+    const category = window._pendingCategory || 'other';
+    const cpc = getCpc(category);
+    const clicks = calcClicks(BUNDLE_PRICES[budget], cpc);
+    const price = BUNDLE_PRICES[budget];
+
+    _selectedBundle = { clicks, price, cpc, budget };
+
+    // Update card styles
+    document.querySelectorAll('.bundle-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('bundle-' + budget).classList.add('selected');
+
+    // Update summary
+    const summary = document.getElementById('paymentSummary');
+    summary.style.display = 'block';
+    document.getElementById('summaryClicks').textContent = clicks + ' clicks';
+    document.getElementById('summaryCpc').textContent = '$' + cpc.toFixed(2) + '/click';
+    document.getElementById('summaryTotal').textContent = '$' + price;
+
+    // Enable checkout button
+    const btn = document.getElementById('checkoutBtn');
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Pay $${price} — Get ${clicks} Clicks →`;
+}
+
+async function goToCheckout() {
+    if (!_selectedBundle) return;
+    const btn = document.getElementById('checkoutBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Redirecting to checkout…';
+
+    try {
+        const res = await fetch(`${API}/create-checkout-session`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                jobId: window._pendingJobId,
+                clicks: _selectedBundle.clicks,
+                price: _selectedBundle.price,
+                jobTitle: window._pendingJobTitle
+            })
+        });
+        const data = await res.json();
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            throw new Error(data.error || 'Could not create checkout session');
+        }
+    } catch (err) {
+        btn.disabled = false;
+        selectBundle(_selectedBundle.clicks, _selectedBundle.price, _selectedBundle.cpc);
+        alert('Payment error: ' + err.message);
+    }
+}
+
+function backToForm() {
+    document.getElementById('paymentStep').classList.remove('show');
+    document.getElementById('formWrap').style.display = 'block';
+}
+
+// ── Init radius listeners ──
+document.querySelectorAll('input[name="radius"]').forEach(r => {
+    r.addEventListener('change', () => {
+        if (document.getElementById('hiringLocation').value.trim()) generateLocations();
+    });
+});
+</script>
 </body>
 </html>
