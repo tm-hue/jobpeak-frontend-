@@ -719,15 +719,15 @@
 
             try {
                 // In production, POST to your API:
-                // const response = await fetch('/api/jobs', {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(formData)
-                // });
-                // const result = await response.json();
+                const response = await fetch('https://jobpeak-production.up.railway.app/jobs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
 
                 // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                
 
                 // Hide loading
                 loadingOverlay.classList.remove('active');
