@@ -1410,8 +1410,23 @@ const CITIES_DB = [
     {city:'Portland',state:'ME',lat:43.6591,lon:-70.2568,pop:68408},
     {city:'Burlington',state:'VT',lat:44.4759,lon:-73.2121,pop:44743},
 ];
+
+let selectedLocations = [];
+
+function generateLocations() {
+    const loc = document.getElementById('hiringLocation').value.trim();
+    if (!loc) return;
+    const radius = parseInt(document.querySelector('input[name="radius"]:checked').value);
+    const coords = parseLocation(loc);
+    const inRadius = CITIES_DB
+        .map(c => ({ ...c, d: Math.round(dist(coords.lat, coords.lon, c.lat, c.lon)) }))
+        .filter(c => c.d <= radius)
+        .sort((a,b) => a.d - b.d)
+        .slice(0, 25);
+    selectedLocations = inRadius.map(c => ({ city: c.city, state: c.state, d: c.d, checked: true }));
     renderLocations();
 }
+
 function selectAllLocs(v) {
     selectedLocations.forEach(l => l.checked = v);
     renderLocations();
