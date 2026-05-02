@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Detail — Jobpeak</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F4F5F7;
+            --surface: #FFFFFF;
+            --border: #E4E6EA;
+            --text: #111318;
+            --text-2: #545B6B;
+            --text-3: #8892A4;
+            --accent: #0A84FF;
+            --accent-2: #E8F3FF;
+            --success: #00C07F;
+            --warn: #FF6B2B;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .topnav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-.5px; }
+        .brand span { color: #F97316; }
+        .nav-link { font-size:14px; font-weight:500; color:var(--text-2); text-decoration:none; padding:6px 12px; border-radius:8px; }
+        .nav-link:hover { background:var(--bg); color:var(--text); }
+
+        .page { max-width: 900px; margin: 0 auto; padding: 36px 24px 80px; display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+        @media (max-width: 720px) { .page { grid-template-columns: 1fr; } .sidebar { order: -1; } }
+
+        /* BREADCRUMB */
+        .breadcrumb { grid-column: 1/-1; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-3); margin-bottom: 4px; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* MAIN CARD */
+        .main-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow); }
+
+        .job-header { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+        .job-logo {
+            width: 72px; height: 72px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            overflow: hidden;
+        }
+        .job-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .job-logo-placeholder { width:72px; height:72px; border-radius:12px; border:1px solid var(--border); background:var(--accent-2); display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
+
+        .job-title-block { flex: 1; }
+        .job-title { font-family: 'Archivo',sans-serif; font-size: 26px; font-weight: 800; letter-spacing:-.5px; line-height: 1.2; margin-bottom: 6px; }
+        .job-company { font-size: 16px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; }
+        .job-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tag {
+            font-size: 12px; font-weight: 600;
+            padding: 4px 10px; border-radius: 20px;
+            background: var(--bg); border: 1px solid var(--border);
+            color: var(--text-2);
+        }
+        .tag.pay { background: #F0FFF8; border-color: var(--success); color: #00965D; }
+        .tag.bonus { background: #FFF3EC; border-color: var(--warn); color: var(--warn); }
+        .tag.cdl { background: var(--accent-2); border-color: var(--accent); color: var(--accent); }
+
+        .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+        .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: 12px; }
+
+        /* JOB DETAILS GRID */
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 500px) { .details-grid { grid-template-columns: 1fr; } }
+        .detail-item { display: flex; gap: 10px; align-items: flex-start; }
+        .detail-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .detail-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-3); }
+        .detail-val { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 1px; }
+
+        /* DESCRIPTION */
+        .job-description { font-size: 15px; line-height: 1.75; color: var(--text-2); }
+        .job-description h1,.job-description h2,.job-description h3 { color:var(--text); margin:16px 0 8px; font-family:'Archivo',sans-serif; }
+        .job-description ul,.job-description ol { padding-left: 20px; margin: 8px 0; }
+        .job-description li { margin-bottom: 4px; }
+        .job-description strong { color: var(--text); }
+
+        /* FLYER */
+        .flyer-wrap { margin-top: 20px; }
+        .flyer-img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); }
+
+        /* SIDEBAR */
+        .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+        .apply-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); }
+        .apply-btn {
+            display: block;
+            width: 100%;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Work Sans',sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all .15s;
+            box-shadow: 0 3px 12px rgba(10,132,255,.3);
+            margin-bottom: 12px;
+        }
+        .apply-btn:hover { background: #0070E0; transform: translateY(-1px); box-shadow: 0 5px 16px rgba(10,132,255,.4); }
+        .apply-note { font-size: 12px; color: var(--text-3); text-align: center; }
+
+        .share-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+        .share-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+        .share-btns { display: flex; gap: 8px; }
+        .share-btn { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); font-size: 12px; font-weight: 600; cursor: pointer; text-align:center; color:var(--text-2); transition: all .15s; }
+        .share-btn:hover { background: var(--surface); border-color: var(--accent); color: var(--accent); }
+
+        .locations-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+        .loc-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+        .loc-tag { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text-2); }
+
+        /* Loading state */
+        .skeleton { background: linear-gradient(90deg, var(--bg) 0%, var(--border) 50%, var(--bg) 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .sk-line { height: 16px; margin-bottom: 8px; }
+        .sk-title { height: 32px; width: 60%; margin-bottom: 12px; }
+
+        /* Not found */
+        .not-found { grid-column: 1/-1; text-align: center; padding: 80px 24px; }
+        .not-found-icon { font-size: 48px; margin-bottom: 16px; }
+        .not-found-title { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; margin-bottom:8px; }
+        .not-found-sub { color: var(--text-2); margin-bottom:24px; }
+    </style>
+</head>
+<body>
+<nav class="topnav">
+    <a href="/" class="brand">jobpeak<span>.</span></a>
+    <div style="display:flex;gap:8px">
+        <a href="jobseeker_search.html" class="nav-link">← All Jobs</a>
+        <a href="job_builder.html" class="nav-link" style="color:var(--accent)">+ Post Job</a>
+    </div>
+</nav>
+
+<div class="page" id="pageContent">
+    <!-- Filled by JS -->
+    <div style="grid-column:1/-1;padding:60px;text-align:center">
+        <div class="spinner" style="width:36px;height:36px;border:3px solid #E4E6EA;border-top-color:#0A84FF;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px"></div>
+        <div style="font-size:14px;color:#8892A4">Loading job…</div>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</div>
+
+<script>
+const API = 'https://jobpeak-production.up.railway.app';
+
+async function loadJob() {
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get('id');
+    
+    if (!jobId) {
+        showNotFound('No job ID provided');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API}/jobs/${jobId}`);
+        if (!res.ok) throw new Error('Job not found');
+        const job = await res.json();
+        renderJob(job);
+    } catch(e) {
+        showNotFound(e.message);
+    }
+}
+
+function formatPay(job) {
+    if (!job.salary && !job.pay_type) return null;
+    const type = { hourly:'/hr', weekly:'/wk', annual:'/yr', cpm:'¢/mi', flat:'/load' }[job.pay_type] || '';
+    return (job.salary || '') + (type ? ' ' + type : '');
+}
+
+function renderJob(job) {
+    const pay = formatPay(job);
+    const locs = (() => { try { return JSON.parse(job.target_locations || '[]'); } catch { return []; } })();
+    
+    const tags = [];
+    if (pay) tags.push(`<span class="tag pay">💰 ${pay}</span>`);
+    if (job.bonus) tags.push(`<span class="tag bonus">🎁 ${job.bonus} Bonus</span>`);
+    if (job.job_type) tags.push(`<span class="tag">${job.job_type}</span>`);
+    if (job.cdl_class) tags.push(`<span class="tag cdl">CDL-${job.cdl_class}</span>`);
+    if (job.home_time) tags.push(`<span class="tag">🏠 ${job.home_time}</span>`);
+    if (job.route_type) tags.push(`<span class="tag">🗺️ ${job.route_type}</span>`);
+
+    const details = [];
+    if (job.hiring_location || job.location) details.push({ icon:'📍', label:'Hiring Location', val: job.hiring_location || job.location });
+    if (pay) details.push({ icon:'💵', label:'Pay', val: pay });
+    if (job.bonus) details.push({ icon:'🎁', label:'Signing Bonus', val: job.bonus });
+    if (job.category) details.push({ icon:'🏷️', label:'Category', val: job.category });
+    if (job.cdl_class) details.push({ icon:'🚛', label:'CDL Class', val: 'Class ' + job.cdl_class });
+    if (job.home_time) details.push({ icon:'🏠', label:'Home Time', val: job.home_time });
+    if (job.route_type) details.push({ icon:'🗺️', label:'Route Type', val: job.route_type });
+    if (job.experience_years != null) details.push({ icon:'📋', label:'Experience', val: job.experience_years + ' yr' + (job.experience_years !== 1 ? 's' : '') + ' min' });
+
+    const logoHtml = job.logo_url
+        ? `<div class="job-logo"><img src="${job.logo_url}" alt="${job.company} logo"></div>`
+        : `<div class="job-logo-placeholder">🏢</div>`;
+
+    const flyerHtml = job.flyer_url
+        ? `<div class="flyer-wrap"><div class="section-label">Recruitment Flyer</div><img class="flyer-img" src="${job.flyer_url}" alt="Recruitment flyer"></div>`
+        : '';
+
+    const locsHtml = locs.length > 0
+        ? `<div class="locations-card">
+            <div class="share-title">📍 Advertising In</div>
+            <div class="loc-list">${locs.map(l => `<span class="loc-tag">${l}</span>`).join('')}</div>
+           </div>`
+        : '';
+
+    document.title = `${job.title} at ${job.company} — Jobpeak`;
+
+    document.getElementById('pageContent').innerHTML = `
+        <div class="breadcrumb" style="grid-column:1/-1">
+            <a href="jobseeker_search.html">All Jobs</a>
+            <span>›</span>
+            <span>${job.category || 'Jobs'}</span>
+            <span>›</span>
+            <span>${job.title}</span>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main-card">
+            <div class="job-header">
+                ${logoHtml}
+                <div class="job-title-block">
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-tags">${tags.join('')}</div>
+                </div>
+            </div>
+
+            ${details.length > 0 ? `
+            <div class="divider"></div>
+            <div class="section-label">Position Details</div>
+            <div class="details-grid">
+                ${details.map(d => `
+                    <div class="detail-item">
+                        <div class="detail-icon">${d.icon}</div>
+                        <div>
+                            <div class="detail-label">${d.label}</div>
+                            <div class="detail-val">${d.val}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            ` : ''}
+
+            <div class="divider"></div>
+            <div class="section-label">About the Role</div>
+            <div class="job-description">${job.description || '<p>No description provided.</p>'}</div>
+
+            ${flyerHtml}
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="apply-card">
+                <a href="${job.apply_url || '#'}" class="apply-btn" target="_self" rel="noopener noreferrer" id="applyBtn">
+                    Apply Now →
+                </a>
+                <div class="apply-note">You'll be taken to the application form</div>
+            </div>
+
+            <div class="share-card">
+                <div class="share-title">Share this job</div>
+                <div class="share-btns">
+                    <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+                    <button class="share-btn" onclick="shareEmail()">✉️ Email</button>
+                </div>
+            </div>
+
+            ${locsHtml}
+        </div>
+    `;
+
+    // Apply button — route in same window
+    const applyBtn = document.getElementById('applyBtn');
+    if (applyBtn && job.apply_url) {
+        applyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = job.apply_url;
+        });
+    }
+}
+
+function showNotFound(msg) {
+    document.getElementById('pageContent').innerHTML = `
+        <div class="not-found">
+            <div class="not-found-icon">🔍</div>
+            <div class="not-found-title">Job Not Found</div>
+            <div class="not-found-sub">${msg || "This job may have been removed or the link is incorrect."}</div>
+            <a href="jobseeker_search.html" class="apply-btn" style="display:inline-block;text-decoration:none;max-width:200px;margin:0 auto">Browse All Jobs</a>
+        </div>
+    `;
+}
+
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'));
+}
+function shareEmail() {
+    const title = document.querySelector('.job-title')?.textContent || 'Job';
+    window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Check out this job: ' + window.location.href)}`;
+}
+
+loadJob();
+</script>
+</body>
+</html>
