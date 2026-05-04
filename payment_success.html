@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful — Jobpeak</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F4F5F7;
+            --surface: #FFFFFF;
+            --border: #E4E6EA;
+            --text: #111318;
+            --text-2: #545B6B;
+            --text-3: #8892A4;
+            --accent: #0A84FF;
+            --success: #00C07F;
+            --radius-lg: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+        .topnav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+        }
+        .brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-.5px; }
+        .brand span { color: #F97316; }
+
+        .page {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 48px 40px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        /* Animated checkmark */
+        .check-wrap {
+            width: 72px; height: 72px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
+        }
+        @keyframes popIn {
+            from { transform: scale(0); opacity:0; }
+            to { transform: scale(1); opacity:1; }
+        }
+        .check-wrap svg { color: #fff; }
+
+        .title { font-family:'Archivo',sans-serif; font-size:28px; font-weight:800; margin-bottom:8px; }
+        .subtitle { font-size:15px; color:var(--text-2); margin-bottom:32px; line-height:1.6; }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            background: #F0FFF8;
+            border: 1px solid #00C07F30;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+        .stat-val { font-family:'Archivo',sans-serif; font-size:28px; font-weight:800; color:var(--success); }
+        .stat-label { font-size:12px; color:var(--text-3); text-transform:uppercase; letter-spacing:.04em; font-weight:600; margin-top:2px; }
+
+        .steps { text-align:left; margin-bottom:32px; }
+        .step-item { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; }
+        .step-num {
+            width:24px; height:24px; border-radius:50%;
+            background:var(--accent); color:#fff;
+            font-size:12px; font-weight:700;
+            display:flex; align-items:center; justify-content:center;
+            flex-shrink:0; margin-top:1px;
+        }
+        .step-text { font-size:14px; color:var(--text-2); line-height:1.5; }
+        .step-text strong { color:var(--text); }
+
+        .btn {
+            font-family:'Work Sans',sans-serif; font-weight:700;
+            font-size:15px; padding:13px 24px;
+            border-radius:10px; border:none; cursor:pointer;
+            text-decoration:none; display:inline-block;
+            transition:all .15s;
+        }
+        .btn-primary { background:var(--accent); color:#fff; box-shadow:0 3px 12px rgba(10,132,255,.3); }
+        .btn-primary:hover { background:#0070E0; transform:translateY(-1px); }
+        .btn-ghost { background:var(--bg); color:var(--text-2); border:1.5px solid var(--border); margin-left:8px; }
+        .btn-ghost:hover { background:var(--border); }
+
+        .loading { opacity:.5; font-size:14px; }
+        .error-state { display:none; color:#EF4444; font-size:14px; margin-top:12px; }
+    </style>
+</head>
+<body>
+<nav class="topnav">
+    <a href="/" class="brand">jobpeak<span>.</span></a>
+</nav>
+
+<div class="page">
+    <div class="card" id="successCard">
+        <div class="check-wrap">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+
+        <div class="title">Payment Successful!</div>
+        <div class="subtitle" id="successSubtitle">
+            Your job is now <strong>live</strong> and advertising to candidates.
+        </div>
+
+        <div class="stats">
+            <div>
+                <div class="stat-val" id="statClicks">—</div>
+                <div class="stat-label">Clicks Purchased</div>
+            </div>
+            <div>
+                <div class="stat-val" id="statCpc">—</div>
+                <div class="stat-label">Per Click</div>
+            </div>
+            <div>
+                <div class="stat-val">2</div>
+                <div class="stat-label">XML Feeds</div>
+            </div>
+        </div>
+
+        <div class="steps">
+            <div class="step-item">
+                <div class="step-num">✓</div>
+                <div class="step-text"><strong>Job is live</strong> — candidates can find and apply now</div>
+            </div>
+            <div class="step-item">
+                <div class="step-num">✓</div>
+                <div class="step-text"><strong>XML feeds syncing</strong> — Talroo & WhatJobs will update within 15 minutes</div>
+            </div>
+            <div class="step-item">
+                <div class="step-num">!</div>
+                <div class="step-text"><strong>Low balance warning</strong> — we'll email you when you have 20 clicks left so you never go dark</div>
+            </div>
+        </div>
+
+        <div>
+            <a id="resultsLink" href="results.html" class="btn btn-primary">View Click Results →</a>
+            <a href="job_builder.html" class="btn btn-ghost">Post Another Job</a>
+        </div>
+        <div class="error-state" id="errorState"></div>
+    </div>
+</div>
+
+<script>
+const API = 'https://jobpeak-production.up.railway.app';
+
+async function loadSessionDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get('job_id');
+
+    if (!jobId) return;
+
+    try {
+        const res = await fetch(`${API}/jobs/${jobId}/stats`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // Update stats
+        const clicks = data.total_clicks_purchased || data.click_balance || '—';
+        document.getElementById('statClicks').textContent = clicks;
+
+        // Calc CPC
+        if (data.total_clicks_purchased) {
+            const bundles = { 100: 1.00, 250: 0.90, 500: 0.80 };
+            const cpc = bundles[data.total_clicks_purchased];
+            document.getElementById('statCpc').textContent = cpc ? '$' + cpc.toFixed(2) : '—';
+        }
+
+        // Update subtitle with job title
+        if (data.title) {
+            document.getElementById('successSubtitle').innerHTML =
+                `<strong>"${data.title}"</strong> is now live and advertising to candidates across all your selected locations.`;
+        }
+
+    } catch (e) {
+        // Silently fail — page still looks great without live data
+    }
+}
+
+loadSessionDetails();
+// Set results link with job ID
+const _params = new URLSearchParams(window.location.search);
+const _jobId = _params.get('job_id');
+if (_jobId) {
+    document.getElementById('resultsLink').href = `results.html?job=${_jobId}`;
+}
+</script>
+</body>
+</html>
