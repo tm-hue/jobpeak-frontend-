@@ -1705,10 +1705,17 @@ async function submitJob() {
         window._pendingCategory = payload.category || 'other';
         updateBundleCards(window._pendingCategory);
 
-        // Show payment step
+        // Show success directly (Stripe not yet configured)
+        const n = checkedLocs.length;
+        document.getElementById('successLocCount').textContent = n;
+        document.getElementById('sLocations').textContent = n;
         document.getElementById('formWrap').style.display = 'none';
-        document.getElementById('paymentStep').classList.add('show');
-        document.getElementById('summaryJob').textContent = payload.title;
+        document.getElementById('successBox').classList.add('show');
+
+        // TODO: Uncomment below and remove above when Stripe is live
+        // document.getElementById('formWrap').style.display = 'none';
+        // document.getElementById('paymentStep').classList.add('show');
+        // document.getElementById('summaryJob').textContent = payload.title;
 
     } catch (err) {
         overlay.classList.remove('show');
