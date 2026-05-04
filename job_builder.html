@@ -844,6 +844,10 @@ function updatePayPlaceholders(type) {
 function handleCategoryChange() {
     const cat = document.getElementById('category').value;
     document.getElementById('cdlCard').classList.toggle('show', cat === 'trucking');
+    // Re-score locations when category changes
+    if (document.getElementById('hiringLocation').value.trim()) {
+        generateLocations();
+    }
 }
 
 // ── Radius selector ──
@@ -1465,13 +1469,18 @@ function renderLocations() {
     const n = selectedLocations.filter(l => l.checked).length;
     count.textContent = n + ' locations';
     submitCount.textContent = n + ' locations';
-    grid.innerHTML = selectedLocations.map((l, i) => `
+    grid.innerHTML = selectedLocations.map((l, i) => {
+        const demoHint = l.demoScore !== null && l.demoScore !== undefined
+            ? `<span style="opacity:.5;font-size:10px;margin-left:2px" title="Worker density score">${l.demoScore}%</span>`
+            : '';
+        return `
         <label class="loc-chip ${l.checked ? 'checked' : ''} ${l.d < 5 ? 'primary' : ''}" onclick="toggleLoc(${i})">
             <input type="checkbox" ${l.checked ? 'checked' : ''}>
             ${l.city}, ${l.state}
             <span style="opacity:.6;font-size:11px">${l.d}mi</span>
-        </label>
-    `).join('');
+            ${demoHint}
+        </label>`;
+    }).join('');
     document.getElementById('locPreview').style.display = 'block';
 }
 
@@ -1482,17 +1491,59 @@ function toggleLoc(i) {
 
 let selectedLocations = [];
 
-function generateLocations() {
+async function generateLocations() {
     const loc = document.getElementById('hiringLocation').value.trim();
     if (!loc) return;
     const radius = parseInt(document.querySelector('input[name="radius"]:checked').value);
+    const category = document.getElementById('category').value || 'other';
     const coords = parseLocation(loc);
+
+    // Get all cities within radius
     const inRadius = CITIES_DB
         .map(c => ({ ...c, d: Math.round(dist(coords.lat, coords.lon, c.lat, c.lon)) }))
         .filter(c => c.d <= radius)
-        .sort((a,b) => a.d - b.d)
-        .slice(0, 25);
-    selectedLocations = inRadius.map(c => ({ city: c.city, state: c.state, d: c.d, checked: true }));
+        .slice(0, 50);
+
+    // Show loading state
+    document.getElementById('locPreview').style.display = 'block';
+    document.getElementById('locGrid').innerHTML = '<div style="color:var(--text-3);font-size:13px;padding:8px">Scoring locations by worker demographics…</div>';
+
+    try {
+        const cityParams = inRadius.map(c => `${c.city}, ${c.state}`).join(',');
+        const res = await fetch(`${API}/demographics?cities=${encodeURIComponent(cityParams)}&category=${category}`);
+        const data = await res.json();
+        const scores = data.scores || {};
+
+        // Blend demographic score (60%) + proximity score (40%)
+        const scored = inRadius.map(c => {
+            const key = `${c.city}, ${c.state}`;
+            const demoScore = scores[key] || 50;
+            const distScore = Math.max(0, 100 - (c.d / radius * 100));
+            const totalScore = (demoScore * 0.6) + (distScore * 0.4);
+            return { ...c, demoScore, totalScore };
+        });
+
+        scored.sort((a, b) => b.totalScore - a.totalScore);
+        const top = scored.slice(0, 20);
+
+        // Always keep the hiring city
+        const hiringCity = inRadius.find(c => c.d === 0);
+        if (hiringCity && !top.find(c => c.city === hiringCity.city && c.state === hiringCity.state)) {
+            top.unshift({ ...hiringCity, demoScore: 100, totalScore: 100 });
+        }
+
+        selectedLocations = top.map(c => ({
+            city: c.city, state: c.state, d: c.d,
+            demoScore: Math.round(c.demoScore), checked: true
+        }));
+
+    } catch (err) {
+        console.warn('Demographics unavailable, using distance:', err);
+        selectedLocations = inRadius
+            .sort((a, b) => a.d - b.d).slice(0, 20)
+            .map(c => ({ city: c.city, state: c.state, d: c.d, demoScore: null, checked: true }));
+    }
+
     renderLocations();
 }
 
