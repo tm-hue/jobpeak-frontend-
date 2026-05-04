@@ -60,14 +60,14 @@
     <div id="jobList"><div class="loading">Loading jobs…</div></div>
 </div>
 
-<!-- Confirm Delete -->
+<!-- Confirm Archive -->
 <div class="confirm-overlay" id="confirmOverlay">
     <div class="confirm-box">
         <div class="confirm-title">Archive this job?</div>
-        <div class="confirm-sub" id="confirmSub">This will remove it from the database and all XML feeds permanently.</div>
+        <div class="confirm-sub" id="confirmSub">This job will stop running and be removed from all feeds. Click history and results are preserved forever.</div>
         <div class="confirm-btns">
             <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
-            <button class="btn btn-danger" id="confirmBtn">Delete</button>
+            <button class="btn btn-danger" id="confirmBtn">Archive</button>
         </div>
     </div>
 </div>
@@ -75,7 +75,6 @@
 <script>
 const API = 'https://jobpeak-production.up.railway.app';
 let allJobs = [];
-let pendingDeleteId = null;
 
 async function loadJobs() {
     try {
@@ -100,17 +99,22 @@ function render() {
                 <div class="job-meta">${job.company} · ${job.hiring_location || job.location || '—'} · ${job.category || 'uncategorized'}</div>
                 <div class="job-id">ID: ${job.id} · Posted: ${new Date(job.created_at).toLocaleDateString()}</div>
             </div>
-            <span class="badge ${job.status === 'active' ? 'badge-active' : 'badge-paused'}">
-                ${job.status === 'active' ? '● Active' : '⏸ Paused'}
+            <span class="badge ${job.status === 'active' ? 'badge-active' : job.status === 'archived' ? 'badge-archived' : 'badge-paused'}">
+                ${job.status === 'active' ? '● Active' : job.status === 'archived' ? '◻ Archived' : '⏸ Paused'}
             </span>
             <div class="actions">
                 <a href="results.html?job=${job.id}" class="btn btn-ghost" target="_blank">Results</a>
                 <a href="job_detail.html?id=${job.id}" class="btn btn-ghost" target="_blank">View</a>
                 ${job.status === 'active'
                     ? `<button class="btn btn-pause" onclick="setStatus(${job.id}, 'paused')">Pause</button>`
-                    : `<button class="btn btn-activate" onclick="setStatus(${job.id}, 'active')">Activate</button>`
+                    : job.status === 'paused'
+                        ? `<button class="btn btn-activate" onclick="setStatus(${job.id}, 'active')">Activate</button>`
+                        : ''
                 }
-                <button class="btn btn-danger" onclick="confirmDelete(${job.id}, '${job.title.replace(/'/g, "\\'")}')">Delete</button>
+                ${job.status !== 'archived'
+                    ? `<button class="btn btn-danger" onclick="confirmArchive(${job.id}, '${job.title.replace(/'/g, "\\'")}')">Archive</button>`
+                    : ''
+                }
             </div>
         </div>
     `).join('');
