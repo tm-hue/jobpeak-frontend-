@@ -955,6 +955,54 @@ const CITIES_DB = [
     {city:'Binghamton',state:'NY',lat:42.0987,lon:-75.9180,pop:45011},
     {city:'Cheektowaga',state:'NY',lat:42.8934,lon:-78.7548,pop:75178},
     {city:'Amherst',state:'NY',lat:42.9870,lon:-78.7987,pop:126082},
+    // Long Island
+    {city:'Hempstead',state:'NY',lat:40.7062,lon:-73.6187,pop:56554},
+    {city:'Mineola',state:'NY',lat:40.7479,lon:-73.6407,pop:20726},
+    {city:'Hicksville',state:'NY',lat:40.7684,lon:-73.5254,pop:41547},
+    {city:'Levittown',state:'NY',lat:40.7254,lon:-73.5132,pop:51881},
+    {city:'Brentwood',state:'NY',lat:40.7812,lon:-73.2462,pop:62461},
+    {city:'Freeport',state:'NY',lat:40.6576,lon:-73.5832,pop:43783},
+    {city:'Valley Stream',state:'NY',lat:40.6643,lon:-73.7085,pop:37511},
+    {city:'Uniondale',state:'NY',lat:40.7026,lon:-73.5921,pop:24759},
+    {city:'Garden City',state:'NY',lat:40.7268,lon:-73.6335,pop:22371},
+    {city:'Manhasset',state:'NY',lat:40.7957,lon:-73.6968,pop:8080},
+    {city:'Great Neck',state:'NY',lat:40.8001,lon:-73.7279,pop:10230},
+    {city:'Huntington',state:'NY',lat:40.8676,lon:-73.4257,pop:203264},
+    {city:'Babylon',state:'NY',lat:40.6965,lon:-73.3254,pop:12166},
+    {city:'Bay Shore',state:'NY',lat:40.7282,lon:-73.2468,pop:32268},
+    {city:'Patchogue',state:'NY',lat:40.7651,lon:-73.0146,pop:12961},
+    {city:'Islip',state:'NY',lat:40.7290,lon:-73.2107,pop:335543},
+    {city:'Smithtown',state:'NY',lat:40.8565,lon:-73.2015,pop:117801},
+    {city:'Commack',state:'NY',lat:40.8426,lon:-73.2929,pop:36367},
+    {city:'Dix Hills',state:'NY',lat:40.8059,lon:-73.3407,pop:27207},
+    {city:'Central Islip',state:'NY',lat:40.7837,lon:-73.1968,pop:34450},
+    {city:'Copiague',state:'NY',lat:40.6726,lon:-73.3907,pop:22993},
+    {city:'Lindenhurst',state:'NY',lat:40.6826,lon:-73.3707,pop:27819},
+    {city:'Amityville',state:'NY',lat:40.6790,lon:-73.4168,pop:9523},
+    {city:'Massapequa',state:'NY',lat:40.6693,lon:-73.4668,pop:21685},
+    {city:'Bethpage',state:'NY',lat:40.7526,lon:-73.4835,pop:16429},
+    {city:'Plainview',state:'NY',lat:40.7776,lon:-73.4674,pop:26217},
+    {city:'Syosset',state:'NY',lat:40.8226,lon:-73.5024,pop:19263},
+    {city:'Westbury',state:'NY',lat:40.7554,lon:-73.5877,pop:15146},
+    {city:'Elmont',state:'NY',lat:40.6943,lon:-73.7085,pop:35045},
+    {city:'Franklin Square',state:'NY',lat:40.7026,lon:-73.6735,pop:30004},
+    {city:'Floral Park',state:'NY',lat:40.7226,lon:-73.7024,pop:15863},
+    {city:'New Hyde Park',state:'NY',lat:40.7340,lon:-73.6857,pop:9728},
+    {city:'Port Washington',state:'NY',lat:40.8257,lon:-73.6985,pop:15846},
+    {city:'Roslyn',state:'NY',lat:40.7993,lon:-73.6485,pop:2770},
+    // NYC Boroughs/areas
+    {city:'Staten Island',state:'NY',lat:40.5795,lon:-74.1502,pop:476143},
+    {city:'Bronx',state:'NY',lat:40.8448,lon:-73.8648,pop:1418207},
+    {city:'Brooklyn',state:'NY',lat:40.6782,lon:-73.9442,pop:2559903},
+    {city:'Queens',state:'NY',lat:40.7282,lon:-73.7949,pop:2230722},
+    // Westchester
+    {city:'Yonkers',state:'NY',lat:40.9312,lon:-73.8988,pop:200807},
+    {city:'New Rochelle',state:'NY',lat:40.9115,lon:-73.7826,pop:79726},
+    {city:'Mount Vernon',state:'NY',lat:40.9126,lon:-73.8371,pop:68224},
+    {city:'Peekskill',state:'NY',lat:41.2948,lon:-73.9196,pop:24536},
+    {city:'Port Chester',state:'NY',lat:41.0051,lon:-73.6668,pop:28727},
+    {city:'Harrison',state:'NY',lat:41.0179,lon:-73.7165,pop:27472},
+    {city:'Ossining',state:'NY',lat:41.1626,lon:-73.8618,pop:26534},
     // New Jersey
     {city:'Newark',state:'NJ',lat:40.7357,lon:-74.1724,pop:311549},
     {city:'Jersey City',state:'NJ',lat:40.7178,lon:-74.0431,pop:292449},
@@ -1509,7 +1557,7 @@ async function generateLocations() {
     document.getElementById('locGrid').innerHTML = '<div style="color:var(--text-3);font-size:13px;padding:8px">Scoring locations by worker demographics…</div>';
 
     try {
-        const cityParams = inRadius.map(c => `${c.city}, ${c.state}`).join(',');
+        const cityParams = inRadius.map(c => `${c.city}, ${c.state}`).join('|');
         const res = await fetch(`${API}/demographics?cities=${encodeURIComponent(cityParams)}&category=${category}`);
         const data = await res.json();
         const scores = data.scores || {};
@@ -1517,7 +1565,7 @@ async function generateLocations() {
         // Blend demographic score (60%) + proximity score (40%)
         const scored = inRadius.map(c => {
             const key = `${c.city}, ${c.state}`;
-            const demoScore = scores[key] || 50;
+            const demoScore = scores[key] !== undefined ? scores[key] : 50;
             const distScore = Math.max(0, 100 - (c.d / radius * 100));
             const totalScore = (demoScore * 0.6) + (distScore * 0.4);
             return { ...c, demoScore, totalScore };
