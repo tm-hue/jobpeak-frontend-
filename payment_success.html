@@ -128,9 +128,32 @@
     </style>
 </head>
 <body>
-<nav class="topnav">
-    <a href="/" class="brand">jobpeak<span>.</span></a>
-</nav>
+
+<!-- ========== JOBPEAK HEADER — replace existing <header> block on every page ========== -->
+<style>
+.jp-header { position:sticky; top:0; z-index:999; background:#fff; border-bottom:1px solid #E4E6EA; height:60px; display:flex; align-items:center; padding:0 32px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.jp-header-inner { max-width:900px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; }
+.jp-header-brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:#111318; text-decoration:none; flex-shrink:0; }
+.jp-header-brand span { color:#F97316; }
+.jp-header-nav { display:flex; align-items:center; gap:8px; }
+.jp-header-link { font-family:'Work Sans',sans-serif; font-size:14px; font-weight:500; color:#545B6B; text-decoration:none; padding:6px 12px; border-radius:8px; transition:color .15s; }
+.jp-header-link:hover { color:#111318; }
+.jp-header-post { font-family:'Work Sans',sans-serif; font-size:14px; font-weight:700; color:#fff; background:#0A84FF; text-decoration:none; padding:8px 18px; border-radius:8px; transition:background .15s; }
+.jp-header-post:hover { background:#0070E0; }
+@media(max-width:600px) { .jp-header { padding:0 16px; } .jp-header-link { display:none; } }
+</style>
+
+<header class="jp-header">
+    <div class="jp-header-inner">
+        <a href="/jobseeker_search.html" class="jp-header-brand">jobpeak<span>.</span></a>
+        <nav class="jp-header-nav">
+            <a href="/jobseeker_search.html" class="jp-header-link">Find Jobs</a>
+            <a href="/job_builder.html" class="jp-header-post">Post a Job</a>
+        </nav>
+    </div>
+</header>
+<!-- ========== END HEADER ========== -->
+
 
 <div class="page">
     <div class="card" id="successCard">
