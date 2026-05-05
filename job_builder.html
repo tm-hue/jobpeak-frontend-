@@ -1593,7 +1593,9 @@ async function generateLocations() {
     if (!loc) return;
     const radius = parseInt(document.querySelector('input[name="radius"]:checked').value);
     const category = document.getElementById('category').value || 'other';
-    const coords = parseLocation(loc);
+    const lat = parseFloat(document.getElementById('hiringLat').value);
+const lng = parseFloat(document.getElementById('hiringLng').value);
+const coords = (lat && lng) ? { lat, lon: lng } : parseLocation(loc);
 
     // Get all cities within radius
     const inRadius = CITIES_DB
