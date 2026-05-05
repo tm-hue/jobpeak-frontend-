@@ -3,275 +3,111 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8LNYW43VBJ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-8LNYW43VBJ');
-</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Successful — Jobpeak</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>You're Live! — Jobpeak</title>
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #F4F5F7;
-            --surface: #FFFFFF;
-            --border: #E4E6EA;
-            --text: #111318;
-            --text-2: #545B6B;
-            --text-3: #8892A4;
-            --accent: #0A84FF;
-            --success: #00C07F;
-            --radius-lg: 16px;
-            --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
-        }
+        :root { --bg:#F4F5F7; --surface:#fff; --border:#E4E6EA; --text:#111318; --text-2:#545B6B; --text-3:#8892A4; --accent:#0A84FF; --success:#00C07F; --orange:#F97316; --radius:16px; --shadow:0 1px 3px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.06); }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: 'Work Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            -webkit-font-smoothing: antialiased;
-        }
-        .topnav {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 0 32px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-        }
-        .brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-.5px; }
-        .brand span { color: #F97316; }
-
-        .page {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 24px;
-        }
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 48px 40px;
-            max-width: 520px;
-            width: 100%;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        /* Animated checkmark */
-        .check-wrap {
-            width: 72px; height: 72px;
-            background: var(--success);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 24px;
-            animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
-        }
-        @keyframes popIn {
-            from { transform: scale(0); opacity:0; }
-            to { transform: scale(1); opacity:1; }
-        }
-        .check-wrap svg { color: #fff; }
-
-        .title { font-family:'Archivo',sans-serif; font-size:28px; font-weight:800; margin-bottom:8px; }
-        .subtitle { font-size:15px; color:var(--text-2); margin-bottom:32px; line-height:1.6; }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            background: #F0FFF8;
-            border: 1px solid #00C07F30;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 32px;
-        }
-        .stat-val { font-family:'Archivo',sans-serif; font-size:28px; font-weight:800; color:var(--success); }
-        .stat-label { font-size:12px; color:var(--text-3); text-transform:uppercase; letter-spacing:.04em; font-weight:600; margin-top:2px; }
-
-        .steps { text-align:left; margin-bottom:32px; }
-        .step-item { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; }
-        .step-num {
-            width:24px; height:24px; border-radius:50%;
-            background:var(--accent); color:#fff;
-            font-size:12px; font-weight:700;
-            display:flex; align-items:center; justify-content:center;
-            flex-shrink:0; margin-top:1px;
-        }
-        .step-text { font-size:14px; color:var(--text-2); line-height:1.5; }
-        .step-text strong { color:var(--text); }
-
-        .btn {
-            font-family:'Work Sans',sans-serif; font-weight:700;
-            font-size:15px; padding:13px 24px;
-            border-radius:10px; border:none; cursor:pointer;
-            text-decoration:none; display:inline-block;
-            transition:all .15s;
-        }
-        .btn-primary { background:var(--accent); color:#fff; box-shadow:0 3px 12px rgba(10,132,255,.3); }
-        .btn-primary:hover { background:#0070E0; transform:translateY(-1px); }
-        .btn-ghost { background:var(--bg); color:var(--text-2); border:1.5px solid var(--border); margin-left:8px; }
+        body { font-family:'Work Sans',sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; min-height:100vh; display:flex; flex-direction:column; }
+        .jp-header { background:#fff; border-bottom:1px solid var(--border); height:60px; display:flex; align-items:center; padding:0 32px; }
+        .jp-header-brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:#111318; text-decoration:none; }
+        .jp-header-brand span { color:#F97316; }
+        .page { max-width:560px; margin:0 auto; padding:64px 24px; flex:1; text-align:center; }
+        .success-icon { width:72px; height:72px; background:#F0FFF8; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 24px; font-size:32px; border:2px solid var(--success); }
+        h1 { font-family:'Archivo',sans-serif; font-size:32px; font-weight:800; margin-bottom:12px; }
+        .subtitle { font-size:16px; color:var(--text-2); margin-bottom:40px; line-height:1.6; }
+        .stats-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:24px; box-shadow:var(--shadow); text-align:left; }
+        .stats-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); }
+        .stats-row:last-child { border-bottom:none; }
+        .stats-label { font-size:14px; color:var(--text-2); }
+        .stats-value { font-size:14px; font-weight:700; color:var(--text); }
+        .stats-value.green { color:var(--success); }
+        .actions { display:flex; flex-direction:column; gap:12px; }
+        .btn { display:block; width:100%; padding:15px; font-family:'Work Sans',sans-serif; font-size:15px; font-weight:700; border:none; border-radius:10px; cursor:pointer; text-decoration:none; text-align:center; transition:all 0.2s; }
+        .btn-primary { background:var(--accent); color:#fff; }
+        .btn-primary:hover { background:#0070E0; }
+        .btn-ghost { background:var(--bg); color:var(--text-2); border:1px solid var(--border); }
         .btn-ghost:hover { background:var(--border); }
-
-        .loading { opacity:.5; font-size:14px; }
-        .error-state { display:none; color:#EF4444; font-size:14px; margin-top:12px; }
+        .loading { color:var(--text-3); font-size:14px; }
     </style>
 </head>
 <body>
-
-<!-- ========== JOBPEAK HEADER — replace existing <header> block on every page ========== -->
-<style>
-.jp-header { position:sticky; top:0; z-index:999; background:#fff; border-bottom:1px solid #E4E6EA; height:60px; display:flex; align-items:center; padding:0 32px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
-.jp-header-inner { max-width:900px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; }
-.jp-header-brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:#111318; text-decoration:none; flex-shrink:0; }
-.jp-header-brand span { color:#F97316; }
-.jp-header-nav { display:flex; align-items:center; gap:8px; }
-.jp-header-link { font-family:'Work Sans',sans-serif; font-size:14px; font-weight:500; color:#545B6B; text-decoration:none; padding:6px 12px; border-radius:8px; transition:color .15s; }
-.jp-header-link:hover { color:#111318; }
-.jp-header-post { font-family:'Work Sans',sans-serif; font-size:14px; font-weight:700; color:#fff; background:#0A84FF; text-decoration:none; padding:8px 18px; border-radius:8px; transition:background .15s; }
-.jp-header-post:hover { background:#0070E0; }
-@media(max-width:600px) { .jp-header { padding:0 16px; } .jp-header-link { display:none; } }
-</style>
-
 <header class="jp-header">
-    <div class="jp-header-inner">
-        <a href="/jobseeker_search.html" class="jp-header-brand">jobpeak<span>.</span></a>
-        <nav class="jp-header-nav">
-            <a href="/jobseeker_search.html" class="jp-header-link">Find Jobs</a>
-            <a href="/job_builder.html" class="jp-header-post">Post a Job</a>
-        </nav>
-    </div>
+    <a href="/jobseeker_search.html" class="jp-header-brand">jobpeak<span>.</span></a>
 </header>
-<!-- ========== END HEADER ========== -->
-
 
 <div class="page">
-    <div class="card" id="successCard">
-        <div class="check-wrap">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-            </svg>
-        </div>
+    <div class="success-icon">✅</div>
+    <h1>Your job is live!</h1>
+    <p class="subtitle" id="subtitle">Your clicks are loaded and your job is now live across Talroo and WhatJobs. Candidates are on their way.</p>
 
-        <div class="title">Payment Successful!</div>
-        <div class="subtitle" id="successSubtitle">
-            Your job is now <strong>live</strong> and advertising to candidates.
-        </div>
+    <div class="stats-card" id="statsCard">
+        <div class="loading">Loading job details...</div>
+    </div>
 
-        <div class="stats">
-            <div>
-                <div class="stat-val" id="statClicks">—</div>
-                <div class="stat-label">Clicks Purchased</div>
-            </div>
-            <div>
-                <div class="stat-val" id="statCpc">—</div>
-                <div class="stat-label">Per Click</div>
-            </div>
-            <div>
-                <div class="stat-val">2</div>
-                <div class="stat-label">XML Feeds</div>
-            </div>
-        </div>
-
-        <div class="steps">
-            <div class="step-item">
-                <div class="step-num">✓</div>
-                <div class="step-text"><strong>Job is live</strong> — candidates can find and apply now</div>
-            </div>
-            <div class="step-item">
-                <div class="step-num">✓</div>
-                <div class="step-text"><strong>XML feeds syncing</strong> — Talroo & WhatJobs will update within 15 minutes</div>
-            </div>
-            <div class="step-item">
-                <div class="step-num">!</div>
-                <div class="step-text"><strong>Low balance warning</strong> — we'll email you when you have 20 clicks left so you never go dark</div>
-            </div>
-        </div>
-
-        <div>
-            <a id="resultsLink" href="results.html" class="btn btn-primary">View Click Results →</a>
-            <a href="job_builder.html" class="btn btn-ghost">Post Another Job</a>
-        </div>
-        <div class="error-state" id="errorState"></div>
+    <div class="actions">
+        <a href="/results.html" class="btn btn-primary" id="resultsLink">View Results Dashboard</a>
+        <a href="/job_builder.html" class="btn btn-ghost">Post Another Job</a>
+        <a href="/admin.html" class="btn btn-ghost">Go to Admin</a>
     </div>
 </div>
 
 <script>
-const API = 'https://jobpeak-production.up.railway.app';
-
-async function loadSessionDetails() {
+    const API = 'https://jobpeak-production.up.railway.app';
     const params = new URLSearchParams(window.location.search);
-    const jobId = params.get('job_id');
+    const jobId = params.get('job');
+    const isAdmin = params.get('admin') === 'true';
 
-    if (!jobId) return;
+    if (jobId) {
+        document.getElementById('resultsLink').href = `/results.html?job=${jobId}`;
 
-    try {
-        const res = await fetch(`${API}/jobs/${jobId}/stats`);
-        if (!res.ok) return;
-        const data = await res.json();
+        fetch(`${API}/jobs/${jobId}/stats`)
+            .then(r => r.json())
+            .then(data => {
+                const job = data.job;
+                const clicks = data.clicks;
+                const spend = data.spend;
 
-        // Update stats
-        const clicks = data.total_clicks_purchased || data.click_balance || '—';
-        document.getElementById('statClicks').textContent = clicks;
-
-        // Calc CPC
-        if (data.total_clicks_purchased) {
-            const bundles = { 100: 1.00, 250: 0.90, 500: 0.80 };
-            const cpc = bundles[data.total_clicks_purchased];
-            document.getElementById('statCpc').textContent = cpc ? '$' + cpc.toFixed(2) : '—';
-        }
-
-        // Update subtitle with job title
-        if (data.title) {
-            document.getElementById('successSubtitle').innerHTML =
-                `<strong>"${data.title}"</strong> is now live and advertising to candidates across all your selected locations.`;
-        }
-
-    } catch (e) {
-        // Silently fail — page still looks great without live data
+                document.getElementById('statsCard').innerHTML = `
+                    <div class="stats-row">
+                        <span class="stats-label">Job</span>
+                        <span class="stats-value">${job.title}</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Company</span>
+                        <span class="stats-value">${job.company}</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Status</span>
+                        <span class="stats-value green">● Live</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Clicks purchased</span>
+                        <span class="stats-value">${clicks.purchased}</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Click balance</span>
+                        <span class="stats-value green">${clicks.remaining} remaining</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Cost per click</span>
+                        <span class="stats-value">$${spend.cpc}</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Distribution</span>
+                        <span class="stats-value">Talroo + WhatJobs</span>
+                    </div>
+                `;
+            })
+            .catch(() => {
+                document.getElementById('statsCard').innerHTML = `<div class="loading">Could not load job details.</div>`;
+            });
     }
-}
 
-loadSessionDetails();
-// Set results link with job ID
-const _params = new URLSearchParams(window.location.search);
-const _jobId = _params.get('job_id');
-if (_jobId) {
-    document.getElementById('resultsLink').href = `results.html?job=${_jobId}`;
-}
+    if (isAdmin) {
+        document.getElementById('subtitle').textContent = 'Admin bypass — job activated without payment. Click balance loaded.';
+    }
 </script>
-
-<style>
-.jp-footer { background:#111318; color:#8892A4; font-family:'Work Sans',sans-serif; font-size:13px; margin-top:60px; padding:32px 24px; }
-.jp-footer-inner { max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; }
-.jp-footer-links { display:flex; flex-wrap:wrap; align-items:center; gap:20px; }
-.jp-footer-links a { color:#8892A4; text-decoration:none; transition:color .15s; }
-.jp-footer-links a:hover { color:#fff; }
-.jp-footer-copy { width:100%; max-width:900px; margin:20px auto 0; padding-top:20px; border-top:1px solid #1E2330; display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; }
-.jp-footer-copy span { font-size:12px; color:#545B6B; }
-</style>
-<footer class="jp-footer">
-    <div class="jp-footer-inner">
-        <div style="display:flex;flex-direction:column;gap:4px;">
-            <a href="/" style="font-family:'Archivo',sans-serif;font-size:18px;font-weight:800;color:#fff;text-decoration:none;">jobpeak<span style="color:#F97316;">.</span></a>
-            <div style="font-size:12px;color:#545B6B;">Built to fix job search.</div>
-        </div>
-        <div class="jp-footer-links">
-            <a href="https://audiencetarget.ai/contact" target="_blank" rel="noopener">Contact Agency</a>
-            <a href="/privacy-policy.html">Privacy Policy</a>
-            <a href="/terms-of-service.html">Terms &amp; Conditions</a>
-        </div>
-    </div>
-    <div class="jp-footer-inner jp-footer-copy">
-        <span>© 2026 Digital Marketing Gen, Inc. All rights reserved.</span>
-        <span>75 S Middleneck Road, Great Neck, NY 11021 · (516) 494
+</body>
+</html>
