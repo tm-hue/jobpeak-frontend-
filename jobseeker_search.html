@@ -74,7 +74,6 @@
         .conversation-turn.user { background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%); border-left: 3px solid var(--accent); }
         .turn-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
         .turn-content { font-size: 15px; color: var(--text-primary); line-height: 1.6; }
-        /* Job cards as links */
         .job-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 16px; transition: all 0.2s; cursor: pointer; display: block; text-decoration: none; color: inherit; }
         .job-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
         .job-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px; }
@@ -101,8 +100,7 @@
     </style>
 </head>
 <body>
-    
-<!-- ========== JOBPEAK HEADER — replace existing <header> block on every page ========== -->
+
 <style>
 .jp-header { position:sticky; top:0; z-index:999; background:#fff; border-bottom:1px solid #E4E6EA; height:60px; display:flex; align-items:center; padding:0 32px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
 .jp-header-inner { max-width:900px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; }
@@ -125,8 +123,6 @@
         </nav>
     </div>
 </header>
-<!-- ========== END HEADER ========== -->
-
 
     <main>
         <section class="hero">
@@ -144,7 +140,7 @@
                     <div class="example-chips">
                         <div class="example-chip" data-query="I'm a CDL A driver in Columbus. I want local routes, home every night, no touch freight, and a company that respects drivers">CDL A - Local, Home Daily</div>
                         <div class="example-chip" data-query="HVAC technician with 5 years experience, looking for residential work in Cincinnati, prefer companies that provide a truck and tools">HVAC Tech - Residential</div>
-                        <div class="example-chip" data-query="I'm a nurse tired of hospital politics. Want a clinic job where I can build relationships with patients, Monday-Friday schedule">Clinic Nurse - No Weekends</div>
+                        <div class="example-chip" data-query="I'm a motorcoach or bus driver looking for luxury transport work on Long Island">Motorcoach / Bus Driver</div>
                     </div>
                 </div>
             </div>
@@ -182,11 +178,12 @@
         </section>
     </main>
 
-
     <script>
         const API = 'https://jobpeak-production.up.railway.app';
 
         let jobDatabase = [];
+
+        // REV9 FIX: removed broken loadJobs() call, fetch runs directly on page load
         fetch(`${API}/jobs`)
             .then(r => r.json())
             .then(jobs => {
@@ -201,8 +198,10 @@
                     tags: [],
                     bonus: j.bonus || null,
                     logoUrl: j.logo_url || null,
+                    // REV9 FIX: category is now stored and sent to AI for matching
                     category: j.category || '',
                 }));
+                console.log(`Loaded ${jobDatabase.length} jobs`);
             })
             .catch(e => console.error('Failed to load jobs:', e));
 
@@ -269,11 +268,13 @@
 
 User query: "${query}"
 
-Available jobs (index: title - key details):
-${jobDatabase.map((job, i) => `${i}: ${job.title} at ${job.company} - ${job.location} - ${job.tags.join(', ')}`).join('\n')}
+Available jobs (index: title - company - location - category):
+${jobDatabase.map((job, i) => `${i}: ${job.title} at ${job.company} - ${job.location} - category: ${job.category}`).join('\n')}
 
 Return ONLY valid JSON array format like: [5, 2, 8, 1]
-Include 3-8 best matches. Consider location, job type, preferences mentioned.
+Include 3-8 best matches. Consider location, job type, category, and preferences mentioned.
+Match "motorcoach", "bus driver", "coach" queries to jobs with category "motorcoach".
+Match "CDL", "truck", "driver" queries to jobs with category "trucking" or "motorcoach".
 DO NOT include any explanation, just the JSON array.`
                         }]
                     })
@@ -303,7 +304,8 @@ DO NOT include any explanation, just the JSON array.`
             const queryLower = query.toLowerCase();
             const scored = jobDatabase.map((job, index) => {
                 let score = 0;
-                const searchText = `${job.title} ${job.company} ${job.location} ${job.description}`.toLowerCase();
+                const searchText = `${job.title} ${job.company} ${job.location} ${job.description} ${job.category}`.toLowerCase();
+                if ((queryLower.includes('motorcoach') || queryLower.includes('bus driver') || queryLower.includes('coach')) && (searchText.includes('motorcoach') || searchText.includes('coach'))) score += 15;
                 if (queryLower.includes('cdl') && searchText.includes('cdl')) score += 10;
                 if (queryLower.includes('hvac') && searchText.includes('hvac')) score += 10;
                 if (queryLower.includes('nurse') && searchText.includes('nurse')) score += 10;
@@ -417,10 +419,8 @@ DO NOT include any explanation, just the JSON array.`
             const lastTurn = document.querySelector('.conversation-turn:last-child');
             if (lastTurn) lastTurn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-    loadJobs();
-</script>
+    </script>
 
-<!-- JOBPEAK FOOTER -->
 <style>
 .jp-footer { background:#111318; color:#8892A4; font-family:'Work Sans',sans-serif; font-size:13px; margin-top:60px; padding:32px 24px; }
 .jp-footer-inner { max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; }
@@ -435,9 +435,9 @@ DO NOT include any explanation, just the JSON array.`
 <footer class="jp-footer">
     <div class="jp-footer-inner">
         <div style="display:flex;flex-direction:column;gap:4px;">
-    <a href="/" class="jp-footer-brand">jobpeak<span>.</span></a>
-    <div style="font-size:12px;color:#545B6B;">Built to fix job search.</div>
-</div>
+            <a href="/" class="jp-footer-brand">jobpeak<span>.</span></a>
+            <div style="font-size:12px;color:#545B6B;">Built to fix job search.</div>
+        </div>
         <div class="jp-footer-links">
             <a href="https://audiencetarget.ai/contact" target="_blank" rel="noopener">Contact Agency</a>
             <a href="/privacy-policy.html">Privacy Policy</a>
