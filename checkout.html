@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Plan — Jobpeak</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F4F5F7;
+            --surface: #fff;
+            --border: #E4E6EA;
+            --text: #111318;
+            --text-2: #545B6B;
+            --text-3: #8892A4;
+            --accent: #0A84FF;
+            --accent-hover: #0070E0;
+            --orange: #F97316;
+            --success: #00C07F;
+            --radius: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+            --shadow-lg: 0 4px 6px rgba(0,0,0,.05), 0 20px 40px rgba(0,0,0,.10);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Work Sans', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+        /* Header */
+        .jp-header { position: sticky; top: 0; z-index: 999; background: #fff; border-bottom: 1px solid var(--border); height: 60px; display: flex; align-items: center; padding: 0 32px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+        .jp-header-inner { max-width: 900px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .jp-header-brand { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: #111318; text-decoration: none; }
+        .jp-header-brand span { color: #F97316; }
+
+        /* Page */
+        .page { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+
+        /* Job summary bar */
+        .job-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; margin-bottom: 40px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); }
+        .job-summary-logo { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; }
+        .job-summary-logo-placeholder { width: 44px; height: 44px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .job-summary-info { flex: 1; }
+        .job-summary-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+        .job-summary-meta { font-size: 13px; color: var(--text-2); }
+        .job-summary-badge { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; background: #F0FFF8; color: var(--success); border: 1px solid var(--success); white-space: nowrap; }
+
+        /* Heading */
+        .page-heading { text-align: center; margin-bottom: 12px; }
+        .page-heading h1 { font-family: 'Archivo', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .page-heading p { font-size: 16px; color: var(--text-2); }
+        .page-heading .cpc-note { font-size: 13px; color: var(--text-3); margin-top: 6px; }
+
+        /* Pricing grid */
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 36px 0; }
+
+        .plan-card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 28px 24px 24px; position: relative; transition: all 0.2s; cursor: pointer; display: flex; flex-direction: column; }
+        .plan-card:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+        .plan-card.popular { border-color: var(--accent); box-shadow: var(--shadow-lg); }
+
+        .popular-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.04em; text-transform: uppercase; }
+
+        .plan-name { font-size: 13px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+        .plan-price { font-family: 'Archivo', sans-serif; font-size: 48px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+        .plan-price span { font-size: 20px; font-weight: 600; vertical-align: top; margin-top: 8px; display: inline-block; }
+        .plan-clicks { font-size: 15px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+        .plan-cpc { font-size: 12px; color: var(--text-3); margin-bottom: 20px; }
+
+        .plan-features { list-style: none; margin-bottom: 24px; flex: 1; }
+        .plan-features li { font-size: 13px; color: var(--text-2); padding: 5px 0; display: flex; align-items: center; gap: 8px; }
+        .plan-features li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+
+        .plan-btn { width: 100%; padding: 14px; font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .plan-btn-primary { background: var(--accent); color: #fff; }
+        .plan-btn-primary:hover { background: var(--accent-hover); }
+        .plan-btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .plan-btn-secondary:hover { background: var(--border); }
+        .plan-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Trust bar */
+        .trust-bar { display: flex; justify-content: center; gap: 32px; margin-top: 24px; flex-wrap: wrap; }
+        .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-3); }
+
+        /* Swap note */
+        .swap-note { text-align: center; margin-top: 28px; padding: 16px 24px; background: #EFF6FF; border-radius: 10px; border: 1px solid #BFDBFE; }
+        .swap-note p { font-size: 14px; color: #1D4ED8; font-weight: 500; }
+        .swap-note p strong { font-weight: 700; }
+
+        /* Loading overlay */
+        .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); display: none; align-items: center; justify-content: center; z-index: 999; flex-direction: column; gap: 16px; }
+        .loading-overlay.show { display: flex; }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-size: 15px; color: var(--text-2); font-weight: 500; }
+
+        /* Admin bypass */
+        .admin-bypass { text-align: center; margin-top: 40px; }
+        .admin-bypass a { font-size: 12px; color: var(--text-3); text-decoration: none; }
+        .admin-bypass a:hover { color: var(--text-2); text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .pricing-grid { grid-template-columns: 1fr; }
+            .page-heading h1 { font-size: 26px; }
+            .plan-price { font-size: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="jp-header">
+    <div class="jp-header-inner">
+        <a href="/jobseeker_search.html" class="jp-header-brand">jobpeak<span>.</span></a>
+    </div>
+</header>
+
+<div class="page">
+
+    <!-- Job summary -->
+    <div class="job-summary" id="jobSummary">
+        <div class="job-summary-logo-placeholder">🏢</div>
+        <div class="job-summary-info">
+            <div class="job-summary-title" id="summaryTitle">Loading job...</div>
+            <div class="job-summary-meta" id="summaryMeta"></div>
+        </div>
+        <div class="job-summary-badge">✓ Job Ready</div>
+    </div>
+
+    <!-- Heading -->
+    <div class="page-heading">
+        <h1>Choose your click budget</h1>
+        <p>Buy clicks. Run on any job. Swap or pause anytime.</p>
+        <div class="cpc-note" id="cpcNote"></div>
+    </div>
+
+    <!-- Pricing cards -->
+    <div class="pricing-grid">
+
+        <!-- Starter -->
+        <div class="plan-card" id="card-100">
+            <div class="plan-name">Starter</div>
+            <div class="plan-price"><span>$</span>100</div>
+            <div class="plan-clicks" id="clicks-100">— clicks</div>
+            <div class="plan-cpc" id="cpc-100"></div>
+            <ul class="plan-features">
+                <li>Run on any active job</li>
+                <li>Swap jobs anytime</li>
+                <li>Pause anytime</li>
+                <li>Talroo + WhatJobs distribution</li>
+            </ul>
+            <button class="plan-btn plan-btn-secondary" onclick="checkout(100)">Get Started</button>
+        </div>
+
+        <!-- Standard (popular) -->
+        <div class="plan-card popular" id="card-225">
+            <div class="popular-badge">⭐ Most Popular</div>
+            <div class="plan-name">Standard</div>
+            <div class="plan-price"><span>$</span>225</div>
+            <div class="plan-clicks" id="clicks-225">— clicks</div>
+            <div class="plan-cpc" id="cpc-225"></div>
+            <ul class="plan-features">
+                <li>Run on any active job</li>
+                <li>Swap jobs anytime</li>
+                <li>Pause anytime</li>
+                <li>Talroo + WhatJobs distribution</li>
+                <li>Priority feed placement</li>
+            </ul>
+            <button class="plan-btn plan-btn-primary" onclick="checkout(225)">Get Standard</button>
+        </div>
+
+        <!-- Premium -->
+        <div class="plan-card" id="card-400">
+            <div class="plan-name">Premium</div>
+            <div class="plan-price"><span>$</span>400</div>
+            <div class="plan-clicks" id="clicks-400">— clicks</div>
+            <div class="plan-cpc" id="cpc-400"></div>
+            <ul class="plan-features">
+                <li>Run on any active job</li>
+                <li>Swap jobs anytime</li>
+                <li>Pause anytime</li>
+                <li>Talroo + WhatJobs distribution</li>
+                <li>Priority feed placement</li>
+                <li>Best value per click</li>
+            </ul>
+            <button class="plan-btn plan-btn-secondary" onclick="checkout(400)">Go Premium</button>
+        </div>
+
+    </div>
+
+    <!-- Swap note -->
+    <div class="swap-note">
+        <p>💡 <strong>Your clicks don't expire.</strong> Swap between jobs, pause when you hire, and pick back up whenever you need. Your budget works for you — not against you.</p>
+    </div>
+
+    <!-- Trust bar -->
+    <div class="trust-bar">
+        <div class="trust-item">🔒 Secure checkout via Stripe</div>
+        <div class="trust-item">⚡ Job goes live instantly</div>
+        <div class="trust-item">⏸ Pause or swap anytime</div>
+        <div class="trust-item">📊 Real-time click tracking</div>
+    </div>
+
+    <!-- Admin bypass -->
+    <div class="admin-bypass">
+        <a href="#" id="adminBypassLink" style="display:none">Skip payment (admin)</a>
+    </div>
+
+</div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Preparing secure checkout...</div>
+</div>
+
+<script>
+    const API = 'https://jobpeak-production.up.railway.app';
+    const PK = 'pk_live_51Q053o05eUGNagjPAtcjG9I6WzTNGwvQK9vnZINrpYkjF9AaymB85QPx74vSi4rort0QJFMCFPYvlMLaWAacPh0V00SNhfWBuq';
+
+    const CPC_RATES = {
+        'trucking': 2.65, 'motorcoach': 2.65,
+        'hvac': 2.35, 'nursing': 2.35,
+        'warehouse': 1.75, 'construction': 1.75, 'manufacturing': 1.75,
+        'retail': 1.35, 'hospitality': 1.35, 'other': 1.75
+    };
+
+    const TIERS = [100, 225, 400];
+
+    // Get job ID from URL
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get('job');
+    const isAdmin = params.get('internal') === 'true';
+
+    let currentJob = null;
+
+    async function loadJob() {
+        if (!jobId) {
+            document.getElementById('summaryTitle').textContent = 'No job selected';
+            return;
+        }
+        try {
+            const res = await fetch(`${API}/jobs/${jobId}`);
+            currentJob = await res.json();
+            renderJobSummary();
+            renderPricing();
+        } catch(e) {
+            document.getElementById('summaryTitle').textContent = 'Error loading job';
+        }
+    }
+
+    function renderJobSummary() {
+        const job = currentJob;
+        document.getElementById('summaryTitle').textContent = job.title;
+        document.getElementById('summaryMeta').textContent = `${job.company} · ${job.hiring_location || job.location || ''} · ${job.category || ''}`;
+        if (job.logo_url) {
+            const placeholder = document.querySelector('.job-summary-logo-placeholder');
+            const img = document.createElement('img');
+            img.src = job.logo_url;
+            img.className = 'job-summary-logo';
+            img.alt = job.company;
+            placeholder.replaceWith(img);
+        }
+    }
+
+    function renderPricing() {
+        const category = (currentJob?.category || 'other').toLowerCase();
+        const cpc = CPC_RATES[category] || 1.75;
+        const categoryName = currentJob?.category || 'this category';
+
+        document.getElementById('cpcNote').textContent = `Cost per click for ${categoryName}: $${cpc.toFixed(2)}`;
+
+        TIERS.forEach(price => {
+            const clicks = Math.floor(price / cpc);
+            document.getElementById(`clicks-${price}`).textContent = `${clicks} clicks included`;
+            document.getElementById(`cpc-${price}`).textContent = `$${cpc.toFixed(2)} per click`;
+        });
+    }
+
+    async function checkout(amount) {
+        if (!jobId) { alert('No job selected.'); return; }
+
+        // Admin bypass
+        if (isAdmin) {
+            const key = params.get('key');
+            try {
+                const res = await fetch(`${API}/admin/activate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jobId, amount, key })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = `/payment_success.html?job=${jobId}&admin=true`;
+                } else {
+                    alert('Admin bypass failed: ' + data.error);
+                }
+            } catch(e) {
+                alert('Error: ' + e.message);
+            }
+            return;
+        }
+
+        document.getElementById('loadingOverlay').classList.add('show');
+
+        try {
+            const res = await fetch(`${API}/create-checkout-session`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jobId,
+                    amount,
+                    category: currentJob?.category || 'other'
+                })
+            });
+            const data = await res.json();
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                throw new Error(data.error || 'Checkout failed');
+            }
+        } catch(e) {
+            document.getElementById('loadingOverlay').classList.remove('show');
+            alert('Error starting checkout: ' + e.message);
+        }
+    }
+
+    // Show admin bypass link if internal
+    if (isAdmin) {
+        document.getElementById('adminBypassLink').style.display = 'inline';
+    }
+
+    loadJob();
+</script>
+
+</body>
+</html>
