@@ -1,10 +1,696 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0;url=/jobseeker_search.html">
-    <title>Jobpeak</title>
-    <script>window.location.replace('/jobseeker_search.html');</script>
-</head>
-<body></body>
-</html>
+const express = require('express');
+const { Pool } = require('pg');
+const cors = require('cors');
+require('dotenv').config();
+
+// ── Cloudinary + Multer ──
+const cloudinary = require('cloudinary').v2;
+const multer = require('multer');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+// ── Helper: upload buffer to Cloudinary ──
+async function uploadToCloudinary(buffer, folder, publicId) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder, public_id: publicId, resource_type: 'auto' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result.secure_url);
+      }
+    );
+    stream.end(buffer);
+  });
+}
+
+// ── HEALTH ──
+app.get('/health', (req, res) => res.json({ status: 'ok', service: 'jobpeak' }));
+
+// ── MIGRATION ──
+app.get('/migrate', async (req, res) => {
+  try {
+    await pool.query(`
+      ALTER TABLE jobs
+      ADD COLUMN IF NOT EXISTS apply_url        TEXT,
+      ADD COLUMN IF NOT EXISTS bonus            TEXT,
+      ADD COLUMN IF NOT EXISTS pay_type         VARCHAR(50),
+      ADD COLUMN IF NOT EXISTS logo_url         TEXT,
+      ADD COLUMN IF NOT EXISTS flyer_url        TEXT,
+      ADD COLUMN IF NOT EXISTS cdl_class        VARCHAR(10),
+      ADD COLUMN IF NOT EXISTS home_time        VARCHAR(50),
+      ADD COLUMN IF NOT EXISTS route_type       VARCHAR(50),
+      ADD COLUMN IF NOT EXISTS experience_years INTEGER,
+      ADD COLUMN IF NOT EXISTS target_locations TEXT,
+      ADD COLUMN IF NOT EXISTS hiring_location  TEXT,
+      ADD COLUMN IF NOT EXISTS category         TEXT,
+      ADD COLUMN IF NOT EXISTS status           VARCHAR(20) DEFAULT 'active',
+      ADD COLUMN IF NOT EXISTS radius           INTEGER,
+      ADD COLUMN IF NOT EXISTS salary           TEXT
+    `);
+    res.json({ success: true, message: 'Migration complete — all new columns added.' });
+  } catch (err) {
+    console.error('Migration error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ── FILE UPLOADS → CLOUDINARY ──
+app.post('/upload/logo', upload.single('logo'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No file provided' });
+    const url = await uploadToCloudinary(req.file.buffer, 'jobpeak/logos', `logo_${Date.now()}`);
+    res.json({ url });
+  } catch (err) {
+    console.error('Logo upload error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/upload/flyer', upload.single('flyer'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No file provided' });
+    const url = await uploadToCloudinary(req.file.buffer, 'jobpeak/flyers', `flyer_${Date.now()}`);
+    res.json({ url });
+  } catch (err) {
+    console.error('Flyer upload error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── JOBS — GET ALL ──
+app.get('/jobs', async (req, res) => {
+  try {
+    const { category, search, limit = 50 } = req.query;
+    let query = `
+      SELECT id, title, company, description, category, job_type,
+             pay_type, salary, bonus, apply_url,
+             location, hiring_location, target_locations,
+             logo_url, flyer_url, cdl_class, home_time, route_type,
+             experience_years, status, created_at,
+             clicks_used, click_balance
+      FROM jobs
+      WHERE status = 'active'
+    `;
+    const params = [];
+    if (category) {
+      params.push(category);
+      query += ` AND category = $${params.length}`;
+    }
+    if (search) {
+      params.push(`%${search}%`);
+      // REV9 FIX: added category to search so "motorcoach" finds motorcoach jobs
+      query += ` AND (title ILIKE $${params.length} OR company ILIKE $${params.length} OR description ILIKE $${params.length} OR category ILIKE $${params.length})`;
+    }
+    query += ` ORDER BY created_at DESC LIMIT $${params.length + 1}`;
+    params.push(parseInt(limit));
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('GET /jobs error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── JOBS — GET SINGLE ──
+app.get('/jobs/:id', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM jobs WHERE id = $1', [req.params.id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Job not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('GET /jobs/:id error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── JOBS — POST ──
+app.post('/jobs', async (req, res) => {
+  try {
+    const {
+      title, company, description, category, jobType,
+      payType, salary, bonus, applyUrl,
+      hiringLocation, radius, targetLocations,
+      logoUrl, flyerUrl,
+      cdlClass, homeTime, routeType, experienceYears,
+      location
+    } = req.body;
+
+    if (!title || !company) {
+      return res.status(400).json({ error: 'title and company are required' });
+    }
+
+    const result = await pool.query(`
+      INSERT INTO jobs (
+        title, company, description, category, job_type,
+        pay_type, salary, bonus, apply_url,
+        location, hiring_location, radius, target_locations,
+        logo_url, flyer_url,
+        cdl_class, home_time, route_type, experience_years,
+        created_at, status
+      ) VALUES (
+        $1,$2,$3,$4,$5,
+        $6,$7,$8,$9,
+        $10,$11,$12,$13,
+        $14,$15,
+        $16,$17,$18,$19,
+        NOW(), 'active'
+      ) RETURNING id, title, company, created_at
+    `, [
+      title, company, description, category, jobType,
+      payType, salary, bonus, applyUrl,
+      hiringLocation || location, hiringLocation, radius, targetLocations,
+      logoUrl, flyerUrl,
+      cdlClass, homeTime, routeType, experienceYears
+    ]);
+
+    res.status(201).json({
+      success: true,
+      job: result.rows[0],
+      message: `Job "${title}" posted successfully`
+    });
+  } catch (err) {
+    console.error('POST /jobs error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── AI SEARCH ──
+app.post('/ai-search', async (req, res) => {
+  try {
+    const { query, jobs } = req.body;
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: `Jobs: ${JSON.stringify(jobs)}\n\nSearch query: ${query}\n\nReturn matching job indices as JSON array.` }]
+      })
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── XML FEED — Talroo (LinkedInJobs format) ──
+// GET /feed/talroo
+// Talroo pulls this URL on their schedule
+app.get('/feed/talroo', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, title, company, description, apply_url,
+             hiring_location, target_locations, salary,
+             job_type, pay_type, bonus, created_at
+      FROM jobs
+      WHERE status = 'active'
+      ORDER BY created_at DESC
+      LIMIT 1000
+    `);
+
+    const jobs = result.rows;
+    const jobEntries = [];
+
+    for (const job of jobs) {
+      let locations = [];
+      try {
+        const parsed = JSON.parse(job.target_locations || '[]');
+        locations = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        if (job.hiring_location) locations = [job.hiring_location];
+      }
+
+      if (locations.length === 0 && job.hiring_location) {
+        locations = [job.hiring_location];
+      }
+
+      const salaryXml = buildSalaryXml(job.salary, job.pay_type);
+      const jobType = mapJobType(job.job_type);
+
+      for (const loc of locations) {
+        const { city, state } = parseLocString(loc);
+        const locationFull = `${city}, ${state === 'OH' ? 'Ohio' : stateFullName(state)}, United States`;
+        const partnerJobId = `${job.id}_${city.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+        const applyUrl = `${job.apply_url || ''}${job.apply_url && job.apply_url.includes('?') ? '&' : '?'}utm_source=Talroo`;
+
+        jobEntries.push(`  <job>
+    <partnerJobId><![CDATA[ ${partnerJobId} ]]></partnerJobId>
+    <company><![CDATA[ ${escXml(job.company)} ]]></company>
+    <title><![CDATA[ ${escXml(job.title)} ]]></title>
+    <description><![CDATA[ ${job.description || ''} ]]></description>
+    <applyUrl><![CDATA[ ${applyUrl} ]]></applyUrl>
+    <location><![CDATA[ ${locationFull} ]]></location>
+    <city><![CDATA[ ${city} ]]></city>
+    <state><![CDATA[ ${stateFullName(state)} ]]></state>
+    <country><![CDATA[ US ]]></country>
+    ${salaryXml}
+    <workplaceTypes><![CDATA[ On-site ]]></workplaceTypes>
+    <jobtype><![CDATA[ ${jobType} ]]></jobtype>
+  </job>`);
+      }
+    }
+
+    const totalJobs = jobEntries.length;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<source>
+  <lastBuildDate>${new Date().toUTCString().replace('GMT', '')}</lastBuildDate>
+  <publisherUrl>https://jobpeak.io</publisherUrl>
+  <publisher>Jobpeak</publisher>
+  <expectedJobCount><![CDATA[ ${totalJobs} ]]></expectedJobCount>
+${jobEntries.join('\n')}
+</source>`;
+
+    res.set('Content-Type', 'application/xml');
+    res.send(xml);
+
+  } catch (err) {
+    console.error('Feed error:', err);
+    res.status(500).send(`<error>${err.message}</error>`);
+  }
+});
+
+// ── XML FEED — WhatJobs ──
+app.get('/feed/whatjobs', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, title, company, description, apply_url,
+             hiring_location, target_locations, salary,
+             job_type, pay_type, category, created_at
+      FROM jobs
+      WHERE status = 'active'
+      ORDER BY created_at DESC
+      LIMIT 1000
+    `);
+
+    const jobs = result.rows;
+    const jobEntries = [];
+
+    for (const job of jobs) {
+      let locations = [];
+      try {
+        const parsed = JSON.parse(job.target_locations || '[]');
+        locations = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        if (job.hiring_location) locations = [job.hiring_location];
+      }
+      if (locations.length === 0 && job.hiring_location) {
+        locations = [job.hiring_location];
+      }
+
+      const jobTypeLabel = { 'full-time':'Full-time','part-time':'Part-time','contract':'Contract','temporary':'Temporary' }[(job.job_type||'').toLowerCase()] || 'Full-time';
+
+      const expDate = new Date(job.created_at);
+      expDate.setDate(expDate.getDate() + 30);
+      const expiration = expDate.toISOString().split('T')[0];
+
+      const salaryText = buildSalaryText(job.salary, job.pay_type);
+
+      // REV9 FIX: added motorcoach to category label map
+      const categoryLabel = {
+        'trucking':    'Company Drivers',
+        'motorcoach':  'Company Drivers',
+        'hvac':        'HVAC',
+        'nursing':     'Healthcare',
+        'warehouse':   'Warehouse',
+        'construction':'Construction',
+        'manufacturing':'Manufacturing',
+        'retail':      'Retail',
+        'hospitality': 'Hospitality',
+        'other':       'General'
+      }[(job.category||'').toLowerCase()] || 'General';
+
+      for (const loc of locations) {
+        const { city, state } = parseLocString(loc);
+        const locationFull = `${city}, ${stateFullName(state)}, United States`;
+        const slug = job.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+        const jobUrl = `https://jobpeak.io/jobs/${job.id}-${slug}?utm_source=WhatJobs`;
+        const locId = `${job.id}${city.toLowerCase().replace(/[^a-z0-9]/g,'')}`;
+
+        jobEntries.push(`  <job>
+    <id><![CDATA[ ${locId} ]]></id>
+    <url><![CDATA[ ${jobUrl} ]]></url>
+    <title><![CDATA[ ${escXml(job.title)} ]]></title>
+    <desc><![CDATA[ ${job.description || ''} ]]></desc>
+    <location><![CDATA[ ${locationFull} ]]></location>
+    <salary><![CDATA[ ${salaryText} ]]></salary>
+    <job-type><![CDATA[ ${jobTypeLabel} ]]></job-type>
+    <category><![CDATA[ ${categoryLabel} ]]></category>
+    <country><![CDATA[ United States ]]></country>
+    <language><![CDATA[ EN ]]></language>
+    <company-name><![CDATA[ ${escXml(job.company)} ]]></company-name>
+    <expiration-date><![CDATA[ ${expiration} ]]></expiration-date>
+  </job>`);
+      }
+    }
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<jobs xmlns="https://whatjobs.com/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://whatjobs.com/XMLSchema jobs.xsd">
+${jobEntries.join('\n')}
+</jobs>`;
+
+    res.set('Content-Type', 'application/xml');
+    res.send(xml);
+
+  } catch (err) {
+    console.error('WhatJobs feed error:', err);
+    res.status(500).send(`<error>${err.message}</error>`);
+  }
+});
+
+// ── FEED HELPERS ──
+
+function escXml(str) {
+  return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function parseLocString(loc) {
+  const parts = loc.split(',').map(p => p.trim());
+  return { city: parts[0] || loc, state: parts[1] || 'US' };
+}
+
+function mapJobType(type) {
+  const map = {
+    'full-time': 'FULL_TIME',
+    'part-time': 'PART_TIME',
+    'contract': 'CONTRACT',
+    'temporary': 'TEMPORARY',
+  };
+  return map[(type || '').toLowerCase()] || 'FULL_TIME';
+}
+
+function buildSalaryText(salary, payType) {
+  if (!salary) return '';
+  const clean = (salary || '').replace(/[$,]/g, '');
+  const nums = clean.match(/[\d.]+/g);
+  if (!nums) return '';
+  const high = parseFloat(nums[nums.length - 1]);
+  const periodMap = { 'hourly':'hourly','weekly':'weekly','annual':'yearly','cpm':'hourly','flat':'weekly' };
+  const period = periodMap[payType] || 'weekly';
+  return `${high.toFixed(2)} ${period}`;
+}
+
+function buildSalaryXml(salary, payType) {
+  if (!salary) return '';
+  const clean = (salary || '').replace(/[$,]/g, '');
+  const nums = clean.match(/[\d.]+/g);
+  if (!nums || nums.length === 0) return '';
+  const low = parseFloat(nums[0]);
+  const high = parseFloat(nums[nums.length - 1]);
+  const periodMap = {
+    'hourly': 'hourly',
+    'weekly': 'weekly',
+    'annual': 'yearly',
+    'cpm': 'hourly',
+    'flat': 'weekly',
+  };
+  const period = periodMap[payType] || 'weekly';
+  return `<salaries>
+    <salary>
+      <highEnd>
+        <amount><![CDATA[ ${high.toFixed(2)} ]]></amount>
+        <currencyCode><![CDATA[ usd ]]></currencyCode>
+      </highEnd>
+      <lowEnd>
+        <amount><![CDATA[ ${low.toFixed(2)} ]]></amount>
+        <currencyCode><![CDATA[ usd ]]></currencyCode>
+      </lowEnd>
+      <period><![CDATA[ ${period} ]]></period>
+    </salary>
+  </salaries>`;
+}
+
+const STATE_NAMES_FULL = {
+  'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
+  'CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia',
+  'HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa',
+  'KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland',
+  'MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri',
+  'MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey',
+  'NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio',
+  'OK':'Oklahoma','OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina',
+  'SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont',
+  'VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming',
+  'DC':'District of Columbia'
+};
+
+function stateFullName(abbr) {
+  return STATE_NAMES_FULL[abbr] || abbr;
+}
+
+// ── DEMOGRAPHICS — Smart location scoring ──
+let demographicScores = null;
+
+function loadDemographics() {
+  if (demographicScores) return demographicScores;
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(__dirname, 'demographic_scores.json');
+    demographicScores = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    console.log(`Loaded demographic scores for ${Object.keys(demographicScores).length} cities`);
+  } catch (err) {
+    console.error('Could not load demographic scores:', err.message);
+    demographicScores = {};
+  }
+  return demographicScores;
+}
+
+// GET /demographics?cities=Columbus+OH,Dublin+OH&category=trucking
+app.get('/demographics', (req, res) => {
+  try {
+    const scores = loadDemographics();
+    const { cities, category = 'other' } = req.query;
+
+    if (!cities) return res.status(400).json({ error: 'cities parameter required' });
+
+    const cityList = cities.split('|').map(c => c.trim());
+    const results = {};
+
+    for (const city of cityList) {
+      if (scores[city]) {
+        results[city] = scores[city][category] || scores[city]['other'] || 50;
+      } else {
+        const cityName = city.split(',')[0].trim();
+        const stateAbbr = city.split(',')[1]?.trim();
+        const match = Object.keys(scores).find(k => {
+          const [kCity, kState] = k.split(',').map(s => s.trim());
+          return kCity.toLowerCase() === cityName.toLowerCase() &&
+                 (!stateAbbr || kState === stateAbbr);
+        });
+        results[city] = match ? (scores[match][category] || 50) : 50;
+      }
+    }
+
+    res.json({ category, scores: results });
+  } catch (err) {
+    console.error('Demographics error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── CLICK TRACKING ──
+app.post('/jobs/:id/click', async (req, res) => {
+  const { id } = req.params;
+  const { source } = req.body;
+  try {
+    const result = await pool.query(`
+      UPDATE jobs
+      SET clicks_used = clicks_used + 1,
+          click_balance = click_balance - 1
+      WHERE id = $1 AND status = 'active'
+      RETURNING click_balance, clicks_used, title, company, employer_email
+    `, [id]);
+
+    if (result.rows.length === 0) {
+      return res.json({ success: false, reason: 'job_not_found' });
+    }
+
+    const job = result.rows[0];
+
+    await pool.query(`
+      INSERT INTO click_history (job_id, clicked_at, source)
+      VALUES ($1, NOW(), $2)
+    `, [id, source || 'direct']).catch(() => {});
+
+    if (job.click_balance <= 0) {
+      await pool.query(`UPDATE jobs SET status = 'paused' WHERE id = $1`, [id]);
+    }
+
+    res.json({ success: true, clicksRemaining: job.click_balance });
+  } catch (err) {
+    console.error('Click tracking error:', err);
+    res.json({ success: true });
+  }
+});
+
+// ── JOB STATS ──
+app.get('/jobs/:id/stats', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const jobResult = await pool.query(`
+      SELECT id, title, company, status, hiring_location,
+             click_balance, clicks_used, pay_type, salary, category,
+             target_locations, logo_url, created_at, apply_url
+      FROM jobs WHERE id = $1
+    `, [id]);
+
+    if (jobResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    const job = jobResult.rows[0];
+
+    const txResult = await pool.query(`
+      SELECT COALESCE(SUM(clicks_purchased), 0) as total_purchased,
+             COALESCE(SUM(amount_cents), 0) as total_spent_cents
+      FROM payment_transactions
+      WHERE job_id = $1 AND status = 'completed'
+    `, [id]).catch(() => ({ rows: [{ total_purchased: 0, total_spent_cents: 0 }] }));
+
+    const tx = txResult.rows[0];
+
+    const weeklyResult = await pool.query(`
+      SELECT
+        date_trunc('week', clicked_at) as week_start,
+        COUNT(*) as clicks
+      FROM click_history
+      WHERE job_id = $1
+        AND clicked_at >= NOW() - INTERVAL '28 days'
+      GROUP BY week_start
+      ORDER BY week_start DESC
+    `, [id]).catch(() => ({ rows: [] }));
+
+    let locationCount = 0;
+    try {
+      const locs = JSON.parse(job.target_locations || '[]');
+      locationCount = locs.length;
+    } catch(e) {}
+
+    // REV9 FIX: added motorcoach at same rate as trucking ($2.65 CPC)
+    const CPC_RATES = {
+      'trucking':      2.65,
+      'motorcoach':    2.65,
+      'hvac':          2.35,
+      'nursing':       2.35,
+      'warehouse':     1.75,
+      'construction':  1.75,
+      'manufacturing': 1.75,
+      'retail':        1.35,
+      'hospitality':   1.35,
+      'other':         1.75
+    };
+    const cpc = CPC_RATES[(job.category || '').toLowerCase()] || 1.75;
+    const totalPurchased = parseInt(tx.total_purchased) || (job.clicks_used + job.click_balance);
+    const totalSpent = tx.total_spent_cents > 0 ? tx.total_spent_cents / 100 : totalPurchased * cpc;
+
+    res.json({
+      job: {
+        id: job.id,
+        title: job.title,
+        company: job.company,
+        status: job.status,
+        location: job.hiring_location,
+        category: job.category,
+        logoUrl: job.logo_url,
+        applyUrl: job.apply_url,
+        createdAt: job.created_at,
+      },
+      clicks: {
+        purchased: totalPurchased,
+        used: job.clicks_used || 0,
+        remaining: job.click_balance || 0,
+        percentUsed: totalPurchased > 0 ? Math.round(((job.clicks_used || 0) / totalPurchased) * 100) : 0,
+      },
+      spend: {
+        total: totalSpent.toFixed(2),
+        cpc: cpc.toFixed(2),
+        costPerClickUsed: job.clicks_used > 0 ? (totalSpent / job.clicks_used).toFixed(2) : cpc.toFixed(2),
+      },
+      distribution: {
+        locationCount,
+        feeds: ['Talroo', 'WhatJobs'],
+      },
+      weeklyClicks: weeklyResult.rows.map(r => ({
+        week: r.week_start,
+        clicks: parseInt(r.clicks)
+      })),
+    });
+
+  } catch (err) {
+    console.error('Stats error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── MIGRATE CLICK HISTORY TABLE ──
+app.get('/migrate-clicks', async (req, res) => {
+  try {
+    await pool.query(`
+      ALTER TABLE jobs
+        ADD COLUMN IF NOT EXISTS click_balance  INTEGER DEFAULT 0,
+        ADD COLUMN IF NOT EXISTS clicks_used    INTEGER DEFAULT 0,
+        ADD COLUMN IF NOT EXISTS employer_email TEXT;
+
+      CREATE TABLE IF NOT EXISTS click_history (
+        id         SERIAL PRIMARY KEY,
+        job_id     INTEGER REFERENCES jobs(id),
+        clicked_at TIMESTAMP DEFAULT NOW(),
+        source     TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS payment_transactions (
+        id                   SERIAL PRIMARY KEY,
+        job_id               INTEGER REFERENCES jobs(id),
+        stripe_session_id    TEXT UNIQUE,
+        clicks_purchased     INTEGER,
+        amount_cents         INTEGER,
+        status               VARCHAR(20) DEFAULT 'pending',
+        created_at           TIMESTAMP DEFAULT NOW(),
+        completed_at         TIMESTAMP
+      );
+    `);
+    res.json({ success: true, message: 'Click tracking tables ready.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── JOB STATUS (active / paused / archived) ──
+app.patch('/jobs/:id/status', async (req, res) => {
+  try {
+    const { status } = req.body;
+    const valid = ['active', 'paused', 'archived'];
+    if (!valid.includes(status)) return res.status(400).json({ error: 'Invalid status' });
+
+    const result = await pool.query(
+      'UPDATE jobs SET status = $1 WHERE id = $2 RETURNING id, title, status',
+      [status, req.params.id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Job not found' });
+    res.json({ success: true, job: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── START ──
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Jobpeak API running on port ${PORT}`));
