@@ -1757,21 +1757,9 @@ async function submitJob() {
         window._pendingCategory = payload.category || 'other';
         updateBundleCards(window._pendingCategory);
 
-        // Show success directly (Stripe not yet configured)
-        const n = checkedLocs.length;
-        document.getElementById('successLocCount').textContent = n;
-        document.getElementById('sLocations').textContent = n;
-        document.getElementById('formWrap').style.display = 'none';
-        document.getElementById('successBox').classList.add('show');
+        window.location.href = `/checkout.html?job=${result.job.id}`;
 
-        // TODO: Uncomment below and remove above when Stripe is live
-        // document.getElementById('formWrap').style.display = 'none';
-        // document.getElementById('paymentStep').classList.add('show');
-        // document.getElementById('summaryJob').textContent = payload.title;
 
-    } catch (err) {
-        overlay.classList.remove('show');
-        console.error(err);
         alert('Error posting job: ' + err.message + '\n\nCheck the browser console for details.');
     }
 }
