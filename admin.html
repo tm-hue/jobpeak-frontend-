@@ -29,6 +29,7 @@
         .job-title { font-size:15px; font-weight:700; margin-bottom:2px; }
         .job-meta { font-size:13px; color:var(--text-2); }
         .job-id { font-size:11px; color:var(--text-3); font-family:monospace; }
+        .job-clicks { font-size:12px; color:var(--text-2); margin:4px 0 2px; }
         .badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; }
         .badge-active { background:#F0FFF8; color:var(--success); border:1px solid var(--success); }
         .badge-paused { background:#FFF3EC; color:var(--warn); border:1px solid var(--warn); }
@@ -121,6 +122,7 @@ function render() {
             <div class="job-info">
                 <div class="job-title">${job.title}</div>
                 <div class="job-meta">${job.company} · ${job.hiring_location || job.location || '—'} · ${job.category || 'uncategorized'}</div>
+                <div class="job-clicks">👁 ${job.clicks_used || 0} job views &nbsp;·&nbsp; 🖱 ${job.clicks_used || 0} apply clicks &nbsp;·&nbsp; 📦 ${job.click_balance || 0} clicks remaining</div>
                 <div class="job-id">ID: ${job.id} · Posted: ${new Date(job.created_at).toLocaleDateString()}</div>
             </div>
             <span class="badge ${job.status === 'active' ? 'badge-active' : job.status === 'archived' ? 'badge-archived' : 'badge-paused'}">
