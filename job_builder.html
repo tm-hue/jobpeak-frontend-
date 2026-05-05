@@ -762,7 +762,11 @@
             <div class="row-2">
                 <div class="field">
                     <label>Hiring Location *</label>
-                    <input type="text" id="hiringLocation" placeholder="e.g., Columbus, OH" required onblur="generateLocations()" onkeydown="if(event.key==='Enter'){event.preventDefault();generateLocations();}">
+                    <input type="text" id="hiringLocation" placeholder="e.g., Farmingdale, NY" required autocomplete="off"
+    onkeydown="if(event.key==='Enter')event.preventDefault();"
+    style="width:100%">
+<input type="hidden" id="hiringLat">
+<input type="hidden" id="hiringLng">
                     <div class="hint">Where the job is based — we'll expand automatically</div>
                 </div>
                 <div class="field">
