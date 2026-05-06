@@ -199,7 +199,7 @@
 
     <!-- Admin bypass -->
     <div class="admin-bypass">
-        <a href="#" id="adminBypassLink" style="display:none">Skip payment (admin)</a>
+        <a href="#" id="adminBypassLink" style="display:none" onclick="handleAdminBypass(); return false;">Skip payment (admin)</a>
     </div>
 
 </div>
@@ -321,6 +321,21 @@
         }
     }
 
+    async function handleAdminBypass() {
+    const res = await fetch(`${API}/admin/activate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId, amount: 225, key: params.get('key') })
+    });
+    const data = await res.json();
+    if (data.success) {
+        window.location.href = `/payment_success.html?job=${jobId}&admin=true`;
+    } else {
+        alert('Admin bypass failed: ' + data.error);
+    }
+}
+
+// Show admin bypass link if internal
     // Show admin bypass link if internal
     if (isAdmin) {
         document.getElementById('adminBypassLink').style.display = 'inline';
