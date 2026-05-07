@@ -63,6 +63,17 @@
         .swap-note { text-align: center; margin-top: 28px; padding: 16px 24px; background: #EFF6FF; border-radius: 10px; border: 1px solid #BFDBFE; }
         .swap-note p { font-size: 14px; color: #1D4ED8; font-weight: 500; }
         .swap-note p strong { font-weight: 700; }
+
+        /* Email capture */
+        .email-capture { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; margin-top: 28px; box-shadow: var(--shadow); }
+        .email-capture-label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+        .email-capture-sub { font-size: 13px; color: var(--text-2); margin-bottom: 14px; }
+        .email-input-row { display: flex; gap: 10px; align-items: center; }
+        .email-input { flex: 1; font-family: 'Work Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 16px; outline: none; transition: border-color .15s; }
+        .email-input:focus { border-color: var(--accent); }
+        .email-input.error { border-color: #EF4444; }
+        .email-hint { font-size: 12px; color: var(--text-3); margin-top: 6px; }
+
         .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); display: none; align-items: center; justify-content: center; z-index: 999; flex-direction: column; gap: 16px; }
         .loading-overlay.show { display: flex; }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
@@ -75,6 +86,7 @@
             .pricing-grid { grid-template-columns: 1fr; }
             .page-heading h1 { font-size: 26px; }
             .plan-price { font-size: 40px; }
+            .email-input-row { flex-direction: column; }
         }
     </style>
 </head>
@@ -154,6 +166,16 @@
         <p>💡 <strong>Your clicks don't expire.</strong> Swap between jobs, pause when you hire, and pick back up whenever you need. Your budget works for you — not against you.</p>
     </div>
 
+    <!-- Email capture — shown before checkout -->
+    <div class="email-capture" id="emailCapture">
+        <div class="email-capture-label">Where should we send your receipt and job updates?</div>
+        <div class="email-capture-sub">We'll email you click reports, low balance alerts, and your results dashboard link.</div>
+        <div class="email-input-row">
+            <input type="email" class="email-input" id="employerEmail" placeholder="you@company.com" autocomplete="email">
+        </div>
+        <div class="email-hint">No spam. Unsubscribe anytime. Required to complete your order.</div>
+    </div>
+
     <div class="trust-bar">
         <div class="trust-item">🔒 Secure checkout via Stripe</div>
         <div class="trust-item">⚡ Job goes live instantly</div>
@@ -200,6 +222,10 @@
             currentJob = await res.json();
             renderJobSummary();
             renderPricing();
+            // Pre-fill email if already on job record
+            if (currentJob.employer_email) {
+                document.getElementById('employerEmail').value = currentJob.employer_email;
+            }
         } catch(e) {
             document.getElementById('summaryTitle').textContent = 'Error loading job';
         }
@@ -224,20 +250,31 @@
         const cpc = CPC_RATES[category] || 1.75;
         const categoryName = currentJob?.category || 'this category';
 
-        // Market rate framing
         document.getElementById('cpcNote').textContent = `Current ${categoryName} market rate: $${cpc.toFixed(2)} CPC`;
 
         TIERS.forEach(price => {
-            // Round UP — employer gets a tiny bonus
             const clicks = Math.ceil(price / cpc);
             document.getElementById(`clicks-${price}`).textContent = `${clicks} clicks included`;
-            // No per-click price on tiles — cleaner, discount implied by market rate above
         });
+    }
+
+    function getEmail() {
+        const email = document.getElementById('employerEmail').value.trim();
+        const emailInput = document.getElementById('employerEmail');
+        if (!email || !email.includes('@')) {
+            emailInput.classList.add('error');
+            emailInput.focus();
+            emailInput.placeholder = 'Please enter your email to continue';
+            return null;
+        }
+        emailInput.classList.remove('error');
+        return email;
     }
 
     async function checkout(amount) {
         if (!jobId) { alert('No job selected.'); return; }
 
+        // Admin bypass — skip email requirement
         if (isAdmin) {
             const key = params.get('key');
             try {
@@ -258,6 +295,10 @@
             return;
         }
 
+        // Validate email before proceeding
+        const email = getEmail();
+        if (!email) return;
+
         document.getElementById('loadingOverlay').classList.add('show');
 
         try {
@@ -267,7 +308,8 @@
                 body: JSON.stringify({
                     jobId,
                     amount,
-                    category: currentJob?.category || 'other'
+                    category: currentJob?.category || 'other',
+                    employerEmail: email
                 })
             });
             const data = await res.json();
@@ -303,6 +345,7 @@
 
     if (isAdmin) {
         document.getElementById('adminBypassLink').style.display = 'inline';
+        document.getElementById('emailCapture').style.display = 'none';
     }
 
     loadJob();
