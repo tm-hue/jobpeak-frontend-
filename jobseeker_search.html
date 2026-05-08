@@ -100,7 +100,6 @@
     </style>
 </head>
 <body>
-
 <style>
 .jp-header { position:sticky; top:0; z-index:999; background:#fff; border-bottom:1px solid #E4E6EA; height:60px; display:flex; align-items:center; padding:0 32px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
 .jp-header-inner { max-width:900px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; }
@@ -113,7 +112,6 @@
 .jp-header-post:hover { background:#0070E0; }
 @media(max-width:600px) { .jp-header { padding:0 16px; } .jp-header-link { display:none; } }
 </style>
-
 <header class="jp-header">
     <div class="jp-header-inner">
         <a href="/jobseeker_search.html" class="jp-header-brand">jobpeak<span>.</span></a>
@@ -123,7 +121,6 @@
         </nav>
     </div>
 </header>
-
     <main>
         <section class="hero">
             <div class="container">
@@ -145,14 +142,12 @@
                 </div>
             </div>
         </section>
-
         <div class="loading" id="loadingSection">
             <div class="container">
                 <div class="loading-spinner"></div>
                 <div class="loading-text">Finding your perfect matches...</div>
             </div>
         </div>
-
         <section class="results-section" id="resultsSection">
             <div class="container">
                 <div class="results-header">
@@ -177,13 +172,11 @@
             </div>
         </section>
     </main>
-
     <script>
         const API = 'https://jobpeak-production.up.railway.app';
-
         let jobDatabase = [];
-
-        // REV9 FIX: removed broken loadJobs() call, fetch runs directly on page load
+        
+        // Load all jobs on page load
         fetch(`${API}/jobs`)
             .then(r => r.json())
             .then(jobs => {
@@ -198,28 +191,29 @@
                     tags: [],
                     bonus: j.bonus || null,
                     logoUrl: j.logo_url || null,
-                    // REV9 FIX: category is now stored and sent to AI for matching
                     category: j.category || '',
                 }));
                 console.log(`Loaded ${jobDatabase.length} jobs`);
             })
             .catch(e => console.error('Failed to load jobs:', e));
-
+        
         let conversationHistory = [];
         let currentResults = [];
-
+        
+        // Auto-resize textareas
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 200) + 'px';
         });
-
+        
         const refineInput = document.getElementById('refineInput');
         refineInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 150) + 'px';
         });
-
+        
+        // Example chips
         document.querySelectorAll('.example-chip').forEach(chip => {
             chip.addEventListener('click', function() {
                 searchInput.value = this.getAttribute('data-query');
@@ -228,7 +222,8 @@
                 performSearch();
             });
         });
-
+        
+        // Refine chips
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('refine-chip')) {
                 refineInput.value = e.target.getAttribute('data-refine');
@@ -237,24 +232,36 @@
                 performRefinement();
             }
         });
-
+        
+        // Event listeners
         document.getElementById('refineButton').addEventListener('click', performRefinement);
-        refineInput.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); performRefinement(); } });
+        refineInput.addEventListener('keydown', function(e) { 
+            if (e.key === 'Enter' && !e.shiftKey) { 
+                e.preventDefault(); 
+                performRefinement(); 
+            } 
+        });
+        
         document.getElementById('searchButton').addEventListener('click', performSearch);
-        searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); performSearch(); } });
-
+        searchInput.addEventListener('keydown', function(e) { 
+            if (e.key === 'Enter' && !e.shiftKey) { 
+                e.preventDefault(); 
+                performSearch(); 
+            } 
+        });
+        
         async function performSearch() {
             const query = searchInput.value.trim();
             if (!query) return;
-
+            
             conversationHistory = [];
             currentResults = [];
-
+            
             document.getElementById('loadingSection').classList.add('active');
             document.getElementById('resultsSection').classList.remove('active');
             document.getElementById('searchButton').disabled = true;
             document.getElementById('loadingSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
-
+            
             try {
                 const response = await fetch(`${API}/ai-search`, {
                     method: 'POST',
@@ -272,57 +279,85 @@ Available jobs (index: title - company - location - category):
 ${jobDatabase.map((job, i) => `${i}: ${job.title} at ${job.company} - ${job.location} - category: ${job.category}`).join('\n')}
 
 Return ONLY valid JSON array format like: [5, 2, 8, 1]
-Include 3-8 best matches. Consider location, job type, category, and preferences mentioned.
+Include 3-12 best matches. Consider location, job type, category, and preferences mentioned.
 Match "motorcoach", "bus driver", "coach" queries to jobs with category "motorcoach".
 Match "CDL", "truck", "driver" queries to jobs with category "trucking" or "motorcoach".
+Match "warehouse" queries to jobs with category "warehouse".
 DO NOT include any explanation, just the JSON array.`
                         }]
                     })
                 });
-
+                
                 const data = await response.json();
                 let matchedIndices = [];
                 const responseText = data.content.find(item => item.type === 'text')?.text || '';
                 const jsonMatch = responseText.match(/\[[\d,\s]+\]/);
+                
                 if (jsonMatch) {
                     matchedIndices = JSON.parse(jsonMatch[0]);
                 } else {
                     matchedIndices = simpleMatch(query);
                 }
+                
                 conversationHistory.push({ role: 'user', content: query });
                 displayResults(query, matchedIndices);
+                
             } catch (error) {
                 console.error('Search error:', error);
                 conversationHistory.push({ role: 'user', content: query });
                 displayResults(query, simpleMatch(query));
             }
-
+            
             document.getElementById('searchButton').disabled = false;
         }
-
+        
         function simpleMatch(query) {
             const queryLower = query.toLowerCase();
+            const queryWords = queryLower.split(/\s+/).filter(w => w.length > 2);
+            
             const scored = jobDatabase.map((job, index) => {
                 let score = 0;
                 const searchText = `${job.title} ${job.company} ${job.location} ${job.description} ${job.category}`.toLowerCase();
-                if ((queryLower.includes('motorcoach') || queryLower.includes('bus driver') || queryLower.includes('coach')) && (searchText.includes('motorcoach') || searchText.includes('coach'))) score += 15;
+                
+                // Exact category match gets highest score
+                if (job.category.toLowerCase() === queryLower) score += 20;
+                if (searchText.includes(queryLower)) score += 15;
+                
+                // Category-specific boosts
+                if ((queryLower.includes('motorcoach') || queryLower.includes('bus driver') || queryLower.includes('coach')) && 
+                    (searchText.includes('motorcoach') || searchText.includes('coach'))) score += 15;
+                if (queryLower.includes('warehouse') && searchText.includes('warehouse')) score += 15;
                 if (queryLower.includes('cdl') && searchText.includes('cdl')) score += 10;
                 if (queryLower.includes('hvac') && searchText.includes('hvac')) score += 10;
                 if (queryLower.includes('nurse') && searchText.includes('nurse')) score += 10;
+                
+                // Location boosts
                 if (queryLower.includes('local') && searchText.includes('local')) score += 5;
                 if (queryLower.includes('home') && searchText.includes('home')) score += 5;
                 if (queryLower.includes('columbus') && searchText.includes('columbus')) score += 3;
                 if (queryLower.includes('cincinnati') && searchText.includes('cincinnati')) score += 3;
+                
+                // Generic word matching for any other searches
+                queryWords.forEach(word => {
+                    if (searchText.includes(word)) score += 2;
+                });
+                
                 return { index, score };
             });
-            return scored.filter(i => i.score > 0).sort((a, b) => b.score - a.score).slice(0, 8).map(i => i.index);
+            
+            return scored
+                .filter(i => i.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 12)
+                .map(i => i.index);
         }
-
+        
         function renderJobCard(job, index) {
             const matchScore = Math.max(95 - (index * 5), 75);
             const bonusBadge = job.bonus ? `<span style="background:#FFF3EC;border:1px solid #FF6B2B;color:#FF6B2B;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;margin-left:8px">🎁 ${job.bonus}</span>` : '';
             const logoHtml = job.logoUrl ? `<img src="${job.logoUrl}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid #E5E5E5;margin-right:12px;flex-shrink:0" alt="">` : '';
             const detailUrl = job.id ? `job_detail.html?id=${job.id}` : '#';
+            
             return `
                 <a class="job-card" href="${detailUrl}">
                     <div class="job-header">
@@ -345,70 +380,88 @@ DO NOT include any explanation, just the JSON array.`
                 </a>
             `;
         }
-
+        
         function displayResults(query, matchedIndices) {
             const matchedJobs = matchedIndices.map(i => jobDatabase[i]).filter(Boolean);
             currentResults = matchedJobs;
+            
             document.getElementById('resultsCount').textContent = `${matchedJobs.length} matches found`;
             document.getElementById('resultsQuery').textContent = `"${query}"`;
             document.getElementById('jobResults').innerHTML = matchedJobs.map((job, i) => renderJobCard(job, i)).join('');
             document.getElementById('conversationHistory').innerHTML = '';
+            
             document.getElementById('loadingSection').classList.remove('active');
             document.getElementById('resultsSection').classList.add('active');
+            
             refineInput.value = '';
-            setTimeout(() => { document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+            
+            setTimeout(() => { 
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }, 100);
         }
-
+        
         async function performRefinement() {
             const refineQuery = refineInput.value.trim();
             if (!refineQuery) return;
+            
             document.getElementById('refineButton').disabled = true;
+            
             conversationHistory.push({ role: 'user', content: refineQuery });
             updateConversationDisplay();
-
+            
             const loadingTurn = document.createElement('div');
             loadingTurn.className = 'conversation-turn assistant';
             loadingTurn.innerHTML = `<div class="turn-label">Jobpeak</div><div class="turn-content">Analyzing...</div>`;
             document.getElementById('conversationHistory').appendChild(loadingTurn);
-
+            
             try {
                 const messages = conversationHistory.map(turn => ({ role: turn.role, content: turn.content }));
+                
                 const currentJobsSummary = currentResults.map((job, i) =>
                     `Job ${i+1}: ${job.title} at ${job.company} - ${job.location} - ${job.salary}`
                 ).join('\n');
+                
                 messages[messages.length - 1].content = `Current search results:\n${currentJobsSummary}\n\nUser question: ${refineQuery}\n\nInstructions: Answer naturally about these jobs. If they want to filter, return {"filter": [1, 3, 5]}. Be concise.`;
-
+                
                 const response = await fetch(`${API}/ai-search`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages })
+                    body: JSON.stringify({ 
+                        model: 'claude-sonnet-4-20250514', 
+                        max_tokens: 1500, 
+                        messages 
+                    })
                 });
-
+                
                 const data = await response.json();
                 const responseText = data.content.find(item => item.type === 'text')?.text || 'I can help with that!';
+                
                 const filterMatch = responseText.match(/\{"filter":\s*\[[\d,\s]+\]\}/);
-
+                
                 if (filterMatch) {
                     const filteredJobs = JSON.parse(filterMatch[0]).filter.map(i => currentResults[i - 1]).filter(Boolean);
                     currentResults = filteredJobs;
                     document.getElementById('jobResults').innerHTML = filteredJobs.map((job, i) => renderJobCard(job, i)).join('');
                     document.getElementById('resultsCount').textContent = `${filteredJobs.length} matches found`;
+                    
                     const cleanResponse = responseText.replace(/\{"filter":\s*\[[\d,\s]+\]\}/, '').trim();
                     conversationHistory.push({ role: 'assistant', content: cleanResponse || `Filtered to ${filteredJobs.length} jobs.` });
                 } else {
                     conversationHistory.push({ role: 'assistant', content: responseText });
                 }
+                
                 updateConversationDisplay();
+                
             } catch (error) {
                 conversationHistory.push({ role: 'assistant', content: "Try asking about salary, location, or schedule." });
                 updateConversationDisplay();
             }
-
+            
             document.getElementById('refineButton').disabled = false;
             refineInput.value = '';
             refineInput.style.height = 'auto';
         }
-
+        
         function updateConversationDisplay() {
             document.getElementById('conversationHistory').innerHTML = conversationHistory.map(turn => `
                 <div class="conversation-turn ${turn.role}">
@@ -416,11 +469,11 @@ DO NOT include any explanation, just the JSON array.`
                     <div class="turn-content">${turn.content}</div>
                 </div>
             `).join('');
+            
             const lastTurn = document.querySelector('.conversation-turn:last-child');
             if (lastTurn) lastTurn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     </script>
-
 <style>
 .jp-footer { background:#111318; color:#8892A4; font-family:'Work Sans',sans-serif; font-size:13px; margin-top:60px; padding:32px 24px; }
 .jp-footer-inner { max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; }
