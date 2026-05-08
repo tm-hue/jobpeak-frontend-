@@ -28,6 +28,7 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
             --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
             --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+            --pulse-green: #10B981;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Work Sans', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; -webkit-font-smoothing: antialiased; }
@@ -39,19 +40,75 @@
         .hero { padding: 120px 0 80px; text-align: center; }
         h1 { font-family: 'Archivo', sans-serif; font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.03em; }
         .subtitle { font-size: 20px; color: var(--text-secondary); margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .search-container { max-width: 800px; margin: 0 auto 40px; position: relative; }
-        .search-wrapper { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 16px; padding: 8px; box-shadow: var(--shadow-lg); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .search-container { max-width: 800px; margin: 0 auto 20px; position: relative; }
+        .search-wrapper { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 16px; padding: 8px; box-shadow: var(--shadow-lg); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .search-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
         .search-wrapper:focus-within { border-color: var(--accent); box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15); }
-        .search-input { width: 100%; border: none; outline: none; font-size: 18px; padding: 20px 24px; font-family: 'Work Sans', sans-serif; background: transparent; color: var(--text-primary); resize: none; min-height: 60px; }
-        .search-input::placeholder { color: var(--text-secondary); }
-        .search-button { width: 100%; background: var(--accent); color: white; border: none; padding: 18px 32px; font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Work Sans', sans-serif; }
+        .search-wrapper:focus-within::before { animation: none; }
+        .search-input { width: 100%; border: none; outline: none; font-size: 18px; padding: 20px 24px; font-family: 'Work Sans', sans-serif; background: transparent; color: var(--text-primary); resize: none; min-height: 60px; position: relative; z-index: 1; }
+        .search-input::placeholder { color: var(--text-secondary); transition: color 0.3s; }
+        .search-button { width: 100%; background: var(--accent); color: white; border: none; padding: 18px 32px; font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Work Sans', sans-serif; position: relative; z-index: 1; }
         .search-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
         .search-button:disabled { opacity: 0.6; cursor: not-allowed; }
-        .examples { text-align: center; margin-bottom: 80px; }
+        
+        /* Pulsing hint below search */
+        .search-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--pulse-green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+            }
+        }
+        .search-hint strong {
+            color: var(--pulse-green);
+            font-weight: 600;
+        }
+        
+        .examples { text-align: center; margin-bottom: 80px; margin-top: 40px; }
         .examples-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
         .example-chips { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .example-chip { background: var(--bg-secondary); border: 1px solid var(--border); padding: 10px 20px; border-radius: 100px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
         .example-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+        
+        /* Location highlighting in example chips */
+        .location-highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
         .results-section { max-width: 900px; margin: 60px auto; display: none; }
         .results-section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -96,6 +153,7 @@
             .subtitle { font-size: 18px; }
             .search-input { font-size: 16px; padding: 16px 20px; }
             .job-header { flex-direction: column; gap: 12px; }
+            .search-hint { font-size: 13px; }
         }
     </style>
 </head>
@@ -128,16 +186,20 @@
                 <p class="subtitle">Talk like a human. Get jobs that actually match.</p>
                 <div class="search-container">
                     <div class="search-wrapper">
-                        <textarea class="search-input" id="searchInput" placeholder="I'm a CDL A driver in Columbus. I want local routes, home every night, no touch freight..." rows="1"></textarea>
+                        <textarea class="search-input" id="searchInput" placeholder="CDL driver jobs in Columbus..." rows="1"></textarea>
                         <button class="search-button" id="searchButton">Search Jobs</button>
+                    </div>
+                    <div class="search-hint">
+                        <span class="pulse-dot"></span>
+                        <span>Pro tip: Include <strong>your city</strong> or <strong>"near me"</strong> for local results</span>
                     </div>
                 </div>
                 <div class="examples">
                     <div class="examples-label">Try these examples</div>
                     <div class="example-chips">
-                        <div class="example-chip" data-query="I'm a CDL A driver in Columbus. I want local routes, home every night, no touch freight, and a company that respects drivers">CDL A - Local, Home Daily</div>
-                        <div class="example-chip" data-query="HVAC technician with 5 years experience, looking for residential work in Cincinnati, prefer companies that provide a truck and tools">HVAC Tech - Residential</div>
-                        <div class="example-chip" data-query="I'm a motorcoach or bus driver looking for luxury transport work on Long Island">Motorcoach / Bus Driver</div>
+                        <div class="example-chip" data-query="I'm a CDL A driver in Columbus. I want local routes, home every night, no touch freight">CDL A - Local, <span class="location-highlight">Columbus</span></div>
+                        <div class="example-chip" data-query="HVAC technician with 5 years experience, looking for residential work in Cincinnati">HVAC Tech - <span class="location-highlight">Cincinnati</span></div>
+                        <div class="example-chip" data-query="warehouse jobs near me">Warehouse - <span class="location-highlight">Near Me</span></div>
                     </div>
                 </div>
             </div>
@@ -176,6 +238,27 @@
         const API = 'https://jobpeak-production.up.railway.app';
         let jobDatabase = [];
         
+        // Rotating placeholder text with location emphasis
+        const placeholders = [
+            "CDL driver jobs in Columbus...",
+            "warehouse work near Anderson, SC...",
+            "HVAC tech in Cincinnati...",
+            "nurse jobs near me...",
+            "forklift operator in Duncan, SC...",
+            "motorcoach driver near Long Island..."
+        ];
+        
+        let placeholderIndex = 0;
+        const searchInput = document.getElementById('searchInput');
+        
+        function rotatePlaceholder() {
+            placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+            searchInput.setAttribute('placeholder', placeholders[placeholderIndex]);
+        }
+        
+        // Rotate placeholder every 3 seconds
+        setInterval(rotatePlaceholder, 3000);
+        
         // Load all jobs on page load
         fetch(`${API}/jobs`)
             .then(r => r.json())
@@ -201,7 +284,6 @@
         let currentResults = [];
         
         // Auto-resize textareas
-        const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 200) + 'px';
@@ -283,6 +365,7 @@ Include 3-12 best matches. Consider location, job type, category, and preference
 Match "motorcoach", "bus driver", "coach" queries to jobs with category "motorcoach".
 Match "CDL", "truck", "driver" queries to jobs with category "trucking" or "motorcoach".
 Match "warehouse" queries to jobs with category "warehouse".
+Pay special attention to location matching - if user mentions a city, state, or "near me", prioritize jobs in that area.
 DO NOT include any explanation, just the JSON array.`
                         }]
                     })
@@ -334,8 +417,11 @@ DO NOT include any explanation, just the JSON array.`
                 // Location boosts
                 if (queryLower.includes('local') && searchText.includes('local')) score += 5;
                 if (queryLower.includes('home') && searchText.includes('home')) score += 5;
-                if (queryLower.includes('columbus') && searchText.includes('columbus')) score += 3;
-                if (queryLower.includes('cincinnati') && searchText.includes('cincinnati')) score += 3;
+                if (queryLower.includes('columbus') && searchText.includes('columbus')) score += 8;
+                if (queryLower.includes('cincinnati') && searchText.includes('cincinnati')) score += 8;
+                if (queryLower.includes('anderson') && searchText.includes('anderson')) score += 8;
+                if (queryLower.includes('duncan') && searchText.includes('duncan')) score += 8;
+                if (queryLower.includes('greenville') && searchText.includes('greenville')) score += 8;
                 
                 // Generic word matching for any other searches
                 queryWords.forEach(word => {
