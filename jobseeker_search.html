@@ -109,57 +109,191 @@
             font-weight: 600;
         }
         
-        .results-section { max-width: 900px; margin: 60px auto; display: none; }
+        .results-section { max-width: 900px; margin: 60px auto; display: none; padding-bottom: 140px; }
         .results-section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .results-header { margin-bottom: 32px; }
         .results-count { font-size: 16px; color: var(--text-secondary); margin-bottom: 8px; }
         .results-query { font-size: 24px; font-weight: 700; color: var(--text-primary); }
-        .conversation-refine { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; margin-bottom: 32px; }
-        .ai-overview-header {
+        
+        /* Sticky AI Chat Bar - 2026 Style */
+        .ai-chat-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(229, 229, 229, 0.8);
+            padding: 16px 24px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+        }
+        .ai-chat-bar.active {
+            display: block;
+            animation: slideUp 0.4s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .ai-bar-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                #FF6B35 0%, 
+                #FF8C42 25%, 
+                #10B981 50%, 
+                #0EA5E9 75%, 
+                #FF6B35 100%);
+            background-size: 200% 100%;
+            animation: gradientShift 3s linear infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+        .ai-bar-content {
+            max-width: 900px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 20px;
         }
-        .ai-pulse-icon {
-            font-size: 32px;
-            animation: iconPulse 2.5s ease-in-out infinite;
+        .ai-icon-modern {
+            font-size: 28px;
+            color: var(--accent);
+            animation: iconFloat 3s ease-in-out infinite;
         }
-        @keyframes iconPulse {
-            0%, 100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 0 rgba(255, 107, 53, 0));
-            }
-            50% {
-                transform: scale(1.1);
-                filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.6));
-            }
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
         }
-        .ai-overview-text {
+        .ai-bar-text {
             flex: 1;
         }
-        .ai-overview-title {
-            font-size: 18px;
+        .ai-bar-title {
+            font-size: 15px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
-        .ai-overview-subtitle {
-            font-size: 14px;
+        .ai-bar-subtitle {
+            font-size: 13px;
             color: var(--text-secondary);
         }
-        .refine-label { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .refine-suggestions { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .ai-expand-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+        }
+        .ai-expand-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+        .ai-expand-btn svg {
+            transition: transform 0.3s;
+        }
+        .ai-expand-btn.expanded svg {
+            transform: rotate(180deg);
+        }
+        
+        /* Expandable AI Panel */
+        .ai-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid rgba(229, 229, 229, 0.8);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
+        }
+        .ai-panel.expanded {
+            max-height: 400px;
+        }
+        .ai-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .ai-panel-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .ai-close-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .ai-close-btn:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .ai-panel-content {
+            padding: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .refine-suggestions-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .ai-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .conversation-history { margin-bottom: 24px; }
         .refine-chip { background: var(--bg-primary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
         .refine-chip:hover { border-color: var(--accent); background: white; transform: translateY(-1px); }
-        .refine-input-wrapper { display: flex; gap: 12px; align-items: flex-start; }
         .refine-input { flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 15px; font-family: 'Work Sans', sans-serif; resize: vertical; min-height: 44px; transition: all 0.2s; }
         .refine-input:focus { outline: none; border-color: var(--accent); }
         .refine-button { background: var(--accent); color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-family: 'Work Sans', sans-serif; white-space: nowrap; }
         .refine-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
         .refine-button:disabled { opacity: 0.6; cursor: not-allowed; }
-        .conversation-history { margin-bottom: 24px; }
         .conversation-turn { margin-bottom: 16px; padding: 16px; border-radius: 10px; background: var(--bg-primary); }
         .conversation-turn.user { background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%); border-left: 3px solid var(--accent); }
         .turn-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -251,27 +385,66 @@
                 </div>
                 <div id="jobResults"></div>
                 <div class="conversation-history" id="conversationHistory"></div>
-                <div class="conversation-refine">
-                    <div class="ai-overview-header">
-                        <div class="ai-pulse-icon">🤖</div>
-                        <div class="ai-overview-text">
-                            <div class="ai-overview-title">AI Overview</div>
-                            <div class="ai-overview-subtitle">Ask me anything about these jobs...</div>
-                        </div>
-                    </div>
-                    <div class="refine-suggestions" id="refineSuggestions">
-                        <div class="refine-chip" data-refine="Which one pays the most?">Which pays the most?</div>
-                        <div class="refine-chip" data-refine="Show me only the ones with weekends off">Weekends off only</div>
-                        <div class="refine-chip" data-refine="Which has the best benefits?">Best benefits?</div>
-                        <div class="refine-chip" data-refine="Tell me about company culture">Company culture</div>
-                    </div>
-                    <div class="refine-input-wrapper">
-                        <textarea class="refine-input" id="refineInput" placeholder="Ask anything... 'Which is closest to me?' or 'Which has best home time?'" rows="1"></textarea>
-                        <button class="refine-button" id="refineButton">Ask</button>
-                    </div>
-                </div>
+                <!-- Spacer to prevent last job card from being hidden behind sticky bar -->
+                <div style="height: 120px;"></div>
             </div>
         </section>
+        
+        <!-- Sticky AI Chat Bar -->
+        <div class="ai-chat-bar" id="aiChatBar">
+            <div class="ai-bar-gradient"></div>
+            <div class="ai-bar-content">
+                <div class="ai-icon-modern">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"/>
+                        <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z" fill="currentColor" opacity="0.6"/>
+                        <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
+                        <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
+                        <path d="M12 15C13.66 15 15 13.66 15 12H9C9 13.66 10.34 15 12 15Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="ai-bar-text">
+                    <div class="ai-bar-title">AI Overview</div>
+                    <div class="ai-bar-subtitle">Ask me anything about these jobs...</div>
+                </div>
+                <button class="ai-expand-btn" id="aiExpandBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Expandable AI Panel -->
+        <div class="ai-panel" id="aiPanel">
+            <div class="ai-panel-header">
+                <div class="ai-panel-title">
+                    <div class="ai-icon-modern" style="font-size: 20px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"/>
+                            <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z" fill="currentColor" opacity="0.6"/>
+                            <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
+                            <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
+                            <path d="M12 15C13.66 15 15 13.66 15 12H9C9 13.66 10.34 15 12 15Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>AI Overview</span>
+                </div>
+                <button class="ai-close-btn" id="aiCloseBtn">✕</button>
+            </div>
+            <div class="ai-panel-content">
+                <div class="refine-suggestions-panel">
+                    <div class="refine-chip" data-refine="Which one pays the most?">Which pays the most?</div>
+                    <div class="refine-chip" data-refine="Show me only the ones with weekends off">Weekends off only</div>
+                    <div class="refine-chip" data-refine="Which has the best benefits?">Best benefits?</div>
+                    <div class="refine-chip" data-refine="Tell me about company culture">Company culture</div>
+                </div>
+                <div class="ai-input-wrapper">
+                    <textarea class="refine-input" id="refineInput" placeholder="Ask anything... 'Which is closest to me?' or 'Which has best home time?'" rows="1"></textarea>
+                    <button class="refine-button" id="refineButton">Ask</button>
+                </div>
+            </div>
+        </div>
     </main>
     <script>
         const API = 'https://jobpeak-production.up.railway.app';
@@ -518,12 +691,36 @@ DO NOT include any explanation, just the JSON array.`
             document.getElementById('loadingSection').classList.remove('active');
             document.getElementById('resultsSection').classList.add('active');
             
+            // Show sticky AI bar when results are displayed
+            document.getElementById('aiChatBar').classList.add('active');
+            
             refineInput.value = '';
             
             setTimeout(() => { 
                 document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
             }, 100);
         }
+        
+        // AI Bar expand/collapse functionality
+        document.getElementById('aiExpandBtn').addEventListener('click', function() {
+            const panel = document.getElementById('aiPanel');
+            const btn = this;
+            
+            if (panel.classList.contains('expanded')) {
+                panel.classList.remove('expanded');
+                btn.classList.remove('expanded');
+            } else {
+                panel.classList.add('expanded');
+                btn.classList.add('expanded');
+            }
+        });
+        
+        document.getElementById('aiCloseBtn').addEventListener('click', function() {
+            const panel = document.getElementById('aiPanel');
+            const btn = document.getElementById('aiExpandBtn');
+            panel.classList.remove('expanded');
+            btn.classList.remove('expanded');
+        });
         
         async function performRefinement() {
             const refineQuery = refineInput.value.trim();
