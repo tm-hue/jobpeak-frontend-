@@ -116,6 +116,39 @@
         .results-count { font-size: 16px; color: var(--text-secondary); margin-bottom: 8px; }
         .results-query { font-size: 24px; font-weight: 700; color: var(--text-primary); }
         .conversation-refine { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; margin-bottom: 32px; }
+        .ai-overview-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .ai-pulse-icon {
+            font-size: 32px;
+            animation: iconPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0 rgba(255, 107, 53, 0));
+            }
+            50% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.6));
+            }
+        }
+        .ai-overview-text {
+            flex: 1;
+        }
+        .ai-overview-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .ai-overview-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
         .refine-label { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
         .refine-suggestions { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
         .refine-chip { background: var(--bg-primary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
@@ -216,21 +249,27 @@
                     <div class="results-count" id="resultsCount"></div>
                     <div class="results-query" id="resultsQuery"></div>
                 </div>
+                <div id="jobResults"></div>
+                <div class="conversation-history" id="conversationHistory"></div>
                 <div class="conversation-refine">
-                    <div class="refine-label">Refine your search</div>
+                    <div class="ai-overview-header">
+                        <div class="ai-pulse-icon">🤖</div>
+                        <div class="ai-overview-text">
+                            <div class="ai-overview-title">AI Overview</div>
+                            <div class="ai-overview-subtitle">Ask me anything about these jobs...</div>
+                        </div>
+                    </div>
                     <div class="refine-suggestions" id="refineSuggestions">
-                        <div class="refine-chip" data-refine="Which ones have the best work-life balance?">Best work-life balance?</div>
-                        <div class="refine-chip" data-refine="Show me only ones with weekends off">Weekends off only</div>
-                        <div class="refine-chip" data-refine="Which pays the most?">Highest paying</div>
-                        <div class="refine-chip" data-refine="Tell me more about company culture">Company culture</div>
+                        <div class="refine-chip" data-refine="Which one pays the most?">Which pays the most?</div>
+                        <div class="refine-chip" data-refine="Show me only the ones with weekends off">Weekends off only</div>
+                        <div class="refine-chip" data-refine="Which has the best benefits?">Best benefits?</div>
+                        <div class="refine-chip" data-refine="Tell me about company culture">Company culture</div>
                     </div>
                     <div class="refine-input-wrapper">
-                        <textarea class="refine-input" id="refineInput" placeholder="Ask anything... 'Which has best benefits?' or 'Show ones closer to downtown'" rows="1"></textarea>
+                        <textarea class="refine-input" id="refineInput" placeholder="Ask anything... 'Which is closest to me?' or 'Which has best home time?'" rows="1"></textarea>
                         <button class="refine-button" id="refineButton">Ask</button>
                     </div>
                 </div>
-                <div class="conversation-history" id="conversationHistory"></div>
-                <div id="jobResults"></div>
             </div>
         </section>
     </main>
