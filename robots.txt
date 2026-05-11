@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://jobpeak-production.up.railway.app/sitemap-jobs.xml
+Sitemap: https://jobpeak.io/sitemap-jobs.xml
