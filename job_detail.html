@@ -206,6 +206,57 @@
 <script>
 const API = 'https://jobpeak-production.up.railway.app';
 
+// ============================================================
+// WHATJOBS S2S CONVERSION TRACKING
+// ============================================================
+let wjClickID = null;
+
+// Capture wjClickID from URL on page load
+function captureWhatJobsClickID() {
+    const params = new URLSearchParams(window.location.search);
+    const clickID = params.get('wjClickID');
+    
+    if (clickID) {
+        wjClickID = clickID;
+        // Store in sessionStorage so it persists if user navigates away and comes back
+        sessionStorage.setItem('wjClickID', clickID);
+        console.log('WhatJobs Click ID captured:', clickID);
+    } else {
+        // Check if we have one in storage from earlier in the session
+        wjClickID = sessionStorage.getItem('wjClickID');
+    }
+}
+
+// Fire WhatJobs S2S conversion tracking
+async function fireWhatJobsConversion() {
+    if (!wjClickID) {
+        console.log('No WhatJobs Click ID - skipping conversion tracking');
+        return;
+    }
+
+    const authKey = '71ca00e950a5054cac5afc0cb89abcb3';
+    const trackingUrl = `https://api.whatjobs.com/api/v1/client/s2s/tracking?authKey=${authKey}&wjClickID=${wjClickID}`;
+
+    try {
+        // Fire the conversion tracking (use fetch with no-cors to avoid CORS issues)
+        const response = await fetch(trackingUrl, {
+            method: 'GET',
+            mode: 'no-cors' // WhatJobs endpoint may not support CORS
+        });
+        
+        console.log('WhatJobs conversion tracked for Click ID:', wjClickID);
+        
+        // Clear the stored click ID after successful tracking
+        sessionStorage.removeItem('wjClickID');
+    } catch (error) {
+        console.error('WhatJobs conversion tracking error:', error);
+    }
+}
+// ============================================================
+
+// Capture WhatJobs Click ID immediately on page load
+captureWhatJobsClickID();
+
 async function loadJob() {
     const params = new URLSearchParams(window.location.search);
     const jobId = params.get('id');
@@ -334,11 +385,27 @@ function renderJob(job) {
         </div>
     `;
 
-    // Apply button — route in same window
+    // Apply button — track WhatJobs conversion then redirect
     const applyBtn = document.getElementById('applyBtn');
     if (applyBtn && job.apply_url) {
-        applyBtn.addEventListener('click', (e) => {
+        applyBtn.addEventListener('click', async (e) => {
             e.preventDefault();
+            
+            // Fire WhatJobs conversion tracking
+            await fireWhatJobsConversion();
+            
+            // Also track the click in your backend for Jobpeak analytics
+            try {
+                await fetch(`${API}/jobs/${job.id}/click`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ source: wjClickID ? 'whatjobs' : 'direct' })
+                });
+            } catch (err) {
+                console.error('Click tracking error:', err);
+            }
+            
+            // Redirect to apply URL
             window.location.href = job.apply_url;
         });
     }
