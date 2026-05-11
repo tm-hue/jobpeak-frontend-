@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/sitemap-jobs.xml",
+      "destination": "https://jobpeak-production.up.railway.app/sitemap-jobs.xml"
+    }
+  ]
+}
