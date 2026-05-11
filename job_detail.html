@@ -282,6 +282,117 @@ function formatPay(job) {
     return (job.salary || '') + (type ? ' ' + type : '');
 }
 
+// ============================================================
+// GOOGLE FOR JOBS - JSON-LD STRUCTURED DATA
+// ============================================================
+function injectGoogleJobsSchema(job) {
+    // Remove any existing schema
+    const existingSchema = document.getElementById('google-jobs-schema');
+    if (existingSchema) existingSchema.remove();
+    
+    // Parse location
+    const location = job.hiring_location || job.location || '';
+    const locationParts = location.split(',').map(s => s.trim());
+    const city = locationParts[0] || '';
+    const state = locationParts[1] || '';
+    
+    // Parse salary for structured data
+    let baseSalary = null;
+    if (job.salary) {
+        const salaryClean = job.salary.replace(/[$,]/g, '');
+        const salaryNums = salaryClean.match(/[\d.]+/g);
+        if (salaryNums && salaryNums.length > 0) {
+            const salaryValue = parseFloat(salaryNums[salaryNums.length - 1]);
+            const unitText = {
+                'hourly': 'HOUR',
+                'weekly': 'WEEK', 
+                'annual': 'YEAR',
+                'cpm': 'HOUR',
+                'flat': 'WEEK'
+            }[job.pay_type] || 'YEAR';
+            
+            baseSalary = {
+                "@type": "MonetaryAmount",
+                "currency": "USD",
+                "value": {
+                    "@type": "QuantitativeValue",
+                    "value": salaryValue,
+                    "unitText": unitText
+                }
+            };
+        }
+    }
+    
+    // Employment type mapping
+    const employmentTypeMap = {
+        'full-time': 'FULL_TIME',
+        'part-time': 'PART_TIME',
+        'contract': 'CONTRACTOR',
+        'temporary': 'TEMPORARY'
+    };
+    const employmentType = employmentTypeMap[(job.job_type || '').toLowerCase()] || 'FULL_TIME';
+    
+    // Build the structured data
+    const schema = {
+        "@context": "https://schema.org/",
+        "@type": "JobPosting",
+        "title": job.title,
+        "description": job.description ? job.description.replace(/<[^>]*>/g, '') : job.title,
+        "identifier": {
+            "@type": "PropertyValue",
+            "name": "Jobpeak",
+            "value": `jobpeak-${job.id}`
+        },
+        "datePosted": job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        "validThrough": (() => {
+            const validDate = new Date();
+            validDate.setDate(validDate.getDate() + 30);
+            return validDate.toISOString().split('T')[0];
+        })(),
+        "employmentType": employmentType,
+        "hiringOrganization": {
+            "@type": "Organization",
+            "name": job.company,
+            "sameAs": job.logo_url ? `https://jobpeak.io/jobs/${job.id}` : undefined,
+            "logo": job.logo_url || undefined
+        },
+        "jobLocation": {
+            "@type": "Place",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": city,
+                "addressRegion": state,
+                "addressCountry": "US"
+            }
+        },
+        "applicantLocationRequirements": {
+            "@type": "Country",
+            "name": "US"
+        }
+    };
+    
+    // Add salary if available
+    if (baseSalary) {
+        schema.baseSalary = baseSalary;
+    }
+    
+    // Add apply URL
+    if (job.apply_url) {
+        schema.directApply = true;
+        schema.url = job.apply_url;
+    }
+    
+    // Inject into head
+    const script = document.createElement('script');
+    script.id = 'google-jobs-schema';
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(schema, null, 2);
+    document.head.appendChild(script);
+    
+    console.log('✅ Google for Jobs schema injected');
+}
+// ============================================================
+
 function renderJob(job) {
     const pay = formatPay(job);
     const locs = (() => { try { return JSON.parse(job.target_locations || '[]'); } catch { return []; } })();
@@ -409,6 +520,9 @@ function renderJob(job) {
             window.location.href = job.apply_url;
         });
     }
+    
+    // Inject Google for Jobs structured data
+    injectGoogleJobsSchema(job);
 }
 
 function showNotFound(msg) {
