@@ -252,10 +252,58 @@ async function fireWhatJobsConversion() {
         console.error('WhatJobs conversion tracking error:', error);
     }
 }
+
+// ============================================================
+// TALROO S2S CONVERSION TRACKING
+// ============================================================
+let tlrSid = null;
+
+// Capture tlr_sid from URL on page load
+function captureTalrooClickID() {
+    const params = new URLSearchParams(window.location.search);
+    const clickID = params.get('tlr_sid');
+    
+    if (clickID) {
+        tlrSid = clickID;
+        // Store in sessionStorage so it persists if user navigates away and comes back
+        sessionStorage.setItem('tlr_sid', clickID);
+        console.log('Talroo Click ID (tlr_sid) captured:', clickID);
+    } else {
+        // Check if we have one in storage from earlier in the session
+        tlrSid = sessionStorage.getItem('tlr_sid');
+    }
+}
+
+// Fire Talroo S2S conversion tracking
+async function fireTalrooConversion() {
+    if (!tlrSid) {
+        console.log('No Talroo Click ID - skipping conversion tracking');
+        return;
+    }
+
+    // Using conversion2.php for application completed events (default)
+    const trackingUrl = `https://www.jobs2careers.com/conversion2.php?tlr_sid=${tlrSid}&Link=true`;
+
+    try {
+        // Fire the conversion tracking (use fetch with no-cors to avoid CORS issues)
+        const response = await fetch(trackingUrl, {
+            method: 'GET',
+            mode: 'no-cors' // Talroo endpoint may not support CORS
+        });
+        
+        console.log('Talroo conversion tracked for tlr_sid:', tlrSid);
+        
+        // Clear the stored click ID after successful tracking
+        sessionStorage.removeItem('tlr_sid');
+    } catch (error) {
+        console.error('Talroo conversion tracking error:', error);
+    }
+}
 // ============================================================
 
-// Capture WhatJobs Click ID immediately on page load
+// Capture both click IDs immediately on page load
 captureWhatJobsClickID();
+captureTalrooClickID();
 
 async function loadJob() {
     const params = new URLSearchParams(window.location.search);
@@ -496,21 +544,25 @@ function renderJob(job) {
         </div>
     `;
 
-    // Apply button — track WhatJobs conversion then redirect
+    // Apply button — track WhatJobs + Talroo conversions then redirect
     const applyBtn = document.getElementById('applyBtn');
     if (applyBtn && job.apply_url) {
         applyBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             
-            // Fire WhatJobs conversion tracking
-            await fireWhatJobsConversion();
+            // Fire both conversion tracking systems in parallel
+            await Promise.all([
+                fireWhatJobsConversion(),
+                fireTalrooConversion()
+            ]);
             
             // Also track the click in your backend for Jobpeak analytics
             try {
+                const source = wjClickID ? 'whatjobs' : (tlrSid ? 'talroo' : 'direct');
                 await fetch(`${API}/jobs/${job.id}/click`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ source: wjClickID ? 'whatjobs' : 'direct' })
+                    body: JSON.stringify({ source })
                 });
             } catch (err) {
                 console.error('Click tracking error:', err);
