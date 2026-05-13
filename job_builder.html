@@ -1668,6 +1668,7 @@ function saveDraft() {
 }
 
 // ── Submit ──
+// ── Submit ──
 async function submitJob() {
     // Validate
     const required = ['jobTitle','companyName','hiringLocation','applyUrl'];
@@ -1696,21 +1697,29 @@ async function submitJob() {
         let logoUrl = null;
         let flyerUrl = null;
 
-        // Upload logo
+        // Upload NEW logo if selected, otherwise keep existing
         const logoFile = document.getElementById('logoFile').files[0];
         if (logoFile) {
             document.getElementById('loadingSub').textContent = 'Uploading logo…';
             logoUrl = await uploadFile(logoFile, 'logo');
+        } else {
+            // Keep existing logo URL
+            const existingLogo = document.getElementById('logoArea').dataset.existingUrl;
+            if (existingLogo) logoUrl = existingLogo;
         }
 
-        // Upload flyer
+        // Upload NEW flyer if selected, otherwise keep existing
         const flyerFile = document.getElementById('flyerFile').files[0];
         if (flyerFile) {
             document.getElementById('loadingSub').textContent = 'Uploading flyer…';
             flyerUrl = await uploadFile(flyerFile, 'flyer');
+        } else {
+            // Keep existing flyer URL
+            const existingFlyer = document.getElementById('flyerArea').dataset.existingUrl;
+            if (existingFlyer) flyerUrl = existingFlyer;
         }
 
-        document.getElementById('loadingSub').textContent = 'Saving job & generating locations…';
+        document.getElementById('loadingSub').textContent = EDIT_MODE ? 'Saving changes…' : 'Saving job & generating locations…';
 
         const checkedLocs = selectedLocations.filter(l => l.checked);
 
@@ -1736,11 +1745,22 @@ async function submitJob() {
             experienceYears: document.getElementById('experienceYears')?.value ? parseInt(document.getElementById('experienceYears').value) : null,
         };
 
-        const res = await fetch(`${API}/jobs`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+        let res;
+        if (EDIT_MODE) {
+            // PATCH request for edit
+            res = await fetch(`${API}/jobs/${EDIT_JOB_ID}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        } else {
+            // POST request for new job
+            res = await fetch(`${API}/jobs`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
 
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
@@ -1750,19 +1770,24 @@ async function submitJob() {
         const result = await res.json();
         overlay.classList.remove('show');
 
-        // Store job info for payment step
-        window._pendingJobId = result.job?.id;
-        window._pendingJobTitle = payload.title;
-        window._pendingLocCount = checkedLocs.length;
-        window._pendingCategory = payload.category || 'other';
-        updateBundleCards(window._pendingCategory);
-
-        window.location.href = `/checkout.html?job=${result.job.id}`;
+        if (EDIT_MODE) {
+            // Show success and redirect to admin
+            alert(`✓ Job "${payload.title}" updated successfully!\n\nChanges will sync to XML feeds in ~15 minutes.`);
+            window.location.href = '/admin.html';
+        } else {
+            // Existing flow: go to checkout
+            window._pendingJobId = result.job?.id;
+            window._pendingJobTitle = payload.title;
+            window._pendingLocCount = checkedLocs.length;
+            window._pendingCategory = payload.category || 'other';
+            updateBundleCards(window._pendingCategory);
+            window.location.href = `/checkout.html?job=${result.job.id}`;
+        }
 
     } catch (err) {
         overlay.classList.remove('show');
         console.error(err);
-        alert('Error posting job: ' + err.message + '\n\nCheck the browser console for details.');
+        alert('Error: ' + err.message + '\n\nCheck the browser console for details.');
     }
 }
 
@@ -1894,6 +1919,152 @@ document.querySelectorAll('input[name="radius"]').forEach(r => {
         if (document.getElementById('hiringLocation').value.trim()) generateLocations();
     });
 });
+
+// ══════════════════════════════════════════════════════════════
+// ── EDIT MODE FUNCTIONALITY ──
+// ══════════════════════════════════════════════════════════════
+
+let EDIT_MODE = false;
+let EDIT_JOB_ID = null;
+
+// Check if we're in edit mode on page load
+(async function checkEditMode() {
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
+    
+    if (editId) {
+        EDIT_MODE = true;
+        EDIT_JOB_ID = editId;
+        
+        // Update page title and subtitle
+        document.querySelector('.page-title').textContent = 'Edit Job';
+        document.querySelector('.page-subtitle').textContent = 'Update job details · Changes sync to XML feeds in ~15 minutes';
+        
+        // Change submit button text
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.textContent = 'Save Changes';
+        
+        // Load existing job data
+        await loadJobForEdit(editId);
+    }
+})();
+
+async function loadJobForEdit(jobId) {
+    try {
+        const overlay = document.getElementById('overlay');
+        overlay.classList.add('show');
+        document.getElementById('loadingTitle').textContent = 'Loading job data…';
+        document.getElementById('loadingSub').textContent = 'Fetching job details';
+        
+        const res = await fetch(`${API}/jobs/${jobId}`);
+        if (!res.ok) throw new Error('Job not found');
+        
+        const job = await res.json();
+        
+        // Populate form fields
+        document.getElementById('jobTitle').value = job.title || '';
+        document.getElementById('companyName').value = job.company || '';
+        document.getElementById('category').value = job.category || '';
+        document.getElementById('jobType').value = job.job_type || 'full-time';
+        document.getElementById('applyUrl').value = job.apply_url || '';
+        document.getElementById('hiringLocation').value = job.hiring_location || '';
+        
+        // Pay fields
+        if (job.pay_type) {
+            document.querySelectorAll('.pay-pill').forEach(p => p.classList.remove('active'));
+            const payPill = document.querySelector(`[data-val="${job.pay_type}"]`);
+            if (payPill) {
+                payPill.classList.add('active');
+                document.getElementById('payType').value = job.pay_type;
+            }
+        }
+        
+        // Parse salary (format: "$22 – $28" or "$22")
+        if (job.salary) {
+            const salaryParts = job.salary.split('–').map(s => s.trim());
+            document.getElementById('payMin').value = salaryParts[0] || '';
+            document.getElementById('payMax').value = salaryParts[1] || '';
+        }
+        
+        document.getElementById('bonus').value = job.bonus || '';
+        
+        // Description (Quill)
+        if (job.description) {
+            quill.root.innerHTML = job.description;
+        }
+        
+        // Radius
+        if (job.radius) {
+            document.querySelectorAll('.r-opt').forEach(opt => opt.classList.remove('active'));
+            const radiusOpt = document.querySelector(`[data-r="${job.radius}"]`);
+            if (radiusOpt) {
+                radiusOpt.classList.add('active');
+                radiusOpt.querySelector('input').checked = true;
+            }
+        }
+        
+        // CDL fields
+        if (job.category === 'trucking') {
+            document.getElementById('cdlCard').classList.add('show');
+            document.getElementById('cdlClass').value = job.cdl_class || '';
+            document.getElementById('homeTime').value = job.home_time || '';
+            document.getElementById('routeType').value = job.route_type || '';
+            document.getElementById('experienceYears').value = job.experience_years || '';
+        }
+        
+        // Logo/Flyer preview
+        if (job.logo_url) {
+            const logoArea = document.getElementById('logoArea');
+            const logoPreview = document.getElementById('logoPreview');
+            const logoFilename = document.getElementById('logoFilename');
+            
+            logoArea.classList.add('has-file');
+            logoPreview.src = job.logo_url;
+            logoPreview.style.display = 'block';
+            logoFilename.textContent = '✓ Current logo';
+            logoFilename.style.display = 'block';
+            
+            // Store existing URL so we can keep it if no new file uploaded
+            logoArea.dataset.existingUrl = job.logo_url;
+        }
+        
+        if (job.flyer_url) {
+            const flyerArea = document.getElementById('flyerArea');
+            const flyerPreview = document.getElementById('flyerPreview');
+            const flyerFilename = document.getElementById('flyerFilename');
+            
+            flyerArea.classList.add('has-file');
+            if (job.flyer_url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                flyerPreview.src = job.flyer_url;
+                flyerPreview.style.display = 'block';
+            }
+            flyerFilename.textContent = '✓ Current flyer';
+            flyerFilename.style.display = 'block';
+            
+            flyerArea.dataset.existingUrl = job.flyer_url;
+        }
+        
+        // Generate locations
+        if (job.target_locations) {
+            try {
+                const locs = JSON.parse(job.target_locations);
+                if (locs.length > 0) {
+                    // Wait a bit for Google Maps to load
+                    setTimeout(() => generateLocations(), 500);
+                }
+            } catch(e) {
+                console.warn('Could not parse target_locations:', e);
+            }
+        }
+        
+        overlay.classList.remove('show');
+        
+    } catch (err) {
+        document.getElementById('overlay').classList.remove('show');
+        alert('Error loading job: ' + err.message);
+        window.location.href = '/admin.html';
+    }
+}   
 </script>
 
 <style>
