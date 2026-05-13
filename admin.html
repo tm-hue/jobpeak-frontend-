@@ -126,7 +126,7 @@ function render(filteredJobs = null) {
         return;
     }
 
-    document.getElementById('jobList').innerHTML = jobsToShow.map `
+    document.getElementById('jobList').innerHTML = jobsToShow.map(job => `
         <div class="job-row" id="row-${job.id}">
             <div class="job-info">
                 <div class="job-title">${job.title}</div>
