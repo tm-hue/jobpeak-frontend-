@@ -571,8 +571,48 @@ function renderJob(job) {
                 console.error('Click tracking error:', err);
             }
             
-            // Redirect to apply URL
-            window.location.href = job.apply_url;
+            // BUILD APPLY URL WITH UTM PARAMETERS
+        let finalApplyUrl = job.apply_url;
+        
+        try {
+            // Get current URL parameters
+            const currentParams = new URLSearchParams(window.location.search);
+            
+            // Parse apply URL to add parameters
+            const applyUrl = new URL(job.apply_url);
+            
+            // Pass through Talroo tracking
+            if (tlrSid) {
+                applyUrl.searchParams.set('tlr_sid', tlrSid);
+                applyUrl.searchParams.set('utm_source', 'Talroo');
+            }
+            
+            // Pass through WhatJobs tracking
+            if (wjClickID) {
+                applyUrl.searchParams.set('wjClickID', wjClickID);
+                if (!tlrSid) { // Only set utm_source if Talroo didn't already
+                    applyUrl.searchParams.set('utm_source', 'WhatJobs');
+                }
+            }
+            
+            // Pass through any other UTM parameters
+            ['utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+                const value = currentParams.get(param);
+                if (value) {
+                    applyUrl.searchParams.set(param, value);
+                }
+            });
+            
+            finalApplyUrl = applyUrl.toString();
+            console.log('Redirecting to:', finalApplyUrl);
+        } catch (err) {
+            console.error('Error building apply URL:', err);
+            // Fallback to original URL if URL parsing fails
+            finalApplyUrl = job.apply_url;
+        }
+        
+        // Redirect to apply URL with parameters
+        window.location.href = finalApplyUrl;
         });
     }
     
