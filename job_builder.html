@@ -1708,10 +1708,17 @@ async function submitJob() {
         alert('Please add a job description.');
         return;
     }
-    if (selectedLocations.filter(l => l.checked).length === 0) {
-        alert('Please enter a hiring location to generate advertising locations.');
-        return;
-    }
+    // Allow posting with just hiring location OR selected locations
+const hiringLoc = document.getElementById('hiringLocation').value.trim();
+const checkedLocs = selectedLocations.filter(l => l.checked).length;
+
+if (!hiringLoc) {
+    alert('Please enter a hiring location.');
+    return;
+}
+
+// If no locations generated (0 radius matches), allow posting with just hiring location
+// This covers rural areas where 25MI generates nothing
 
     // Show loading
     const overlay = document.getElementById('overlay');
