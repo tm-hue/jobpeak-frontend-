@@ -678,8 +678,9 @@ function initAutocomplete() {
 
             <div class="row-3">
                 <div class="field">
-                    <label>Pay Min *</label>
-                    <input type="text" id="payMin" placeholder="e.g., $22">
+                    <label>PAY MIN * <span style="font-weight:400;font-size:12px;color:var(--text-3)">(or exact amount if no range)</span></label>
+                    <input type="text" id="payMin" placeholder="e.g., 90000" oninput="formatSalary(this)">
+                    <div class="hint">Enter bottom of range or exact salary. Required for search visibility.</div>
                 </div>
                 <div class="field">
                     <label>Pay Max <span class="opt">(optional)</span></label>
@@ -1679,6 +1680,29 @@ async function submitJob() {
             return;
         }
     }
+    // Validate salary - must be a number
+    const payMin = document.getElementById('payMin').value.trim();
+    if (!payMin) {
+        document.getElementById('payMin').focus();
+        document.getElementById('payMin').style.borderColor = '#EF4444';
+        document.getElementById('payMin').style.background = '#FEF2F2';
+        alert('⚠️ Please enter a pay amount\n\nWe need a number for your job to appear in search results. Enter your minimum hourly/weekly/annual rate.');
+        return;
+    }
+
+    // Check if pay is actually a number (not "competitive" or text)
+    const payMinClean = payMin.replace(/[$,]/g, '');
+    if (isNaN(parseFloat(payMinClean))) {
+        document.getElementById('payMin').focus();
+        document.getElementById('payMin').style.borderColor = '#EF4444';
+        document.getElementById('payMin').style.background = '#FEF2F2';
+        alert('⚠️ Pay must be a number\n\n"Competitive" won\'t show in search. Please enter a specific amount like $22 or $65,000.');
+        return;
+    }
+
+    // Reset error styling if validation passes
+    document.getElementById('payMin').style.borderColor = '';
+    document.getElementById('payMin').style.background = '';
     const desc = quill.root.innerHTML;
     if (quill.getText().trim().length < 10) {
         alert('Please add a job description.');
@@ -2065,6 +2089,18 @@ async function loadJobForEdit(jobId) {
         window.location.href = '/admin.html';
     }
 }   
+function formatSalary(input) {
+    // Remove non-numeric characters except decimal
+    let value = input.value.replace(/[^\d.]/g, '');
+    
+    // Format with commas and dollar sign
+    if (value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+            input.value = '$' + num.toLocaleString('en-US', {maximumFractionDigits: 0});
+        }
+    }
+}
 </script>
 
 <style>
