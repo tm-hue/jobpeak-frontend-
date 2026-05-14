@@ -308,7 +308,9 @@ captureTalrooClickID();
 
 async function loadJob() {
     const params = new URLSearchParams(window.location.search);
-    const jobId = params.get('id');
+    // Support both new slug URLs (/jobs/45-slug) and old query params (?id=45)
+const pathMatch = window.location.pathname.match(/\/jobs\/(\d+)/);
+const jobId = pathMatch ? pathMatch[1] : params.get('id');
     
     if (!jobId) {
         showNotFound('No job ID provided');
