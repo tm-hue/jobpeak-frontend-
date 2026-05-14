@@ -3,6 +3,27 @@
     {
       "source": "/sitemap-jobs.xml",
       "destination": "https://jobpeak-production.up.railway.app/sitemap-jobs.xml"
+    },
+    {
+      "source": "/jobs/:id-:slug*",
+      "destination": "/job_detail.html?id=:id"
+    },
+    {
+      "source": "/jobs/:id",
+      "destination": "/job_detail.html?id=:id"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/job_detail.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "id"
+        }
+      ],
+      "destination": "/jobs/:id",
+      "permanent": true
     }
   ]
 }
