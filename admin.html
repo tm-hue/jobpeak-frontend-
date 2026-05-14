@@ -141,7 +141,7 @@ function render(filteredJobs = null) {
             <div class="actions">
                 <a href="job_builder.html?edit=${job.id}" class="btn btn-edit">Edit</a>
                 <a href="results.html?job=${job.id}" class="btn btn-ghost" target="_blank">Results</a>
-                <a href="job_detail.html?id=${job.id}" class="btn btn-ghost" target="_blank">View</a>
+                <a href="/jobs/${job.id}${job.slug ? '-' + job.slug.split('-').slice(1).join('-') : ''}" class="btn btn-ghost" target="_blank">View</a>
                 ${job.status === 'active'
                     ? `<button class="btn btn-pause" onclick="setStatus(${job.id}, 'paused')">Pause</button>`
                     : job.status === 'paused'
