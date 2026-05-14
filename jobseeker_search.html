@@ -654,7 +654,7 @@ DO NOT include any explanation, just the JSON array.`
             const matchScore = Math.max(95 - (index * 5), 75);
             const bonusBadge = job.bonus ? `<span style="background:#FFF3EC;border:1px solid #FF6B2B;color:#FF6B2B;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;margin-left:8px">🎁 ${job.bonus}</span>` : '';
             const logoHtml = job.logoUrl ? `<img src="${job.logoUrl}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid #E5E5E5;margin-right:12px;flex-shrink:0" alt="">` : '';
-            const detailUrl = job.id ? `job_detail.html?id=${job.id}` : '#';
+            const detailUrl = job.id ? `/jobs/${job.id}${job.slug ? '-' + job.slug.split('-').slice(1).join('-') : ''}` : '#';
             
             return `
                 <a class="job-card" href="${detailUrl}">
