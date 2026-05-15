@@ -685,11 +685,12 @@ function initAutocomplete() {
                 </div>
                 <div class="field">
                     <label>Pay Max <span class="opt">(optional)</span></label>
-                    <input type="text" id="payMax" placeholder="e.g., $28">
+                    <input type="text" id="payMax" placeholder="e.g., $28" oninput="formatSalary(this)">
+                    <div class="hint" style="visibility:hidden;">Placeholder for alignment</div>
                 </div>
                 <div class="field">
-                    <label>Signing Bonus <span class="opt">(optional)</span></label>
-                    <input type="text" id="bonus" placeholder="e.g., $2,500">
+                    <label>Bonus Info <span class="opt">(optional)</span></label>
+                    <input type="text" id="bonus" placeholder="e.g., $2,500" oninput="formatBonusOrText(this)">
                     <div class="hint">Include in job card — boosts applications</div>
                 </div>
             </div>
