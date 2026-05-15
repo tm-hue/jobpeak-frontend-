@@ -666,16 +666,17 @@ function initAutocomplete() {
             <div class="card-title"><span class="icon">💰</span>Pay & Benefits</div>
 
             <div class="field">
-                <label>Pay Type</label>
-                <div class="pay-type-group" id="payTypeGroup">
-                    <div class="pay-pill active" data-val="hourly">Hourly</div>
-                    <div class="pay-pill" data-val="weekly">Weekly</div>
-                    <div class="pay-pill" data-val="annual">Annual/Salary</div>
-                    <div class="pay-pill" data-val="cpm">CPM (¢/Mile)</div>
-                    <div class="pay-pill" data-val="flat">Flat Rate</div>
-                </div>
-                <input type="hidden" id="payType" value="hourly">
-            </div>
+    <label>Pay Max</label>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">(optional)</div>
+    <input type="text" id="payMax" placeholder="e.g., $28" oninput="formatSalary(this)">
+    <div class="hint" style="visibility:hidden;">Placeholder for alignment</div>
+</div>
+<div class="field">
+    <label>Bonus Info</label>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">(optional)</div>
+    <input type="text" id="bonus" placeholder="e.g., $2,500" oninput="formatBonusOrText(this)">
+    <div class="hint">Include in job card — boosts applications</div>
+</div>
 
             <div class="row-3">
                 <div class="field">
@@ -742,8 +743,7 @@ function initAutocomplete() {
         <div class="card">
             <div class="card-title"><span class="icon">🔗</span>Application Link</div>
             <div class="field">
-                <label>Apply URL *</label>
-                <input type="url" id="applyUrl" placeholder="https://yourcompany.com/apply or GHL form link" required>
+                <input type="url" id="applyUrl" placeholder="https://intelliapp.driverapponline.com/c/yourcompany?uri_b=ia_yourcompanyinc_123456789" required>
                 <div class="hint">Candidates click "Apply Now" and land here. Paste your GHL form, Indeed, or company page link.</div>
             </div>
         </div>
@@ -2109,6 +2109,19 @@ function formatSalary(input) {
             input.value = '$' + num.toLocaleString('en-US', {maximumFractionDigits: 0});
         }
     }
+}
+    function formatBonusOrText(input) {
+    // Try to parse as number
+    let value = input.value.replace(/[^\d.]/g, '');
+    
+    // If it's a number, format with currency
+    if (value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+            input.value = '$' + num.toLocaleString('en-US', {maximumFractionDigits: 0});
+        }
+    }
+    // If not a number, leave as text (for things like "Performance bonus" or "Sign-on available")
 }
 </script>
 
