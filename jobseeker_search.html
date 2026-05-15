@@ -718,16 +718,18 @@ DO NOT include any explanation, just the JSON array.`
             try {
                 // Build detailed job data with all relevant fields
                 const jobsData = currentResults.map((job, i) => ({
-                    number: i + 1,
-                    title: job.title,
-                    company: job.company,
-                    location: job.location,
-                    salary: job.salary || 'Not specified',
-                    type: job.type,
-                    bonus: job.bonus || 'None',
-                    category: job.category,
-                    description: job.description
-                }));
+    number: i + 1,
+    id: job.id,           // ← ADD THIS
+    slug: job.slug,       // ← ADD THIS
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    salary: job.salary || 'Not specified',
+    type: job.type,
+    bonus: job.bonus || 'None',
+    category: job.category,
+    description: job.description
+}));
                 
                 const jobsDataString = JSON.stringify(jobsData, null, 2);
                 
