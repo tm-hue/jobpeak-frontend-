@@ -469,6 +469,7 @@
             .then(jobs => {
                 jobDatabase = jobs.map(j => ({
                     id: j.id,
+                    slug: j.slug,
                     title: j.title || '',
                     company: j.company || '',
                     location: j.hiring_location || j.location || '',
