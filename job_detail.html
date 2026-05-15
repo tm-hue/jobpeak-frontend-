@@ -165,6 +165,35 @@
         .not-found-icon { font-size: 48px; margin-bottom: 16px; }
         .not-found-title { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; margin-bottom:8px; }
         .not-found-sub { color: var(--text-2); margin-bottom:24px; }
+        /* STICKY APPLY BUTTON */
+        .apply-card.sticky {
+            position: fixed;
+            top: 76px; /* Below header (60px) + spacing */
+            right: 20px;
+            width: 340px;
+            z-index: 90;
+            animation: slideInSticky 0.3s ease-out;
+        }
+
+        @keyframes slideInSticky {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile: stick to top of viewport */
+        @media (max-width: 720px) {
+            .apply-card.sticky {
+                position: fixed;
+                top: 60px; /* Just below header */
+                left: 0;
+                right: 0;
+                width: 100%;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            }
+        }
     </style>
 </head>
 <body>
@@ -638,7 +667,37 @@ function shareEmail() {
     const title = document.querySelector('.job-title')?.textContent || 'Job';
     window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Check out this job: ' + window.location.href)}`;
 }
-
+// STICKY APPLY BUTTON ON SCROLL
+window.addEventListener('scroll', () => {
+    const applyCard = document.querySelector('.apply-card');
+    const sidebar = document.querySelector('.sidebar');
+    
+    if (!applyCard || !sidebar) return;
+    
+    const sidebarRect = sidebar.getBoundingClientRect();
+    const headerHeight = 60;
+    
+    // On desktop: stick when sidebar scrolls past header
+    // On mobile: stick immediately when scrolling down
+    const isMobile = window.innerWidth <= 720;
+    
+    if (isMobile) {
+        // Mobile: stick to top after scrolling 10px
+        if (window.scrollY > 10) {
+            applyCard.classList.add('sticky');
+        } else {
+            applyCard.classList.remove('sticky');
+        }
+    } else {
+        // Desktop: stick when sidebar reaches top
+        if (sidebarRect.top <= headerHeight + 16) {
+            applyCard.classList.add('sticky');
+        } else {
+            applyCard.classList.remove('sticky');
+        }
+    }
+});
+    
 loadJob();
 
     </script>
