@@ -169,7 +169,8 @@
         .apply-card.sticky {
             position: fixed;
             top: 76px; /* Below header (60px) + spacing */
-            right: 20px;
+            left: 50%;
+            transform: translateX(calc(900px/2 - 340px - 10px)); /* Center in right column */
             width: 340px;
             z-index: 90;
             animation: slideInSticky 0.3s ease-out;
