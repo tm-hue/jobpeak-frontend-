@@ -610,22 +610,18 @@ function renderJob(job) {
             // Parse apply URL to add parameters
             const applyUrl = new URL(job.apply_url);
             
-            // Pass through Talroo tracking
+            // Pass through Talroo tracking ID
             if (tlrSid) {
                 applyUrl.searchParams.set('tlr_sid', tlrSid);
-                applyUrl.searchParams.set('utm_source', 'Talroo');
             }
             
-            // Pass through WhatJobs tracking
+            // Pass through WhatJobs tracking ID
             if (wjClickID) {
                 applyUrl.searchParams.set('wjClickID', wjClickID);
-                if (!tlrSid) { // Only set utm_source if Talroo didn't already
-                    applyUrl.searchParams.set('utm_source', 'WhatJobs');
-                }
             }
             
-            // Pass through any other UTM parameters
-            ['utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+            // Pass through ALL UTM parameters from current page
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
                 const value = currentParams.get(param);
                 if (value) {
                     applyUrl.searchParams.set(param, value);
@@ -639,11 +635,6 @@ function renderJob(job) {
             // Fallback to original URL if URL parsing fails
             finalApplyUrl = job.apply_url;
         }
-        
-        // Redirect to apply URL with parameters
-        window.location.href = finalApplyUrl;
-        });
-    }
     
     // Inject Google for Jobs structured data
     injectGoogleJobsSchema(job);
