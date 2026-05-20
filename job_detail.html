@@ -635,6 +635,11 @@ function renderJob(job) {
             // Fallback to original URL if URL parsing fails
             finalApplyUrl = job.apply_url;
         }
+
+            // Redirect to apply URL with parameters
+            window.location.href = finalApplyUrl;
+        });
+    }
     
     // Inject Google for Jobs structured data
     injectGoogleJobsSchema(job);
