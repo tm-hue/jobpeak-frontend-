@@ -357,9 +357,8 @@ const jobId = pathMatch ? pathMatch[1] : params.get('id');
 }
 
 function formatPay(job) {
-    if (!job.salary && !job.pay_type) return null;
-    const type = { hourly:'/hr', weekly:'/wk', annual:'/yr', cpm:'¢/mi', flat:'/load' }[job.pay_type] || '';
-    return (job.salary || '') + (type ? ' ' + type : '');
+    if (!job.salary) return null;
+    return job.salary;
 }
 
 // ============================================================
