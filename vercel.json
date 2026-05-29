@@ -15,6 +15,17 @@
   ],
   "redirects": [
     {
+    "source": "/:path*",
+    "has": [
+      {
+        "type": "host",
+        "value": "jobpeak.io"
+      }
+    ],
+    "destination": "https://www.jobpeak.io/:path*",
+    "permanent": true
+  },
+    {
       "source": "/job_detail.html",
       "has": [
         {
