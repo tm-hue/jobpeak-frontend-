@@ -604,6 +604,7 @@ DO NOT include any explanation, just the JSON array.`
             }
             
             document.getElementById('searchButton').disabled = false;
+            logSearch(query, currentResults.length);
         }
         
         function simpleMatch(query) {
@@ -650,6 +651,18 @@ DO NOT include any explanation, just the JSON array.`
                 .slice(0, 12)
                 .map(i => i.index);
         }
+        function logSearch(query, resultsCount) {
+  if (!query || query.trim().length < 2) return;
+  fetch('https://jobpeak-production.up.railway.app/webhook/search-log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: query.trim(),
+      results_count: resultsCount || 0,
+      session_id: sessionStorage.getItem('jp_session') || null
+    })
+  }).catch(() => {});
+}
         
         function renderJobCard(job, index) {
             const matchScore = Math.max(95 - (index * 5), 75);
