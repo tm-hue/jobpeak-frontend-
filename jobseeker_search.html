@@ -651,7 +651,7 @@ DO NOT include any explanation, just the JSON array.`
                 .slice(0, 12)
                 .map(i => i.index);
         }
-        function logSearch(query, resultsCount) {
+        function logSearch(query, resultsCount, type) {
   if (!query || query.trim().length < 2) return;
   fetch('https://jobpeak-production.up.railway.app/webhook/search-log', {
     method: 'POST',
@@ -659,7 +659,8 @@ DO NOT include any explanation, just the JSON array.`
     body: JSON.stringify({
       query: query.trim(),
       results_count: resultsCount || 0,
-      session_id: sessionStorage.getItem('jp_session') || null
+      session_id: sessionStorage.getItem('jp_session') || null,
+      type: type || 'search'
     })
   }).catch(() => {});
 }
@@ -803,6 +804,7 @@ Instructions:
             document.getElementById('aiAskBtn').disabled = false;
             aiInput.value = '';
             aiInput.style.height = 'auto';
+            logSearch(refineQuery, currentResults.length, 'refinement');
         }
         
         function updateConversationDisplay() {
