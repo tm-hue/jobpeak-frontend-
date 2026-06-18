@@ -581,12 +581,6 @@ function renderJob(job) {
         applyBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             
-            // Fire both conversion tracking systems in parallel
-            await Promise.all([
-                fireWhatJobsConversion(),
-                fireTalrooConversion()
-            ]);
-            
             // Also track the click in your backend for Jobpeak analytics
             try {
                 const source = wjClickID ? 'whatjobs' : (tlrSid ? 'talroo' : 'direct');
