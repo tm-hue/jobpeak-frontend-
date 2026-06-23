@@ -574,14 +574,14 @@ DO NOT include any explanation, just the JSON array.`
 
         // ── LINKIFY JOB REFERENCES IN AI RESPONSES ──
         function linkifyJobRefs(text) {
-            return text.replace(/Job\s*#(\d+)/gi, function(match, num) {
-                const idx = parseInt(num) - 1;
-                const job = currentResults[idx];
-                if (!job) return match;
-                const url = job.slug ? `/jobs/${job.id}-${job.slug}` : `/jobs/${job.id}`;
-                return `<a href="${url}" target="_blank" style="color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent);">${match}</a>`;
-            });
-        }
+    return text.replace(/Job\s*#(\d+)/gi, function(match, num) {
+        const idx = parseInt(num) - 1;
+        const job = currentResults[idx];
+        if (!job) return match;
+        const url = job.slug ? `/jobs/${job.id}-${job.slug}` : `/jobs/${job.id}`;
+        return `<a href="${url}" target="_blank" style="color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent);">${job.title} at ${job.company}</a>`;
+    });
+}
         
         async function performRefinement() {
             const refineQuery = aiInput.value.trim();
