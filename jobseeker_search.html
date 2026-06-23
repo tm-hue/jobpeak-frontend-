@@ -65,7 +65,6 @@
         .search-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
         .search-button:disabled { opacity: 0.6; cursor: not-allowed; }
         
-        /* Pulsing hint below search */
         .search-hint {
             display: flex;
             align-items: center;
@@ -84,31 +83,17 @@
             box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
         }
         @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            }
-            50% {
-                transform: scale(1.1);
-                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
-            }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
         }
-        .search-hint strong {
-            color: var(--pulse-green);
-            font-weight: 600;
-        }
+        .search-hint strong { color: var(--pulse-green); font-weight: 600; }
         
         .examples { text-align: center; margin-bottom: 80px; margin-top: 40px; }
         .examples-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
         .example-chips { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .example-chip { background: var(--bg-secondary); border: 1px solid var(--border); padding: 10px 20px; border-radius: 100px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
         .example-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-        
-        /* Location highlighting in example chips */
-        .location-highlight {
-            color: var(--accent);
-            font-weight: 600;
-        }
+        .location-highlight { color: var(--accent); font-weight: 600; }
         
         .results-section { max-width: 900px; margin: 60px auto; display: none; padding-bottom: 160px; }
         .results-section.active { display: block; animation: fadeIn 0.4s ease; }
@@ -122,6 +107,28 @@
         .conversation-turn.user { background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%); border-left: 3px solid var(--accent); }
         .turn-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
         .turn-content { font-size: 15px; color: var(--text-primary); line-height: 1.6; }
+
+        /* ── PULSING ANALYZING ANIMATION ── */
+        .analyzing-pulse {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+        .analyzing-pulse .dots span {
+            display: inline-block;
+            animation: dotBounce 1.2s ease-in-out infinite;
+            font-size: 18px;
+            line-height: 1;
+        }
+        .analyzing-pulse .dots span:nth-child(1) { animation-delay: 0s; }
+        .analyzing-pulse .dots span:nth-child(2) { animation-delay: 0.2s; }
+        .analyzing-pulse .dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dotBounce {
+            0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+            40% { transform: translateY(-6px); opacity: 1; }
+        }
         
         .job-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 16px; transition: all 0.2s; cursor: pointer; display: block; text-decoration: none; color: inherit; }
         .job-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
@@ -141,7 +148,7 @@
         .loading-text { font-size: 16px; color: var(--text-secondary); }
         footer { text-align: center; padding: 60px 20px; color: var(--text-secondary); font-size: 14px; }
         
-        /* Sticky AI Bar - Fixed at Bottom */
+        /* Sticky AI Bar */
         .ai-sticky-bar {
             position: fixed;
             bottom: 0;
@@ -156,170 +163,43 @@
             box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
         }
-        .ai-sticky-bar.active {
-            display: block;
-            animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
+        .ai-sticky-bar.active { display: block; animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        /* Animated gradient top border */
         .ai-bar-gradient {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 3px;
-            background: linear-gradient(90deg, 
-                #FF6B35 0%, 
-                #FF8C42 25%, 
-                #10B981 50%, 
-                #0EA5E9 75%, 
-                #FF6B35 100%);
+            background: linear-gradient(90deg, #FF6B35 0%, #FF8C42 25%, #10B981 50%, #0EA5E9 75%, #FF6B35 100%);
             background-size: 200% 100%;
             animation: gradientShift 3s linear infinite;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 200% 0%; }
-        }
+        @keyframes gradientShift { 0% { background-position: 0% 0%; } 100% { background-position: 200% 0%; } }
         
-        /* Collapsed state - just the bar */
-        .ai-bar-collapsed {
-            padding: 16px 24px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .ai-bar-collapsed:hover {
-            background: rgba(255, 255, 255, 0.95);
-        }
-        .ai-bar-content {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .ai-icon-svg {
-            font-size: 28px;
-            color: var(--accent);
-            animation: iconFloat 3s ease-in-out infinite;
-            flex-shrink: 0;
-        }
-        @keyframes iconFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-4px); }
-        }
-        .ai-bar-text {
-            flex: 1;
-        }
-        .ai-bar-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-        .ai-bar-subtitle {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .ai-expand-arrow {
-            width: 40px;
-            height: 40px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-            flex-shrink: 0;
-        }
-        .ai-expand-arrow svg {
-            transition: transform 0.3s;
-        }
-        .ai-sticky-bar.expanded .ai-expand-arrow svg {
-            transform: rotate(180deg);
-        }
+        .ai-bar-collapsed { padding: 16px 24px; cursor: pointer; transition: all 0.2s; }
+        .ai-bar-collapsed:hover { background: rgba(255, 255, 255, 0.95); }
+        .ai-bar-content { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+        .ai-icon-svg { font-size: 28px; color: var(--accent); animation: iconFloat 3s ease-in-out infinite; flex-shrink: 0; }
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px); } }
+        .ai-bar-text { flex: 1; }
+        .ai-bar-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+        .ai-bar-subtitle { font-size: 13px; color: var(--text-secondary); }
+        .ai-expand-arrow { width: 40px; height: 40px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3); flex-shrink: 0; }
+        .ai-expand-arrow svg { transition: transform 0.3s; }
+        .ai-sticky-bar.expanded .ai-expand-arrow svg { transform: rotate(180deg); }
         
-        /* Expanded state - shows the panel */
-        .ai-panel-expanded {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .ai-sticky-bar.expanded .ai-panel-expanded {
-            max-height: 400px;
-        }
-        .ai-panel-content {
-            padding: 0 24px 24px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .ai-suggestions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-        .ai-chip {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .ai-chip:hover {
-            border-color: var(--accent);
-            background: white;
-            transform: translateY(-1px);
-        }
-        .ai-input-container {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-        .ai-textarea {
-            flex: 1;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-size: 15px;
-            font-family: 'Work Sans', sans-serif;
-            resize: none;
-            min-height: 44px;
-            transition: all 0.2s;
-        }
-        .ai-textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        .ai-ask-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Work Sans', sans-serif;
-            white-space: nowrap;
-        }
-        .ai-ask-btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
-        .ai-ask-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .ai-panel-expanded { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .ai-sticky-bar.expanded .ai-panel-expanded { max-height: 400px; }
+        .ai-panel-content { padding: 0 24px 24px; max-width: 900px; margin: 0 auto; }
+        .ai-suggestions { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .ai-chip { background: var(--bg-primary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .ai-chip:hover { border-color: var(--accent); background: white; transform: translateY(-1px); }
+        .ai-input-container { display: flex; gap: 12px; align-items: flex-start; }
+        .ai-textarea { flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 15px; font-family: 'Work Sans', sans-serif; resize: none; min-height: 44px; transition: all 0.2s; }
+        .ai-textarea:focus { outline: none; border-color: var(--accent); }
+        .ai-ask-btn { background: var(--accent); color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-family: 'Work Sans', sans-serif; white-space: nowrap; }
+        .ai-ask-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .ai-ask-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         
         @media (max-width: 768px) {
             h1 { font-size: 40px; }
@@ -442,7 +322,6 @@
         const API = 'https://jobpeak-production.up.railway.app';
         let jobDatabase = [];
         
-        // Rotating placeholder text with location emphasis
         const placeholders = [
             "CDL driver jobs in Columbus...",
             "warehouse work near Anderson, SC...",
@@ -459,11 +338,8 @@
             placeholderIndex = (placeholderIndex + 1) % placeholders.length;
             searchInput.setAttribute('placeholder', placeholders[placeholderIndex]);
         }
-        
-        // Rotate placeholder every 3 seconds
         setInterval(rotatePlaceholder, 3000);
         
-        // Load all jobs on page load
         fetch(`${API}/jobs`)
             .then(r => r.json())
             .then(jobs => {
@@ -488,7 +364,6 @@
         let conversationHistory = [];
         let currentResults = [];
         
-        // Auto-resize textareas
         searchInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 200) + 'px';
@@ -500,7 +375,6 @@
             this.style.height = Math.min(this.scrollHeight, 150) + 'px';
         });
         
-        // Example chips
         document.querySelectorAll('.example-chip').forEach(chip => {
             chip.addEventListener('click', function() {
                 searchInput.value = this.getAttribute('data-query');
@@ -510,7 +384,6 @@
             });
         });
         
-        // AI suggestion chips
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('ai-chip')) {
                 aiInput.value = e.target.getAttribute('data-refine');
@@ -520,27 +393,19 @@
             }
         });
         
-        // Sticky bar expand/collapse
         document.getElementById('aiBarCollapsed').addEventListener('click', function() {
             const bar = document.getElementById('aiStickyBar');
             bar.classList.toggle('expanded');
         });
         
-        // Event listeners
         document.getElementById('aiAskBtn').addEventListener('click', performRefinement);
         aiInput.addEventListener('keydown', function(e) { 
-            if (e.key === 'Enter' && !e.shiftKey) { 
-                e.preventDefault(); 
-                performRefinement(); 
-            } 
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); performRefinement(); } 
         });
         
         document.getElementById('searchButton').addEventListener('click', performSearch);
         searchInput.addEventListener('keydown', function(e) { 
-            if (e.key === 'Enter' && !e.shiftKey) { 
-                e.preventDefault(); 
-                performSearch(); 
-            } 
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); performSearch(); } 
         });
         
         async function performSearch() {
@@ -615,19 +480,14 @@ DO NOT include any explanation, just the JSON array.`
                 let score = 0;
                 const searchText = `${job.title} ${job.company} ${job.location} ${job.description} ${job.category}`.toLowerCase();
                 
-                // Exact category match gets highest score
                 if (job.category.toLowerCase() === queryLower) score += 20;
                 if (searchText.includes(queryLower)) score += 15;
-                
-                // Category-specific boosts
                 if ((queryLower.includes('motorcoach') || queryLower.includes('bus driver') || queryLower.includes('coach')) && 
                     (searchText.includes('motorcoach') || searchText.includes('coach'))) score += 15;
                 if (queryLower.includes('warehouse') && searchText.includes('warehouse')) score += 15;
                 if (queryLower.includes('cdl') && searchText.includes('cdl')) score += 10;
                 if (queryLower.includes('hvac') && searchText.includes('hvac')) score += 10;
                 if (queryLower.includes('nurse') && searchText.includes('nurse')) score += 10;
-                
-                // Location boosts
                 if (queryLower.includes('local') && searchText.includes('local')) score += 5;
                 if (queryLower.includes('home') && searchText.includes('home')) score += 5;
                 if (queryLower.includes('columbus') && searchText.includes('columbus')) score += 8;
@@ -637,10 +497,7 @@ DO NOT include any explanation, just the JSON array.`
                 if (queryLower.includes('greenville') && searchText.includes('greenville')) score += 8;
                 if (queryLower.includes('tennessee') && searchText.includes('tennessee')) score += 8;
                 
-                // Generic word matching for any other searches
-                queryWords.forEach(word => {
-                    if (searchText.includes(word)) score += 2;
-                });
+                queryWords.forEach(word => { if (searchText.includes(word)) score += 2; });
                 
                 return { index, score };
             });
@@ -651,19 +508,20 @@ DO NOT include any explanation, just the JSON array.`
                 .slice(0, 12)
                 .map(i => i.index);
         }
+
         function logSearch(query, resultsCount, type) {
-  if (!query || query.trim().length < 2) return;
-  fetch('https://jobpeak-production.up.railway.app/webhook/search-log', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: query.trim(),
-      results_count: resultsCount || 0,
-      session_id: sessionStorage.getItem('jp_session') || null,
-      type: type || 'search'
-    })
-  }).catch(() => {});
-}
+            if (!query || query.trim().length < 2) return;
+            fetch('https://jobpeak-production.up.railway.app/webhook/search-log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    query: query.trim(),
+                    results_count: resultsCount || 0,
+                    session_id: sessionStorage.getItem('jp_session') || null,
+                    type: type || 'search'
+                })
+            }).catch(() => {});
+        }
         
         function renderJobCard(job, index) {
             const matchScore = Math.max(95 - (index * 5), 75);
@@ -705,8 +563,6 @@ DO NOT include any explanation, just the JSON array.`
             
             document.getElementById('loadingSection').classList.remove('active');
             document.getElementById('resultsSection').classList.add('active');
-            
-            // Show sticky AI bar
             document.getElementById('aiStickyBar').classList.add('active');
             
             aiInput.value = '';
@@ -714,6 +570,17 @@ DO NOT include any explanation, just the JSON array.`
             setTimeout(() => { 
                 document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
             }, 100);
+        }
+
+        // ── LINKIFY JOB REFERENCES IN AI RESPONSES ──
+        function linkifyJobRefs(text) {
+            return text.replace(/Job\s*#(\d+)/gi, function(match, num) {
+                const idx = parseInt(num) - 1;
+                const job = currentResults[idx];
+                if (!job) return match;
+                const url = job.slug ? `/jobs/${job.id}-${job.slug}` : `/jobs/${job.id}`;
+                return `<a href="${url}" target="_blank" style="color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent);">${match}</a>`;
+            });
         }
         
         async function performRefinement() {
@@ -725,26 +592,27 @@ DO NOT include any explanation, just the JSON array.`
             conversationHistory.push({ role: 'user', content: refineQuery });
             updateConversationDisplay();
             
+            // ── PULSING LOADING STATE ──
             const loadingTurn = document.createElement('div');
             loadingTurn.className = 'conversation-turn assistant';
-            loadingTurn.innerHTML = `<div class="turn-label">Jobpeak</div><div class="turn-content">Analyzing...</div>`;
+            loadingTurn.innerHTML = `<div class="turn-label">Jobpeak</div><div class="turn-content"><span class="analyzing-pulse">Analyzing<span class="dots"><span>.</span><span>.</span><span>.</span></span></span></div>`;
             document.getElementById('conversationHistory').appendChild(loadingTurn);
+            loadingTurn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
             try {
-                // Build detailed job data with all relevant fields
                 const jobsData = currentResults.map((job, i) => ({
-    number: i + 1,
-    id: job.id,           // ← ADD THIS
-    slug: job.slug,       // ← ADD THIS
-    title: job.title,
-    company: job.company,
-    location: job.location,
-    salary: job.salary || 'Not specified',
-    type: job.type,
-    bonus: job.bonus || 'None',
-    category: job.category,
-    description: job.description
-}));
+                    number: i + 1,
+                    id: job.id,
+                    slug: job.slug,
+                    title: job.title,
+                    company: job.company,
+                    location: job.location,
+                    salary: job.salary || 'Not specified',
+                    type: job.type,
+                    bonus: job.bonus || 'None',
+                    category: job.category,
+                    description: job.description
+                }));
                 
                 const jobsDataString = JSON.stringify(jobsData, null, 2);
                 
@@ -758,6 +626,7 @@ User question: "${refineQuery}"
 
 Instructions:
 - Answer naturally and conversationally about these specific jobs
+- When referencing a specific job, use the format "Job #1", "Job #2" etc. (matching their number field) so the user can click through to the listing
 - If they ask "which pays the most" or similar comparison questions, analyze the salary field and answer
 - If they ask about bonuses, check the bonus field
 - If they ask about location, benefits, schedule, or company culture, use the available data
@@ -766,11 +635,12 @@ Instructions:
 - Keep responses concise (2-3 sentences)
 - If the data doesn't contain the information they're asking for, say so honestly`;
 
+                // ── HAIKU FOR FASTER REFINEMENT RESPONSES ──
                 const response = await fetch(`${API}/ai-search`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        model: 'claude-sonnet-4-20250514', 
+                        model: 'claude-haiku-4-5-20251001', 
                         max_tokens: 1500, 
                         messages: [{ role: 'user', content: refinementPrompt }]
                     })
@@ -811,7 +681,7 @@ Instructions:
             document.getElementById('conversationHistory').innerHTML = conversationHistory.map(turn => `
                 <div class="conversation-turn ${turn.role}">
                     <div class="turn-label">${turn.role === 'user' ? 'You' : 'Jobpeak'}</div>
-                    <div class="turn-content">${turn.content}</div>
+                    <div class="turn-content">${linkifyJobRefs(turn.content)}</div>
                 </div>
             `).join('');
             
