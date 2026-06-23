@@ -980,18 +980,18 @@
         <div class="section-label">Advertising Radius & Location Intelligence</div>
 
         <div class="lib-banner">
-          <div class="lib-title">🎯 Smarter than Indeed's dumb circle</div>
+          <div class="lib-title">📍 Intelligent ad placement — powered by US Census data</div>
           <div class="lib-body">
-            Indeed shows your job in a generic radius — the same circle regardless of where CDL drivers actually live. Jobpeak uses US Census data to find up to 20 cities within your radius ranked by CDL driver density. Your ad dollars go where the drivers are, not where they aren't.
+            Enter your hiring location and radius. Jobpeak finds up to 20 cities ranked by CDL driver density for your specific job title — so your listing reaches the right candidates, not just the nearest zip codes.
           </div>
           <div class="lib-vs">
             <div class="lib-vs-item">
-              <div class="lib-vs-label bad">❌ Indeed / ZipRecruiter</div>
-              <div class="lib-vs-desc">Generic circle radius. Equal spend across suburbs, rural areas, and industrial zones regardless of driver population.</div>
+              <div class="lib-vs-label bad">Standard job boards</div>
+              <div class="lib-vs-desc">Advertise in a generic radius circle. Every zip code treated equally regardless of driver population.</div>
             </div>
             <div class="lib-vs-item">
-              <div class="lib-vs-label good">✓ Jobpeak</div>
-              <div class="lib-vs-desc">Census-ranked city list. Up to 20 locations sorted by CDL driver density. You see exactly where your job advertises.</div>
+              <div class="lib-vs-label good">Jobpeak</div>
+              <div class="lib-vs-desc">Census-ranked city list by job title. Up to 20 locations sorted by driver density. You see exactly where you advertise.</div>
             </div>
           </div>
         </div>
@@ -1034,7 +1034,7 @@
         <hr class="section-divider">
         <div class="section-label">Pay & Schedule</div>
 
-        <div class="pay-row">
+        <div class="field-row" style="grid-template-columns:1fr 1fr 1fr 1fr;">
           <div class="field" id="field-payType">
             <label>Pay Type <span class="req">*</span></label>
             <select id="payType">
@@ -1048,8 +1048,13 @@
             <div class="field-error">Pay type is required</div>
           </div>
           <div class="field">
-            <label>Pay Range <span class="req">*</span></label>
-            <input type="text" id="salary" placeholder="e.g. $0.55 — $0.60 CPM" oninput="formatSalaryField(this)">
+            <label>Pay Min <span class="req">*</span></label>
+            <input type="text" id="payMin" placeholder="e.g. 65000" oninput="formatSalaryField(this)">
+            <div class="field-hint">Enter a number — we format it automatically</div>
+          </div>
+          <div class="field">
+            <label>Pay Max <span class="opt">(optional)</span></label>
+            <input type="text" id="payMax" placeholder="e.g. 85000" oninput="formatSalaryField(this)">
           </div>
           <div class="field">
             <label>Sign-On Bonus <span class="opt">(optional)</span></label>
@@ -1407,7 +1412,8 @@
     if (!lat || !lng) return;
 
     const radius = parseInt(document.querySelector('input[name="radius"]:checked')?.value || 50);
-    const category = document.getElementById('cdlClass')?.value ? 'trucking' : 'trucking';
+    const category = 'trucking';
+    const jobTitle = document.getElementById('jobTitle').value.trim();
 
     document.getElementById('locPreview').style.display = 'block';
     document.getElementById('locGrid').innerHTML = '<div style="font-size:13px;color:#9BA3AF;padding:8px;">Analyzing driver density by location...</div>';
@@ -1419,7 +1425,7 @@
 
     try {
       const cityParams = inRadius.map(c => `${c.city}, ${c.state}`).join('|');
-      const res = await fetch(`${API}/demographics?cities=${encodeURIComponent(cityParams)}&category=${category}`);
+      const titleParam = jobTitle ? `&title=${encodeURIComponent(jobTitle)}` : ''; const res = await fetch(`${API}/demographics?cities=${encodeURIComponent(cityParams)}&category=${category}${titleParam}`);
       const data = await res.json();
       const scores = data.scores || {};
 
@@ -1576,7 +1582,7 @@
     const title = document.getElementById('jobTitle').value.trim();
     const company = document.getElementById('company').value.trim();
     const location = document.getElementById('location').value.trim();
-    const salary = document.getElementById('salary').value.trim();
+    const salary = [document.getElementById('payMin').value, document.getElementById('payMax').value].filter(Boolean).join(' — ');
     const bonus = document.getElementById('bonus').value.trim();
     const homeTime = document.getElementById('homeTime').value;
     const jobType = document.getElementById('jobType').value;
@@ -1585,7 +1591,7 @@
     document.getElementById('previewTitle').textContent = title || '—';
     document.getElementById('previewCompany').textContent = company || '—';
     document.getElementById('previewLocation').textContent = location || '—';
-    document.getElementById('previewSalary').textContent = salary || 'Competitive';
+    document.getElementById('previewSalary').textContent = (document.getElementById('payMin').value || '') + (document.getElementById('payMax').value ? ' — ' + document.getElementById('payMax').value : '') || 'Competitive';
     document.getElementById('previewJobType').textContent = jobType === 'full-time' ? 'Full-Time' : jobType === 'part-time' ? 'Part-Time' : 'Contract';
     const rawDesc = quill ? quill.getText().trim() : desc; document.getElementById('previewDesc').textContent = rawDesc ? rawDesc.substring(0, 400) + (rawDesc.length > 400 ? '...' : '') : '—';
 
@@ -1705,7 +1711,7 @@ Write 150-200 words. Lead with what makes this job worth a driver's time. End wi
         title: document.getElementById('jobTitle').value.trim(),
         company: document.getElementById('company').value.trim(),
         hiringLocation: document.getElementById('location').value.trim(),
-        salary: document.getElementById('salary').value.trim(),
+        salary: [document.getElementById('payMin').value, document.getElementById('payMax').value].filter(v => v.trim()).join(' — '),
         bonus: document.getElementById('bonus').value.trim() || null,
         cdlClass: document.getElementById('cdlClass').value || null,
         homeTime: document.getElementById('homeTime').value || null,
