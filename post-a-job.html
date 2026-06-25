@@ -1105,7 +1105,7 @@
         <div class="field-row" style="grid-template-columns:1fr 1fr 1fr 1fr;">
           <div class="field" id="field-payType">
             <label>Pay Type <span class="req">*</span></label>
-            <select id="payType">
+            <select id="payType" onchange="updatePayPlaceholders()">
               <option value="">Select...</option>
               <option value="cpm">CPM (cents per mile)</option>
               <option value="hourly">Hourly</option>
@@ -1117,12 +1117,12 @@
           </div>
           <div class="field">
             <label>Pay Min <span class="req">*</span></label>
-            <input type="text" id="payMin" placeholder="e.g. 65000" oninput="formatSalaryField(this)">
+            <input type="text" id="payMin" placeholder="e.g. 0.55" onblur="formatSalaryField(this)">
             <div class="field-hint">Enter a number — we format it automatically</div>
           </div>
           <div class="field">
             <label>Pay Max <span class="opt">(optional)</span></label>
-            <input type="text" id="payMax" placeholder="e.g. 85000" oninput="formatSalaryField(this)">
+            <input type="text" id="payMax" placeholder="e.g. 0.65" onblur="formatSalaryField(this)">
           </div>
           <div class="field">
             <label>Sign-On Bonus <span class="opt">(optional)</span></label>
@@ -1783,6 +1783,22 @@
     }
   }
 
+  function updatePayPlaceholders() {
+    const type = document.getElementById('payType').value;
+    const minEl = document.getElementById('payMin');
+    const maxEl = document.getElementById('payMax');
+    const map = {
+      cpm:    ['0.55', '0.65'],
+      hourly: ['22.00', '28.00'],
+      weekly: ['1200', '1600'],
+      annual: ['65000', '85000'],
+      flat:   ['150', '250'],
+    };
+    const vals = map[type] || ['amount', 'amount'];
+    if (minEl) minEl.placeholder = 'e.g. ' + vals[0];
+    if (maxEl) maxEl.placeholder = 'e.g. ' + vals[1];
+  }
+
   function formatBonusField(input) {
     const value = input.value.replace(/[^\d.]/g, '');
     if (value) {
@@ -1935,11 +1951,11 @@
     const title = document.getElementById('jobTitle').value.trim();
     const company = document.getElementById('company').value.trim();
     const location = document.getElementById('location').value.trim();
-    const salary = document.getElementById('salary').value.trim();
+    const salary = [document.getElementById('payMin').value, document.getElementById('payMax').value].filter(Boolean).join(' — ');
     const bonus = document.getElementById('bonus').value.trim();
-    const cdlClass = document.getElementById('cdlClass').value;
-    const homeTime = document.getElementById('homeTime').value;
-    const routeType = document.getElementById('routeType').value;
+    const cdlClass = document.getElementById('cdlClass') ? document.getElementById('cdlClass').value : '';
+    const homeTime = document.getElementById('homeTime') ? document.getElementById('homeTime').value : '';
+    const routeType = document.getElementById('routeType') ? document.getElementById('routeType').value : '';
     const payType = document.getElementById('payType').value;
 
     if (!title || !company) {
