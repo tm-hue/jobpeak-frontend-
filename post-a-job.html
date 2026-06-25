@@ -218,7 +218,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
-      overflow: hidden;
+      overflow: visible;
       box-shadow: var(--shadow-sm);
     }
 
@@ -1285,6 +1285,21 @@
         <div class="field">
           <label>Description <span class="req">*</span></label>
           <div id="quillEditor"></div>
+          <script>
+            // Inline init as final fallback
+            (function tryQuill() {
+              if (typeof Quill !== 'undefined' && !window._quillInitDone) {
+                window._quillInitDone = true;
+                quill = new Quill('#quillEditor', {
+                  theme: 'snow',
+                  placeholder: 'Describe the role, daily responsibilities, requirements, benefits...',
+                  modules: { toolbar: [['bold','italic','underline'],[{'list':'ordered'},{'list':'bullet'}],['clean']] }
+                });
+              } else if (!window._quillInitDone) {
+                setTimeout(tryQuill, 100);
+              }
+            })();
+          </script>
           <div class="field-hint">AI-written descriptions get 40% more applicants on average</div>
         </div>
 
@@ -1640,7 +1655,7 @@
     return Array.from(items).filter(cb => cb.checked).map(cb => cb.value);
   }
 
-  // ── QUILL INIT ──
+  // ── QUILL INIT — called after all scripts load ──
   function initQuill() {
     if (document.getElementById('quillEditor') && typeof Quill !== 'undefined' && !quill) {
       quill = new Quill('#quillEditor', {
@@ -1655,12 +1670,6 @@
         }
       });
     }
-  }
-  // Init on DOMContentLoaded or immediately if already loaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { initQuill(); if (typeof google !== 'undefined') initAutocomplete(); });
-  } else {
-    initQuill();
   }
 
   // ── RADIUS SELECTOR ──
@@ -2125,5 +2134,11 @@ Structure: Opening hook (1-2 sentences), What We Offer section with bullets, Req
 </script>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPO41zo918dmVLtEgKZCjTyCSHVaapGsw&libraries=places&callback=initAutocomplete" defer></script>
+  <script>
+    // Init Quill after all scripts fully loaded
+    window.addEventListener('load', function() {
+      initQuill();
+    });
+  </script>
 </body>
 </html>
