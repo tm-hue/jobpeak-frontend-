@@ -1873,11 +1873,12 @@
     }
 
     const descText = quill ? quill.getText().trim() : '';
+    const qlContainer = document.querySelector('.ql-container');
     if (!descText || descText.length < 10) {
-      document.querySelector('.ql-container').style.borderColor = '#EF4444';
+      if (qlContainer) qlContainer.style.borderColor = '#EF4444';
       valid = false;
     } else {
-      document.querySelector('.ql-container').style.borderColor = '';
+      if (qlContainer) qlContainer.style.borderColor = '';
     }
 
     // Warn if non-CDL and no apply URL
@@ -1912,8 +1913,6 @@
     const bonus = document.getElementById('bonus').value.trim();
     const homeTime = document.getElementById('homeTime').value;
     const jobType = document.getElementById('jobType').value;
-    const desc = document.getElementById('description').value.trim();
-
     // Show urgency badge in preview
     const urgencyPreview = document.getElementById('urgencyPreviewBadge');
     if (urgencyPreview) urgencyPreview.style.display = urgentActive ? 'block' : 'none';
@@ -2007,7 +2006,7 @@ Structure: Opening hook (1-2 sentences), What We Offer section with bullets, Req
       const data = await res.json();
       const text = data.content?.find(c => c.type === 'text')?.text || '';
       if (text) {
-        if (quill) { quill.root.innerHTML = text.replace(/\n/g, '<br>'); document.querySelector('.ql-container').style.borderColor = ''; } else { document.getElementById('description').value = text; }
+        if (quill) { const clean = text.replace(/```html/g,'').replace(/```/g,'').trim(); quill.root.innerHTML = clean; document.querySelector('.ql-container').style.borderColor = ''; } else { console.warn('Quill not ready'); }
       }
     } catch (err) {
       console.error('AI write error:', err);
