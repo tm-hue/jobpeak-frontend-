@@ -1037,7 +1037,7 @@
 
         <div class="field" id="field-location">
           <label>Hiring Location <span class="req">*</span></label>
-          <input type="text" id="location" placeholder="e.g. Columbus, OH" autocomplete="off" onkeydown="if(event.key==='Enter')event.preventDefault();">
+          <input type="text" id="location" placeholder="e.g. Columbus, OH" autocomplete="off" onkeydown="if(event.key==='Enter')event.preventDefault();" oninput="locationInputChanged()">
           <input type="hidden" id="hiringLat">
           <input type="hidden" id="hiringLng">
           <div class="field-hint">Start typing — we'll find your city automatically</div>
@@ -1672,6 +1672,15 @@
     }
   }
 
+  // ── LOCATION INPUT CHANGE ──
+  let locationTimer = null;
+  function locationInputChanged() {
+    clearTimeout(locationTimer);
+    locationTimer = setTimeout(() => {
+      generateLocations();
+    }, 600); // debounce 600ms after typing stops
+  }
+
   // ── RADIUS SELECTOR ──
   function selectRadius(el, val) {
     document.querySelectorAll('.r-opt').forEach(o => o.classList.remove('active'));
@@ -1711,9 +1720,27 @@
   async function generateLocations() {
     const loc = document.getElementById('location').value.trim();
     if (!loc) return;
-    const lat = parseFloat(document.getElementById('hiringLat').value);
-    const lng = parseFloat(document.getElementById('hiringLng').value);
-    if (!lat || !lng) return;
+    let lat = parseFloat(document.getElementById('hiringLat').value);
+    let lng = parseFloat(document.getElementById('hiringLng').value);
+
+    // Fallback: look up in CITIES_DB if Google Maps hasn't fired yet
+    if (!lat || !lng) {
+      const locLower = loc.toLowerCase();
+      const found = CITIES_DB.find(c => {
+        const cityState = (c.city + ', ' + c.state).toLowerCase();
+        const cityOnly = c.city.toLowerCase();
+        return cityState === locLower || cityOnly === locLower ||
+               locLower.startsWith(cityOnly) || cityState.startsWith(locLower);
+      });
+      if (found) {
+        lat = found.lat;
+        lng = found.lon;
+        document.getElementById('hiringLat').value = lat;
+        document.getElementById('hiringLng').value = lng;
+      } else {
+        return; // Can't generate without coordinates
+      }
+    }
 
     const radius = parseInt(document.querySelector('input[name="radius"]:checked')?.value || 50);
     const category = 'trucking';
