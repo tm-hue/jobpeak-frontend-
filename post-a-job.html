@@ -903,6 +903,55 @@
       .activate-features { grid-template-columns: 1fr; }
       .radio-cards { grid-template-columns: 1fr; }
     }
+    /* ── CDL TOGGLE ── */
+    .cdl-toggle-bar {
+      background: var(--accent-light);
+      border: 1.5px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      margin-bottom: 0;
+      transition: all .15s;
+    }
+    .cdl-toggle-bar:hover { background: #FFE8D6; }
+    .cdl-toggle-label { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 10px; }
+    .cdl-toggle-sub { font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+    .toggle-switch { width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; transition: background .2s; flex-shrink: 0; }
+    .toggle-switch.on { background: var(--accent); }
+    .toggle-switch::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .toggle-switch.on::after { left: 23px; }
+    .cdl-fields-panel { display: none; background: #FAFBFC; border: 1.5px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: 20px; margin-bottom: 24px; }
+    .cdl-fields-panel.open { display: block; }
+
+    /* ── SCREENER QUESTIONS ── */
+    .screener-section { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
+    .screener-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .screener-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5; }
+    .screener-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .screener-item { display: flex; align-items: flex-start; gap: 10px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: all .15s; }
+    .screener-item:hover { border-color: var(--accent); }
+    .screener-item.selected { border-color: var(--accent); background: var(--accent-light); }
+    .screener-item input[type="checkbox"] { accent-color: var(--accent); margin-top: 2px; flex-shrink: 0; width: 16px; height: 16px; }
+    .screener-item-text { font-size: 13px; font-weight: 600; color: var(--text); }
+    .screener-item-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .screener-note { font-size: 11px; color: var(--text-muted); margin-top: 12px; display: flex; align-items: center; gap: 6px; }
+
+    /* ── URGENCY TOGGLE ── */
+    .urgency-bar { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 24px; cursor: pointer; transition: all .15s; }
+    .urgency-bar:hover { border-color: #EF4444; }
+    .urgency-bar.active { border-color: #EF4444; background: #FFF5F5; }
+    .urgency-label { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .urgency-badge { background: #EF4444; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: .04em; }
+
+    /* ── DISTRIBUTION BADGES ── */
+    .dist-badge-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+    .dist-badge { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+    .dist-badge .check { width: 18px; height: 18px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; flex-shrink: 0; }
+    .dist-badge.ai { border-color: #8B5CF6; color: #8B5CF6; background: #F5F3FF; }
+    .dist-badge.ai .check { background: #8B5CF6; }
   </style>
   <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
@@ -956,7 +1005,27 @@
         <div class="field-row">
           <div class="field" id="field-jobTitle">
             <label>Job Title <span class="req">*</span></label>
-            <input type="text" id="jobTitle" placeholder="e.g. CDL-A OTR Driver" autocomplete="off">
+            <input type="text" id="jobTitle" placeholder="e.g. CDL-A OTR Driver" autocomplete="off" list="jobTitleSuggestions" oninput="onJobTitleChange()">
+            <datalist id="jobTitleSuggestions">
+              <option value="CDL-A OTR Driver">
+              <option value="CDL-A Regional Driver">
+              <option value="CDL-A Dedicated Driver">
+              <option value="CDL-A Local Driver">
+              <option value="CDL-A Hazmat/Tanker Driver">
+              <option value="CDL-A Flatbed Driver">
+              <option value="CDL-A Intermodal Driver">
+              <option value="CDL-A/B Tow Truck Driver">
+              <option value="CDL-B Dump Truck Driver">
+              <option value="CDL-B Local Driver">
+              <option value="CDL-B Delivery Driver">
+              <option value="CDL-B Motorcoach Operator">
+              <option value="CDL-A/B Motorcoach Operator">
+              <option value="CDL-B Bus Driver">
+              <option value="CDL-B School Bus Driver">
+              <option value="CDL-B/Non-CDL Limo or Paratransit Driver">
+              <option value="Non-CDL Shuttle Driver">
+              <option value="Non-CDL Delivery Driver">
+            </datalist>
             <div class="field-error">Job title is required</div>
           </div>
           <div class="field" id="field-company">
@@ -1061,56 +1130,149 @@
           </div>
         </div>
 
-        <div class="field-row">
-          <div class="field">
-            <label>CDL Class Required</label>
-            <select id="cdlClass">
-              <option value="">Any / Not Required</option>
-              <option value="A">CDL-A</option>
-              <option value="B">CDL-B</option>
-              <option value="C">CDL-C</option>
-            </select>
+        <!-- Urgency Toggle -->
+        <div class="urgency-bar" id="urgencyBar" onclick="toggleUrgency()">
+          <div class="urgency-label">
+            <span>🚨</span>
+            <div>
+              <div>Mark as Urgently Hiring</div>
+              <div style="font-size:12px;font-weight:400;color:var(--text-secondary);">Adds a free Urgently Hiring badge to your listing — drives more applications</div>
+            </div>
           </div>
-          <div class="field">
-            <label>Home Time</label>
-            <select id="homeTime">
-              <option value="">Select...</option>
-              <option value="Daily">Home Daily</option>
-              <option value="Weekly">Home Weekly</option>
-              <option value="Biweekly">Home Biweekly</option>
-              <option value="OTR">OTR (out 2-3 weeks)</option>
-            </select>
-          </div>
+          <div class="toggle-switch" id="urgencyToggle"></div>
         </div>
+        <input type="hidden" id="urgentHiring" value="false">
 
-        <div class="field-row">
-          <div class="field">
-            <label>Route Type</label>
-            <select id="routeType">
-              <option value="">Select...</option>
-              <option value="Local">Local</option>
-              <option value="Regional">Regional</option>
-              <option value="OTR">OTR</option>
-              <option value="Dedicated">Dedicated Lane</option>
-            </select>
+        <!-- CDL Toggle -->
+        <div class="cdl-toggle-bar" onclick="toggleCdlFields()" style="margin-bottom:0;border-radius:var(--radius) var(--radius) 0 0;" id="cdlToggleBar">
+          <div class="cdl-toggle-label">
+            🚛 This is a CDL / Trucking job
+            <span class="cdl-toggle-sub">Unlock CDL-specific fields and auto-screener questions</span>
           </div>
-          <div class="field">
-            <label>Job Type</label>
-            <select id="jobType">
-              <option value="full-time">Full-Time</option>
-              <option value="part-time">Part-Time</option>
-              <option value="contract">Contract</option>
-            </select>
+          <div class="toggle-switch" id="cdlToggleSwitch"></div>
+        </div>
+        <div id="nonCdlMsg" style="background:#F8F9FA;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 0 var(--radius) var(--radius);padding:10px 16px;font-size:12px;color:var(--text-secondary);margin-bottom:24px;">
+          Not a CDL job? No problem — paste your website application form or careers page URL in the Apply URL field below. Your job will still distribute to Talroo, WhatJobs, and Google for Jobs.
+        </div>
+        <div class="cdl-fields-panel" id="cdlFieldsPanel">
+          <div class="field-row" style="margin-bottom:16px;">
+            <div class="field">
+              <label>CDL Class Required</label>
+              <select id="cdlClass">
+                <option value="">Any / Not Required</option>
+                <option value="A">CDL-A</option>
+                <option value="B">CDL-B</option>
+                <option value="C">CDL-C</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Home Time</label>
+              <select id="homeTime">
+                <option value="">Select...</option>
+                <option value="Daily">Home Daily</option>
+                <option value="Weekly">Home Weekly</option>
+                <option value="Biweekly">Home Biweekly</option>
+                <option value="OTR">OTR (out 2-3 weeks)</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row" style="margin-bottom:16px;">
+            <div class="field">
+              <label>Route Type</label>
+              <select id="routeType">
+                <option value="">Select...</option>
+                <option value="Local">Local</option>
+                <option value="Regional">Regional</option>
+                <option value="OTR">OTR</option>
+                <option value="Dedicated">Dedicated Lane</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Job Type</label>
+              <select id="jobType">
+                <option value="full-time">Full-Time</option>
+                <option value="part-time">Part-Time</option>
+                <option value="contract">Contract</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- CDL Screener Questions -->
+          <div class="screener-section">
+            <div class="screener-title">✅ CDL Screener Questions</div>
+            <div class="screener-sub">Select which qualifications to screen for. Drivers who don't qualify are flagged automatically — you only see qualified applicants. Indeed charges extra for this. It's included free.</div>
+            <div class="screener-grid">
+              <label class="screener-item" onclick="toggleScreener(this)">
+                <input type="checkbox" id="sq_cdla" value="cdla">
+                <div>
+                  <div class="screener-item-text">Valid CDL-A Required</div>
+                  <div class="screener-item-sub">Auto-reject without CDL-A</div>
+                </div>
+              </label>
+              <label class="screener-item" onclick="toggleScreener(this)">
+                <input type="checkbox" id="sq_experience" value="experience">
+                <div>
+                  <div class="screener-item-text">Minimum Experience</div>
+                  <div class="screener-item-sub">Filter by years of OTR/local experience</div>
+                </div>
+              </label>
+              <label class="screener-item" onclick="toggleScreener(this)">
+                <input type="checkbox" id="sq_accidents" value="accidents">
+                <div>
+                  <div class="screener-item-text">Clean MVR Required</div>
+                  <div class="screener-item-sub">Screen for preventable accidents</div>
+                </div>
+              </label>
+              <label class="screener-item" onclick="toggleScreener(this)">
+                <input type="checkbox" id="sq_location" value="location">
+                <div>
+                  <div class="screener-item-text">Must Report to Location</div>
+                  <div class="screener-item-sub">Confirm daily commute willingness</div>
+                </div>
+              </label>
+              <label class="screener-item" onclick="toggleScreener(this)">
+                <input type="checkbox" id="sq_drug" value="drug">
+                <div>
+                  <div class="screener-item-text">Drug Screening Consent</div>
+                  <div class="screener-item-sub">Pre-employment drug test required</div>
+                </div>
+              </label>
+              <label class="screener-item" onclick="toggleScreener(this)">
+                <input type="checkbox" id="sq_hometime" value="hometime">
+                <div>
+                  <div class="screener-item-text">Home Time Preference</div>
+                  <div class="screener-item-sub">Match on home daily/weekly/OTR</div>
+                </div>
+              </label>
+            </div>
+            <div class="screener-note">💡 Selected screener questions appear on the apply form automatically — no setup needed</div>
           </div>
         </div>
 
         <hr class="section-divider">
         <div class="section-label">Job Description</div>
 
+        <div style="background:#F7F8FA;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;">How to get the best description:</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);">
+              <div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+              Enter your job title, hiring location, and pay above
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);">
+              <div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+              Toggle on CDL fields if applicable (home time, route type)
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);">
+              <div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+              Hit <strong style="color:var(--accent);">Write it for me</strong> — done in seconds. Edit freely after.
+            </div>
+          </div>
+        </div>
         <div class="ai-desc-bar">
           <div class="ai-desc-left">
             <span class="ai-icon">✨</span>
-            <div class="ai-desc-text">Let <span>Jobpeak AI</span> write a driver-ready description from your details above</div>
+            <div class="ai-desc-text">Let <span>Jobpeak AI</span> write a driver-ready description — CDL-specific, not generic</div>
           </div>
           <button class="ai-write-btn" id="aiWriteBtn" onclick="generateDescription()">Write it for me</button>
         </div>
@@ -1130,9 +1292,17 @@
         <div class="section-label">Apply Link & Contact</div>
 
         <div class="field">
-          <label>Apply URL <span class="opt">(optional — we'll create one if blank)</span></label>
-          <input type="url" id="applyUrl" placeholder="https://your-ats.com/apply or leave blank">
-          <div class="field-hint">Where drivers click Apply. Leave blank and we'll host an apply form for you.</div>
+          <label>Apply URL <span class="opt">(optional for CDL jobs)</span></label>
+          <input type="url" id="applyUrl" placeholder="https://intelliapp.driverapponline.com/c/yourcompany" oninput="checkApplyUrl()">
+          <div style="font-size:12px;color:var(--text-muted);margin-top:5px;display:flex;align-items:center;gap:6px;">
+            🚛 <strong>Using Tenstreet?</strong> Paste your Intelliapp URL here — drivers apply directly in your ATS
+          </div>
+          <div id="applyUrlWarning" style="display:none;background:#FFF9EC;border:1px solid #F59E0B;border-radius:6px;padding:8px 12px;color:#92400E;font-size:12px;margin-top:6px;">
+            ⚠️ No apply URL entered — paste your Tenstreet Intelliapp link, ATS URL, or career page. Or toggle on CDL mode above to use our hosted apply form.
+          </div>
+          <div class="field-hint" style="background:#F0FFF8;border:1px solid #10B981;border-radius:6px;padding:8px 12px;color:#065F46;margin-top:6px;">
+            ✓ Leave blank — we automatically build your CDL screening form using the questions you selected above. Every applicant gets screened. You get emailed instantly with their answers.
+          </div>
         </div>
 
         <div class="field">
@@ -1173,11 +1343,32 @@
       </div>
       <div class="form-body">
 
-        <div class="preview-distribution">
-          <span style="font-size:20px">🚀</span>
-          <div>
-            <strong>Your job distributes to:</strong> Jobpeak · Talroo · WhatJobs · Google for Jobs
-            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Live within minutes of activation</div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Your job goes live across all of these instantly:</div>
+          <div class="dist-badge-row">
+            <div class="dist-badge">
+              <div class="check">✓</div>
+              <span>Jobpeak.io</span>
+            </div>
+            <div class="dist-badge">
+              <div class="check">✓</div>
+              <span>Talroo Network<br><span style="font-size:10px;font-weight:400;color:var(--text-muted);">1B+ monthly matches</span></span>
+            </div>
+            <div class="dist-badge">
+              <div class="check">✓</div>
+              <span>WhatJobs</span>
+            </div>
+            <div class="dist-badge">
+              <div class="check">✓</div>
+              <span>Google for Jobs</span>
+            </div>
+            <div class="dist-badge ai">
+              <div class="check">✓</div>
+              <span>AI Search<br><span style="font-size:10px;font-weight:400;">ChatGPT · Perplexity · Gemini</span></span>
+            </div>
+          </div>
+          <div id="urgencyPreviewBadge" style="display:none;margin-top:8px;">
+            <span style="background:#EF4444;color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px;letter-spacing:.04em;">🚨 URGENTLY HIRING</span>
           </div>
         </div>
 
@@ -1204,7 +1395,7 @@
 
       </div>
       <div class="form-footer">
-        <button class="btn-back" onclick="goToStep(1)">← Edit Job</button>
+        <button class="btn-back" onclick="goToStep(1)">✏️ Edit Details</button>
         <button class="btn-next" onclick="goToStep(3)">
           Looks good — Go Live
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1251,7 +1442,7 @@
             Activate My Job — $197/mo
           </button>
           <div class="stripe-note">
-            🔒 Secured by Stripe · Renews monthly · Cancel anytime
+            🔒 Secured by Stripe · Renews monthly · Cancel anytime — your job stays live until the end of your billing period, no partial charges
           </div>
 
           <!-- Trust badge tray -->
@@ -1393,6 +1584,61 @@
   let logoFile = null;
   let selectedLocations = [];
   let quill = null;
+  let cdlOpen = false;
+  let urgentActive = false;
+
+  // ── JOB TITLE CHANGE — regenerate locations ──
+  function onJobTitleChange() {
+    const loc = document.getElementById('location').value.trim();
+    if (loc && document.getElementById('hiringLat').value) generateLocations();
+  }
+
+  // ── APPLY URL WARNING for non-CDL ──
+  function checkApplyUrl() {
+    const val = document.getElementById('applyUrl').value.trim();
+    const warning = document.getElementById('applyUrlWarning');
+    if (!warning) return;
+    // Only show warning if CDL toggle is off and field is empty
+    if (!cdlOpen && !val) {
+      warning.style.display = 'block';
+    } else {
+      warning.style.display = 'none';
+    }
+  }
+
+  // ── CDL TOGGLE ──
+  function toggleCdlFields() {
+    cdlOpen = !cdlOpen;
+    document.getElementById('cdlFieldsPanel').classList.toggle('open', cdlOpen);
+    document.getElementById('cdlToggleSwitch').classList.toggle('on', cdlOpen);
+    document.getElementById('cdlToggleBar').style.borderRadius = cdlOpen
+      ? 'var(--radius) var(--radius) 0 0'
+      : 'var(--radius)';
+    // Hide non-CDL message when CDL is toggled on
+    const nonCdlMsg = document.getElementById('nonCdlMsg');
+    if (nonCdlMsg) nonCdlMsg.style.display = cdlOpen ? 'none' : 'block';
+  }
+
+  // ── URGENCY TOGGLE ──
+  function toggleUrgency() {
+    urgentActive = !urgentActive;
+    document.getElementById('urgencyToggle').classList.toggle('on', urgentActive);
+    document.getElementById('urgencyBar').classList.toggle('active', urgentActive);
+    document.getElementById('urgentHiring').value = urgentActive ? 'true' : 'false';
+  }
+
+  // ── SCREENER QUESTION TOGGLE ──
+  function toggleScreener(label) {
+    const cb = label.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    label.classList.toggle('selected', cb.checked);
+  }
+
+  // ── GET SELECTED SCREENERS ──
+  function getSelectedScreeners() {
+    const items = document.querySelectorAll('.screener-item input[type="checkbox"]');
+    return Array.from(items).filter(cb => cb.checked).map(cb => cb.value);
+  }
 
   // ── QUILL INIT ──
   document.addEventListener('DOMContentLoaded', function() {
@@ -1519,15 +1765,21 @@
 
   // ── PAY FORMATTING ──
   function formatSalaryField(input) {
-    // For CPM fields leave as-is (user types 0.55 etc)
     const payType = document.getElementById('payType').value;
-    if (payType === 'cpm') return;
-    const value = input.value.replace(/[^\d.]/g, '');
-    if (value) {
-      const num = parseFloat(value);
-      if (!isNaN(num)) {
-        input.value = '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
-      }
+    const raw = input.value.replace(/[^0-9.]/g, '');
+    if (!raw) return;
+    const num = parseFloat(raw);
+    if (isNaN(num)) return;
+    if (payType === 'cpm') {
+      // CPM always formats as $0.XX — never a whole dollar
+      // Handle input like "65" → $0.65, "0.65" → $0.65
+      let cpmVal = num;
+      if (cpmVal >= 1) cpmVal = cpmVal / 100; // user typed 65 instead of 0.65
+      input.value = '$' + cpmVal.toFixed(2) + ' CPM';
+    } else if (payType === 'hourly') {
+      input.value = '$' + num.toFixed(2) + '/hr';
+    } else {
+      input.value = '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
     }
   }
 
@@ -1608,6 +1860,15 @@
       document.querySelector('.ql-container').style.borderColor = '';
     }
 
+    // Warn if non-CDL and no apply URL
+    const applyUrl = document.getElementById('applyUrl').value.trim();
+    const warning = document.getElementById('applyUrlWarning');
+    if (!cdlOpen && !applyUrl) {
+      if (warning) warning.style.display = 'block';
+      document.getElementById('applyUrl').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      valid = false;
+    }
+
     return valid;
   }
 
@@ -1633,6 +1894,19 @@
     const jobType = document.getElementById('jobType').value;
     const desc = document.getElementById('description').value.trim();
 
+    // Show urgency badge in preview
+    const urgencyPreview = document.getElementById('urgencyPreviewBadge');
+    if (urgencyPreview) urgencyPreview.style.display = urgentActive ? 'block' : 'none';
+    // Urgency badge in preview
+    const existingBadge = document.getElementById('previewUrgentBadge');
+    if (existingBadge) existingBadge.remove();
+    if (urgentActive) {
+      const badge = document.createElement('div');
+      badge.id = 'previewUrgentBadge';
+      badge.style.cssText = 'display:inline-block;background:#EF4444;color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px;letter-spacing:.04em;margin-bottom:10px;';
+      badge.textContent = '🚨 URGENTLY HIRING';
+      document.querySelector('.preview-job-card').insertBefore(badge, document.querySelector('.preview-title'));
+    }
     document.getElementById('previewTitle').textContent = title || '—';
     document.getElementById('previewCompany').textContent = company || '—';
     document.getElementById('previewLocation').textContent = location || '—';
@@ -1767,6 +2041,8 @@ Write 150-200 words. Lead with what makes this job worth a driver's time. End wi
         applyUrl: document.getElementById('applyUrl').value.trim() || null,
         category: 'trucking',
         targetLocations: JSON.stringify(selectedLocations.filter(l => l.checked).map(l => `${l.city}, ${l.state}`)),
+        urgentHiring: document.getElementById('urgentHiring').value === 'true',
+        screenerQuestions: JSON.stringify(getSelectedScreeners()),
         logoUrl,
       };
 
