@@ -1969,19 +1969,25 @@
     btn.textContent = 'Writing...';
     loading.classList.add('active');
 
-    const prompt = `Write a compelling CDL driver job posting for the following position. Write in plain, direct language that appeals to working CDL drivers — no corporate fluff, no buzzwords. Focus on what matters to drivers: pay, home time, routes, and company culture. Format with short paragraphs and a brief bullet list of requirements/benefits.
+    const prompt = `Write a compelling CDL driver job posting for the following position. Output valid HTML only — no markdown, no backticks. Use these HTML elements:
+- <h3> for section headers (What We Offer, Requirements, Why Drive For Us)
+- <p> for short paragraphs
+- <ul><li> for bullet lists
+- <strong> for key highlights like pay, bonus, home time
+
+Write in plain, direct language that appeals to working CDL drivers — no corporate fluff, no buzzwords. Focus on what matters to drivers: pay, home time, routes, and company culture.
 
 Job Title: ${title}
 Company: ${company}
 Location: ${location}
-${salary ? `Pay: ${salary}` : ''}
-${bonus ? `Sign-On Bonus: ${bonus}` : ''}
-${cdlClass ? `CDL Class Required: CDL-${cdlClass}` : ''}
-${homeTime ? `Home Time: ${homeTime}` : ''}
-${routeType ? `Route Type: ${routeType}` : ''}
-${payType ? `Pay Type: ${payType}` : ''}
+${salary ? \`Pay: ${salary}\` : ''}
+${bonus ? \`Sign-On Bonus: ${bonus}\` : ''}
+${cdlClass ? \`CDL Class Required: CDL-${cdlClass}\` : ''}
+${homeTime ? \`Home Time: ${homeTime}\` : ''}
+${routeType ? \`Route Type: ${routeType}\` : ''}
+${payType ? \`Pay Type: ${payType}\` : ''}
 
-Write 150-200 words. Lead with what makes this job worth a driver's time. End with a simple call to action.`;
+Structure: Opening hook (1-2 sentences), What We Offer section with bullets, Requirements section with bullets, closing call to action. Keep it under 250 words total. Make the pay and home time the first bullets — that's what drivers read first.`;
 
     try {
       const res = await fetch(`${API}/ai-search`, {
