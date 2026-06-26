@@ -202,6 +202,21 @@
     .dist-badge .check { width: 18px; height: 18px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; flex-shrink: 0; }
     .dist-badge.ai { border-color: #8B5CF6; color: #8B5CF6; background: #F5F3FF; }
     .dist-badge.ai .check { background: #8B5CF6; }
+    /* Apply preview modal */
+    .apply-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+    .apply-modal-overlay.open { display:flex; }
+    .apply-modal { background:var(--surface); border-radius:14px; max-width:540px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-lg); }
+    .apply-modal-header { padding:24px 28px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .apply-modal-title { font-family:'Archivo',sans-serif; font-size:18px; font-weight:800; color:var(--text); }
+    .apply-modal-close { width:32px; height:32px; background:var(--bg); border:none; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; color:var(--text-secondary); }
+    .apply-modal-body { padding:24px 28px; }
+    .apply-field { margin-bottom:18px; }
+    .apply-field label { display:block; font-size:13px; font-weight:600; color:var(--text); margin-bottom:6px; }
+    .apply-field input, .apply-field select, .apply-field textarea { width:100%; padding:10px 13px; border:1.5px solid var(--border); border-radius:var(--radius); font-size:14px; font-family:'Work Sans',sans-serif; color:var(--text); outline:none; }
+    .apply-field input:focus, .apply-field select:focus, .apply-field textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(249,115,22,0.12); }
+    .apply-screener-label { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; margin:20px 0 10px; }
+    .apply-submit-btn { width:100%; font-family:'Work Sans',sans-serif; font-size:15px; font-weight:700; color:white; background:var(--accent); border:none; padding:14px; border-radius:var(--radius); cursor:default; margin-top:8px; opacity:0.8; }
+    .apply-preview-note { font-size:12px; color:var(--text-muted); text-align:center; margin-top:10px; }
     /* Fix Google Maps autocomplete dropdown */
     .pac-container { z-index: 9999 !important; }
     .pac-icon { background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons.png) !important; width: 15px !important; height: 20px !important; margin-right: 7px !important; display: inline-block !important; vertical-align: middle !important; }
@@ -228,6 +243,16 @@
       <div class="step-line" id="line-2"></div>
       <div class="progress-step" id="step-indicator-3"><div class="step-dot">3</div><span>Go Live</span></div>
     </div>
+  </div>
+</div>
+
+<div class="apply-modal-overlay" id="applyModalOverlay" onclick="if(event.target===this)closeApplyPreview()">
+  <div class="apply-modal">
+    <div class="apply-modal-header">
+      <div class="apply-modal-title" id="applyModalTitle">Apply Now</div>
+      <button class="apply-modal-close" onclick="closeApplyPreview()">✕</button>
+    </div>
+    <div class="apply-modal-body" id="applyModalBody"></div>
   </div>
 </div>
 
@@ -494,7 +519,11 @@
             <div class="preview-meta-item" id="previewHomeTimeWrap" style="display:none">🏠 <span id="previewHomeTime">—</span></div>
             <div class="preview-meta-item" id="previewBonusWrap" style="display:none">🎁 <span id="previewBonus">—</span></div>
           </div>
-          <div class="preview-desc" id="previewDesc">—</div>
+          <div class="preview-desc" id="previewDesc"></div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+            <button onclick="openApplyPreview()" style="font-family:'Work Sans',sans-serif;font-size:15px;font-weight:700;color:white;background:var(--accent);border:none;padding:12px 28px;border-radius:var(--radius);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--accent-dark)'" onmouseout="this.style.background='var(--accent)'">Apply Now</button>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px;">This is exactly what drivers will see — the Apply Now button opens your CDL screening form</div>
+          </div>
         </div>
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:13px;color:var(--text-secondary);"><strong style="color:var(--text);">✏️ Need to make changes?</strong> Go back and edit — your details are saved.</div>
       </div>
@@ -759,6 +788,60 @@
   function toggleLoc(i) { selectedLocations[i].checked = !selectedLocations[i].checked; renderLocations(); }
   function selectAllLocs(v) { selectedLocations.forEach(l => l.checked = v); renderLocations(); }
 
+  // ── APPLY PREVIEW MODAL ──
+  function openApplyPreview() {
+    const title = document.getElementById('jobTitle').value.trim() || 'This Position';
+    const company = document.getElementById('company').value.trim() || 'Our Company';
+    const screeners = getSelectedScreeners();
+
+    const screenerLabels = {
+      cdla: 'Do you have a valid CDL-A?',
+      experience: 'How many years of verifiable tractor-trailer experience do you have?',
+      accidents: 'Do you have a clean MVR (no preventable accidents in the last 3 years)?',
+      location: 'Are you willing to report to our hiring location daily?',
+      drug: 'Do you consent to a pre-employment drug screen?',
+      hometime: 'What is your home time preference?',
+      hazmat: 'Do you have a valid Hazmat endorsement?',
+      tanker: 'Do you have a valid Tanker endorsement?',
+      doubles: 'Do you have a valid Doubles/Triples endorsement?',
+      twic: 'Do you have a valid TWIC card?',
+      passenger: 'Do you have a valid Passenger endorsement?',
+      schoolbus: 'Do you have a valid School Bus endorsement?',
+      companydriver: 'Are you applying as a Company Driver?',
+      owneroperator: 'Do you have your own truck or authority (Owner Operator)?',
+      leasepurchase: 'Are you interested in a Lease Purchase program?',
+    };
+
+    let screenerHTML = '';
+    if (screeners.length) {
+      screenerHTML = `<div class="apply-screener-label">Screening Questions</div>`;
+      screeners.forEach(s => {
+        const label = screenerLabels[s] || s;
+        screenerHTML += `<div class="apply-field"><label>${label}</label><select><option value="">Select...</option><option>Yes</option><option>No</option></select></div>`;
+      });
+    }
+
+    document.getElementById('applyModalTitle').textContent = `Apply — ${title} at ${company}`;
+    document.getElementById('applyModalBody').innerHTML = `
+      <div class="apply-field"><label>First Name *</label><input type="text" placeholder="John"></div>
+      <div class="apply-field"><label>Last Name *</label><input type="text" placeholder="Smith"></div>
+      <div class="apply-field"><label>Phone Number *</label><input type="tel" placeholder="(555) 000-0000"></div>
+      <div class="apply-field"><label>Email Address *</label><input type="email" placeholder="you@email.com"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="apply-field"><label>City *</label><input type="text" placeholder="Columbus"></div>
+        <div class="apply-field"><label>State *</label><input type="text" placeholder="OH"></div>
+      </div>
+      ${screenerHTML}
+      <button class="apply-submit-btn">Submit Application</button>
+      <div class="apply-preview-note">👆 Preview only — this is the form your drivers will see</div>
+    `;
+    document.getElementById('applyModalOverlay').classList.add('open');
+  }
+
+  function closeApplyPreview() {
+    document.getElementById('applyModalOverlay').classList.remove('open');
+  }
+
   function formatSalaryField(input) {
     const payType = document.getElementById('payType').value;
     const raw = input.value.replace(/[^0-9.]/g, '');
@@ -867,9 +950,14 @@
     const payMax = document.getElementById('payMax').value;
     document.getElementById('previewSalary').textContent = payMin ? (payMax ? payMin + ' — ' + payMax : payMin) : 'Competitive';
     document.getElementById('previewJobType').textContent = jobType === 'full-time' ? 'Full-Time' : jobType === 'part-time' ? 'Part-Time' : 'Contract';
-    // FIX: was `: desc` — desc was undefined. Now safely uses empty string fallback.
-    const rawDesc = quill ? quill.getText().trim() : '';
-    document.getElementById('previewDesc').textContent = rawDesc ? rawDesc.substring(0, 400) + (rawDesc.length > 400 ? '...' : '') : '—';
+    // FIX: use innerHTML to preserve bullets and formatting
+    const rawDesc = quill ? quill.root.innerHTML : '';
+    const descEl = document.getElementById('previewDesc');
+    if (rawDesc && rawDesc !== '<p><br></p>' && rawDesc !== '<p></p>') {
+      descEl.innerHTML = rawDesc;
+    } else {
+      descEl.innerHTML = '<span style="color:var(--text-muted)">—</span>';
+    }
 
     if (homeTime) { document.getElementById('previewHomeTime').textContent = homeTime; document.getElementById('previewHomeTimeWrap').style.display = 'flex'; }
     if (bonus) { document.getElementById('previewBonus').textContent = bonus; document.getElementById('previewBonusWrap').style.display = 'flex'; }
@@ -956,9 +1044,11 @@ ${payType ? 'Pay Type: ' + payType : ''}`;
       const text = data.content?.find(c => c.type === 'text')?.text || '';
       if (text && quill) {
         let clean = text.replace(/^```html\s*/i, '').replace(/```\s*$/i, '').trim();
-        // Strip any leading plain-text line (e.g. job title echoed back before HTML)
+        // Strip any leading plain-text line before HTML starts
         clean = clean.replace(/^[^<\n]+\n+/, '');
-        quill.root.innerHTML = clean;
+        // Use dangerouslyPasteHTML to preserve bullets and formatting
+        quill.root.innerHTML = '';
+        quill.clipboard.dangerouslyPasteHTML(0, clean);
         const qlContainer = document.querySelector('.ql-container');
         if (qlContainer) qlContainer.style.borderColor = '';
       }
