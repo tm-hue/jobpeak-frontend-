@@ -895,30 +895,47 @@
     const loading = document.getElementById('aiLoading');
     btn.disabled = true; btn.textContent = 'Writing...'; loading.classList.add('active');
 
-    const prompt = `You are writing a CDL truck driver job posting. Output ONLY valid HTML — no title, no markdown, no backticks, no preamble. Start immediately with a <p> tag.
+    const prompt = `You are writing a CDL truck driver job posting. Output ONLY valid HTML — no markdown, no backticks, no preamble, no job title line. Start immediately with a <p> tag.
 
-REQUIRED FORMAT (use exactly this structure):
-<p><strong>[1-2 sentence hook about pay, home time, and route]</strong></p>
-<h3>What We Offer</h3>
+REQUIRED FORMAT (mirror this structure exactly):
+
+<p>Join [Company] as a [Job Title] and [1-2 sentence hook about pay, home time, and opportunity]. We're seeking [type of driver] who [what you value].</p>
+
+<p><strong>What We Offer:</strong></p>
 <ul>
-<li><strong>Pay:</strong> [pay details]</li>
-<li><strong>Home Time:</strong> [home time details]</li>
-<li><strong>Route:</strong> [route details]</li>
-<li>[benefit 4]</li>
-<li>[benefit 5]</li>
+<li>[pay details — always first bullet]</li>
+<li>[sign-on bonus if applicable]</li>
+<li>[home time / schedule]</li>
+<li>[benefit]</li>
+<li>[benefit]</li>
+<li>[benefit]</li>
+<li>[benefit]</li>
+<li>[equipment or freight details]</li>
 </ul>
-<h3>Requirements</h3>
+
+<p><strong>Requirements:</strong></p>
 <ul>
-<li>[requirement 1]</li>
-<li>[requirement 2]</li>
-<li>[requirement 3]</li>
-<li>[requirement 4]</li>
+<li>Valid CDL-[class] required</li>
+<li>[experience requirement]</li>
+<li>Clean driving record</li>
+<li>[endorsement or equipment type if applicable]</li>
+<li>Pass DOT physical and drug screen</li>
 </ul>
-<h3>Ready to Apply?</h3>
-<p>[1 sentence CTA with company name]</p>
 
-Fill in every bullet with real content based on the job details below. Never leave a bullet empty. Plain direct language — no corporate fluff.
+<p><strong>About [Company]:</strong></p>
+<p>[2-3 sentences about the company — location, what they haul, why drivers choose them, what makes them different]</p>
 
+<p><strong>Ready to join our team?</strong> Apply now and start earning what you deserve.</p>
+
+Rules:
+- Every bullet must have real content — never leave one empty or generic
+- Pay is always the first bullet
+- If a sign-on bonus is provided, make it the second bullet
+- Home time is always in the first 3 bullets
+- Bold all section headers using <strong> inside a <p> tag
+- Write in plain direct language — no corporate fluff, no buzzwords
+
+Job Details:
 Job Title: ${title}
 Company: ${company}
 Location: ${location}
@@ -933,7 +950,7 @@ ${payType ? 'Pay Type: ' + payType : ''}`;
       const res = await fetch(`${API}/ai-search`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({model: 'claude-haiku-4-5-20251001', max_tokens: 600, messages: [{role: 'user', content: prompt}]})
+        body: JSON.stringify({model: 'claude-haiku-4-5-20251001', max_tokens: 900, messages: [{role: 'user', content: prompt}]})
       });
       const data = await res.json();
       const text = data.content?.find(c => c.type === 'text')?.text || '';
