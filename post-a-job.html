@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
-<script>
+  <script>
     function initAutocomplete() {
       const input = document.getElementById('location');
       if (!input) return;
@@ -31,12 +31,10 @@
     }
   </script>
   <style>
-    /* Quill overrides */
     .ql-container { font-family: 'Work Sans', sans-serif !important; font-size: 15px !important; border-bottom-left-radius: 10px !important; border-bottom-right-radius: 10px !important; border-color: #E4E6EA !important; }
     .ql-toolbar { border-top-left-radius: 10px !important; border-top-right-radius: 10px !important; border-color: #E4E6EA !important; background: #F7F8FA !important; }
     .ql-editor { min-height: 160px; line-height: 1.6; }
     .ql-editor.ql-blank::before { color: #9BA3AF !important; font-style: normal !important; }
-    /* Location chips */
     .loc-chip { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #F7F8FA; border: 1px solid #E4E6EA; color: #545B6B; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all .15s; margin: 3px; }
     .loc-chip.checked { background: var(--accent); border-color: var(--accent); color: #fff; }
     .loc-chip.primary { background: #FFF3EB; border-color: var(--accent); color: var(--accent); }
@@ -62,862 +60,119 @@
     .lib-vs-label.good { color: var(--green); }
     .lib-vs-desc { color: var(--text-secondary); line-height: 1.5; }
     :root {
-      --bg: #F7F8FA;
-      --surface: #FFFFFF;
-      --border: #E4E6EA;
-      --border-focus: #F97316;
-      --text: #111318;
-      --text-secondary: #545B6B;
-      --text-muted: #9BA3AF;
-      --accent: #F97316;
-      --accent-dark: #D95F00;
-      --accent-light: #FFF3EB;
-      --green: #10B981;
-      --green-light: #ECFDF5;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
-      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
-      --radius: 10px;
+      --bg: #F7F8FA; --surface: #FFFFFF; --border: #E4E6EA; --border-focus: #F97316;
+      --text: #111318; --text-secondary: #545B6B; --text-muted: #9BA3AF;
+      --accent: #F97316; --accent-dark: #D95F00; --accent-light: #FFF3EB;
+      --green: #10B981; --green-light: #ECFDF5;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06); --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10); --radius: 10px;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Work Sans', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── HEADER ── */
-    .header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      height: 60px;
-      display: flex;
-      align-items: center;
-      padding: 0 32px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .header-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-family: 'Archivo', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text);
-      text-decoration: none;
-    }
-
+    body { font-family: 'Work Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .header { background: var(--surface); border-bottom: 1px solid var(--border); height: 60px; display: flex; align-items: center; padding: 0 32px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+    .header-inner { max-width: 1100px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); text-decoration: none; }
     .logo span { color: var(--accent); }
-
-    .header-right {
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-
-    .header-right a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* ── PROGRESS BAR ── */
-    .progress-wrap {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
-    }
-
-    .progress-inner {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .progress-steps {
-      display: flex;
-      align-items: center;
-      gap: 0;
-    }
-
-    .progress-step {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      flex: 1;
-    }
-
+    .header-right { font-size: 14px; color: var(--text-secondary); }
+    .header-right a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .progress-wrap { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; }
+    .progress-inner { max-width: 720px; margin: 0 auto; }
+    .progress-steps { display: flex; align-items: center; gap: 0; }
+    .progress-step { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text-muted); flex: 1; }
     .progress-step.active { color: var(--accent); }
     .progress-step.done { color: var(--green); }
-
-    .step-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      background: var(--surface);
-      flex-shrink: 0;
-      transition: all 0.2s;
-    }
-
-    .progress-step.active .step-dot {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: white;
-    }
-
-    .progress-step.done .step-dot {
-      border-color: var(--green);
-      background: var(--green);
-      color: white;
-    }
-
-    .step-line {
-      flex: 1;
-      height: 2px;
-      background: var(--border);
-      margin: 0 4px;
-      transition: background 0.3s;
-    }
-
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; background: var(--surface); flex-shrink: 0; transition: all 0.2s; }
+    .progress-step.active .step-dot { border-color: var(--accent); background: var(--accent); color: white; }
+    .progress-step.done .step-dot { border-color: var(--green); background: var(--green); color: white; }
+    .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 4px; transition: background 0.3s; }
     .step-line.done { background: var(--green); }
-
-    /* ── LAYOUT ── */
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 32px 80px;
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 32px;
-      align-items: start;
-    }
-
-    /* ── FORM CARD ── */
-    .form-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: visible;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .form-card-header {
-      padding: 28px 32px 24px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .form-card-title {
-      font-family: 'Archivo', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .form-card-sub {
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-
+    .page { max-width: 1100px; margin: 0 auto; padding: 40px 32px 80px; display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+    .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: visible; box-shadow: var(--shadow-sm); }
+    .form-card-header { padding: 28px 32px 24px; border-bottom: 1px solid var(--border); }
+    .form-card-title { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .form-card-sub { font-size: 14px; color: var(--text-secondary); }
     .form-body { padding: 32px; }
-
-    .form-section {
-      display: none;
-    }
-
+    .form-section { display: none; }
     .form-section.active { display: block; }
-
-    /* ── FIELDS ── */
-    .field {
-      margin-bottom: 24px;
-    }
-
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
+    .field { margin-bottom: 24px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
     .field-row .field { margin-bottom: 0; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-      letter-spacing: 0.01em;
-    }
-
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: 0.01em; }
     label .req { color: var(--accent); margin-left: 2px; }
     label .opt { color: var(--text-muted); font-weight: 400; font-size: 12px; margin-left: 4px; }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="url"],
-    input[type="tel"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 15px;
-      font-family: 'Work Sans', sans-serif;
-      color: var(--text);
-      background: var(--surface);
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      appearance: none;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
-    }
-
-    select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239BA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 36px;
-      cursor: pointer;
-    }
-
+    input[type="text"], input[type="email"], input[type="url"], input[type="tel"], select, textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 15px; font-family: 'Work Sans', sans-serif; color: var(--text); background: var(--surface); outline: none; transition: border-color 0.15s, box-shadow 0.15s; appearance: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(249,115,22,0.12); }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239BA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
     textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
-
-    .field-hint {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 5px;
-    }
-
-    .field-error {
-      font-size: 12px;
-      color: #EF4444;
-      margin-top: 5px;
-      display: none;
-    }
-
-    .field.error input,
-    .field.error select,
-    .field.error textarea {
-      border-color: #EF4444;
-    }
-
+    .field-hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+    .field-error { font-size: 12px; color: #EF4444; margin-top: 5px; display: none; }
+    .field.error input, .field.error select, .field.error textarea { border-color: #EF4444; }
     .field.error .field-error { display: block; }
-
-    /* ── AI DESCRIPTION ── */
-    .ai-desc-bar {
-      background: var(--accent-light);
-      border: 1.5px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .ai-desc-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .ai-icon {
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .ai-desc-text {
-      font-size: 13px;
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .ai-desc-text span {
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .ai-write-btn {
-      font-family: 'Work Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: white;
-      background: var(--accent);
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s;
-      flex-shrink: 0;
-    }
-
+    .ai-desc-bar { background: var(--accent-light); border: 1.5px solid var(--accent); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .ai-desc-left { display: flex; align-items: center; gap: 10px; }
+    .ai-icon { font-size: 20px; flex-shrink: 0; }
+    .ai-desc-text { font-size: 13px; color: var(--text); font-weight: 500; }
+    .ai-desc-text span { color: var(--accent); font-weight: 700; }
+    .ai-write-btn { font-family: 'Work Sans', sans-serif; font-size: 13px; font-weight: 700; color: white; background: var(--accent); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
     .ai-write-btn:hover { background: var(--accent-dark); }
     .ai-write-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    /* ── PAY FIELDS ── */
-    .pay-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .pay-row .field { margin-bottom: 0; }
-
-    /* ── LOGO UPLOAD ── */
-    .logo-upload {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-    }
-
-    .logo-upload:hover {
-      border-color: var(--accent);
-      background: var(--accent-light);
-    }
-
-    .logo-upload input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
+    .logo-upload { border: 2px dashed var(--border); border-radius: var(--radius); padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+    .logo-upload:hover { border-color: var(--accent); background: var(--accent-light); }
+    .logo-upload input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .logo-upload-icon { font-size: 32px; margin-bottom: 8px; }
     .logo-upload-text { font-size: 14px; color: var(--text-secondary); }
     .logo-upload-text strong { color: var(--accent); }
     .logo-preview { max-width: 80px; max-height: 80px; border-radius: 8px; margin: 0 auto 8px; display: none; }
-
-    /* ── SECTION DIVIDER ── */
-    .section-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 28px 0;
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 20px;
-    }
-
-    /* ── FORM NAVIGATION ── */
-    .form-footer {
-      padding: 24px 32px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #FAFBFC;
-    }
-
-    .btn-back {
-      font-family: 'Work Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      background: none;
-      border: 1.5px solid var(--border);
-      padding: 11px 24px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+    .section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; }
+    .form-footer { padding: 24px 32px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #FAFBFC; border-radius: 0 0 14px 14px; }
+    .btn-back { font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-secondary); background: none; border: 1.5px solid var(--border); padding: 11px 24px; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; }
     .btn-back:hover { border-color: var(--text-secondary); color: var(--text); }
-
-    .btn-next {
-      font-family: 'Work Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: white;
-      background: var(--accent);
-      border: none;
-      padding: 12px 32px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .btn-next { font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 700; color: white; background: var(--accent); border: none; padding: 12px 32px; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 8px; }
     .btn-next:hover { background: var(--accent-dark); transform: translateY(-1px); }
     .btn-next:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-    /* ── SIDEBAR ── */
     .sidebar { display: flex; flex-direction: column; gap: 20px; }
-
-    .sidebar-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .sidebar-card-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .distribution-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-
+    .sidebar-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; box-shadow: var(--shadow-sm); }
+    .sidebar-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .distribution-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-secondary); }
     .distribution-item:last-child { border-bottom: none; padding-bottom: 0; }
-
-    .dist-check {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--green-light);
-      border: 1.5px solid var(--green);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 11px;
-      color: var(--green);
-    }
-
-    .price-card {
-      background: linear-gradient(135deg, #FFF3EB 0%, #FFF8F5 100%);
-      border: 2px solid var(--accent);
-      border-radius: 14px;
-      padding: 24px;
-    }
-
-    .price-card-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-    }
-
-    .price-card-amount {
-      font-family: 'Archivo', sans-serif;
-      font-size: 42px;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .price-card-period {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-    }
-
-    .price-includes {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .price-include-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .price-include-item::before {
-      content: '✓';
-      color: var(--green);
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .trust-badges {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .trust-badge {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .trust-badge-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--bg);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
-    /* ── PREVIEW SECTION ── */
-    .preview-job-card {
-      background: var(--surface);
-      border: 2px solid var(--green);
-      border-radius: 14px;
-      padding: 28px;
-      margin-bottom: 24px;
-    }
-
-    .preview-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--green);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .preview-title {
-      font-family: 'Archivo', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .preview-company {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-      font-weight: 500;
-    }
-
-    .preview-meta {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .preview-meta-item {
-      font-size: 14px;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .preview-desc {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.7;
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
-    }
-
-    .preview-distribution {
-      background: var(--accent-light);
-      border: 1px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      font-size: 13px;
-      color: var(--text);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* ── ACTIVATE SECTION ── */
-    .activate-plan {
-      background: linear-gradient(135deg, #FFF3EB 0%, #FFF8F5 100%);
-      border: 2px solid var(--accent);
-      border-radius: 14px;
-      padding: 28px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .activate-plan-badge {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 100px;
-      margin-bottom: 16px;
-    }
-
-    .activate-price {
-      font-family: 'Archivo', sans-serif;
-      font-size: 56px;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .activate-period {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-    }
-
-    .activate-features {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 28px;
-      text-align: left;
-    }
-
-    .activate-feature {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .activate-feature::before {
-      content: '✓';
-      color: var(--green);
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .btn-activate {
-      width: 100%;
-      font-family: 'Work Sans', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: white;
-      background: var(--accent);
-      border: none;
-      padding: 16px 32px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
+    .dist-check { width: 20px; height: 20px; border-radius: 50%; background: var(--green-light); border: 1.5px solid var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; color: var(--green); }
+    .price-card { background: linear-gradient(135deg, #FFF3EB 0%, #FFF8F5 100%); border: 2px solid var(--accent); border-radius: 14px; padding: 24px; }
+    .price-card-label { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .price-card-amount { font-family: 'Archivo', sans-serif; font-size: 42px; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 4px; }
+    .price-card-period { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+    .price-includes { display: flex; flex-direction: column; gap: 8px; }
+    .price-include-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }
+    .price-include-item::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .trust-badges { display: flex; flex-direction: column; gap: 10px; }
+    .trust-badge { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); }
+    .trust-badge-icon { width: 32px; height: 32px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .preview-job-card { background: var(--surface); border: 2px solid var(--green); border-radius: 14px; padding: 28px; margin-bottom: 24px; }
+    .preview-label { font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+    .preview-title { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .preview-company { font-size: 16px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 500; }
+    .preview-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+    .preview-meta-item { font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
+    .preview-desc { font-size: 14px; color: var(--text); line-height: 1.7; border-top: 1px solid var(--border); padding-top: 16px; }
+    .activate-plan { background: linear-gradient(135deg, #FFF3EB 0%, #FFF8F5 100%); border: 2px solid var(--accent); border-radius: 14px; padding: 28px; margin-bottom: 20px; text-align: center; }
+    .activate-plan-badge { display: inline-block; background: var(--accent); color: white; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 100px; margin-bottom: 16px; }
+    .activate-price { font-family: 'Archivo', sans-serif; font-size: 56px; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 4px; }
+    .activate-features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; text-align: left; }
+    .activate-feature { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }
+    .activate-feature::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .btn-activate { width: 100%; font-family: 'Work Sans', sans-serif; font-size: 17px; font-weight: 700; color: white; background: var(--accent); border: none; padding: 16px 32px; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .btn-activate:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249,115,22,0.3); }
     .btn-activate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-
-    .stripe-note {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-align: center;
-      margin-top: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    /* ── LOADING OVERLAY ── */
-    .ai-loading {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-
+    .stripe-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .ai-loading { display: none; text-align: center; padding: 20px; font-size: 14px; color: var(--text-secondary); }
     .ai-loading.active { display: block; }
-
-    .ai-spinner {
-      width: 32px;
-      height: 32px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin: 0 auto 12px;
-    }
-
+    .ai-spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── CHECKBOX GROUPS ── */
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--text);
-      cursor: pointer;
-    }
-
-    .checkbox-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    /* ── RADIO CARDS ── */
-    .radio-cards {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .radio-card {
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .radio-card:hover { border-color: var(--accent); }
-    .radio-card.selected { border-color: var(--accent); background: var(--accent-light); }
-
-    .radio-card input[type="radio"] {
-      accent-color: var(--accent);
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-
-    .radio-card-text { font-size: 14px; font-weight: 600; color: var(--text); }
-    .radio-card-sub { font-size: 12px; color: var(--text-muted); }
-
-    /* ── SUCCESS STATE ── */
-    .success-section {
-      display: none;
-      text-align: center;
-      padding: 60px 32px;
-    }
-
-    .success-section.active { display: block; }
-
-    .success-icon {
-      font-size: 64px;
-      margin-bottom: 20px;
-      animation: bounceIn 0.6s ease;
-    }
-
-    @keyframes bounceIn {
-      0% { transform: scale(0); }
-      60% { transform: scale(1.15); }
-      100% { transform: scale(1); }
-    }
-
-    .success-title {
-      font-family: 'Archivo', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .success-sub {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin-bottom: 32px;
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .page { grid-template-columns: 1fr; }
-      .sidebar { order: -1; }
-      .price-card { display: none; }
-    }
-
-    @media (max-width: 600px) {
-      .header { padding: 0 16px; }
-      .page { padding: 24px 16px 60px; }
-      .form-body { padding: 24px 20px; }
-      .form-footer { padding: 20px; }
-      .form-card-header { padding: 20px 20px 16px; }
-      .field-row { grid-template-columns: 1fr; }
-      .pay-row { grid-template-columns: 1fr 1fr; }
-      .activate-features { grid-template-columns: 1fr; }
-      .radio-cards { grid-template-columns: 1fr; }
-    }
-    /* ── CDL TOGGLE ── */
-    .cdl-toggle-bar {
-      background: var(--accent-light);
-      border: 1.5px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      margin-bottom: 0;
-      transition: all .15s;
-    }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); cursor: pointer; }
+    .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+    @media (max-width: 900px) { .page { grid-template-columns: 1fr; } .sidebar { order: -1; } .price-card { display: none; } }
+    @media (max-width: 600px) { .header { padding: 0 16px; } .page { padding: 24px 16px 60px; } .form-body { padding: 24px 20px; } .form-footer { padding: 20px; } .form-card-header { padding: 20px 20px 16px; } .field-row { grid-template-columns: 1fr; } .activate-features { grid-template-columns: 1fr; } }
+    .cdl-toggle-bar { background: var(--accent-light); border: 1.5px solid var(--accent); border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 0; transition: all .15s; }
     .cdl-toggle-bar:hover { background: #FFE8D6; }
     .cdl-toggle-label { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 10px; }
     .cdl-toggle-sub { font-size: 12px; color: var(--text-secondary); font-weight: 400; }
@@ -927,8 +182,6 @@
     .toggle-switch.on::after { left: 23px; }
     .cdl-fields-panel { display: none; background: #FAFBFC; border: 1.5px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: 20px; margin-bottom: 24px; }
     .cdl-fields-panel.open { display: block; }
-
-    /* ── SCREENER QUESTIONS ── */
     .screener-section { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
     .screener-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
     .screener-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5; }
@@ -940,25 +193,25 @@
     .screener-item-text { font-size: 13px; font-weight: 600; color: var(--text); }
     .screener-item-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .screener-note { font-size: 11px; color: var(--text-muted); margin-top: 12px; display: flex; align-items: center; gap: 6px; }
-
-    /* ── URGENCY TOGGLE ── */
     .urgency-bar { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 24px; cursor: pointer; transition: all .15s; }
     .urgency-bar:hover { border-color: #EF4444; }
     .urgency-bar.active { border-color: #EF4444; background: #FFF5F5; }
     .urgency-label { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
-    .urgency-badge { background: #EF4444; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: .04em; }
-
-    /* ── DISTRIBUTION BADGES ── */
     .dist-badge-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
     .dist-badge { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 700; color: var(--text-secondary); }
     .dist-badge .check { width: 18px; height: 18px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; flex-shrink: 0; }
     .dist-badge.ai { border-color: #8B5CF6; color: #8B5CF6; background: #F5F3FF; }
     .dist-badge.ai .check { background: #8B5CF6; }
+    /* Fix Google Maps autocomplete dropdown */
+    .pac-container { z-index: 9999 !important; }
+    .pac-icon { background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons.png) !important; width: 15px !important; height: 20px !important; margin-right: 7px !important; display: inline-block !important; vertical-align: middle !important; }
+    .pac-item { font-family: 'Work Sans', sans-serif; font-size: 13px; padding: 6px 12px; cursor: pointer; }
+    .pac-item:hover { background: var(--accent-light); }
+    .pac-item-query { font-size: 13px; color: var(--text); }
   </style>
 </head>
 <body>
 
-<!-- ── HEADER ── -->
 <header class="header">
   <div class="header-inner">
     <a href="/jobseeker_search.html" class="logo">jobpeak<span>.</span></a>
@@ -966,35 +219,22 @@
   </div>
 </header>
 
-<!-- ── PROGRESS ── -->
 <div class="progress-wrap">
   <div class="progress-inner">
     <div class="progress-steps">
-      <div class="progress-step active" id="step-indicator-1">
-        <div class="step-dot">1</div>
-        <span>Job Details</span>
-      </div>
+      <div class="progress-step active" id="step-indicator-1"><div class="step-dot">1</div><span>Job Details</span></div>
       <div class="step-line" id="line-1"></div>
-      <div class="progress-step" id="step-indicator-2">
-        <div class="step-dot">2</div>
-        <span>Preview</span>
-      </div>
+      <div class="progress-step" id="step-indicator-2"><div class="step-dot">2</div><span>Preview</span></div>
       <div class="step-line" id="line-2"></div>
-      <div class="progress-step" id="step-indicator-3">
-        <div class="step-dot">3</div>
-        <span>Go Live</span>
-      </div>
+      <div class="progress-step" id="step-indicator-3"><div class="step-dot">3</div><span>Go Live</span></div>
     </div>
   </div>
 </div>
 
-<!-- ── PAGE ── -->
 <div class="page">
-
-  <!-- ── MAIN FORM CARD ── -->
   <div class="form-card" id="mainCard">
 
-    <!-- STEP 1: JOB DETAILS -->
+    <!-- STEP 1 -->
     <div class="form-section active" id="section-1">
       <div class="form-card-header">
         <div class="form-card-title">Tell us about the job</div>
@@ -1023,6 +263,9 @@
               <option value="CDL-B Bus Driver">
               <option value="CDL-B School Bus Driver">
               <option value="CDL-B/Non-CDL Limo or Paratransit Driver">
+              <option value="CDL-A Local Owner Operator">
+              <option value="CDL-A Regional Owner Operator">
+              <option value="CDL-A OTR Owner Operator">
               <option value="Non-CDL Shuttle Driver">
               <option value="Non-CDL Delivery Driver">
             </datalist>
@@ -1045,22 +288,14 @@
         </div>
 
         <hr class="section-divider">
-        <div class="section-label">Advertising Radius & Location Intelligence</div>
+        <div class="section-label">Advertising Radius &amp; Location Intelligence</div>
 
         <div class="lib-banner">
           <div class="lib-title">📍 Intelligent ad placement — powered by US Census data</div>
-          <div class="lib-body">
-            Enter your hiring location and radius. Jobpeak finds up to 20 cities ranked by CDL driver density for your specific job title — so your listing reaches the right candidates, not just the nearest zip codes.
-          </div>
+          <div class="lib-body">Enter your hiring location and radius. Jobpeak finds up to 20 cities ranked by CDL driver density for your specific job title — so your listing reaches the right candidates, not just the nearest zip codes.</div>
           <div class="lib-vs">
-            <div class="lib-vs-item">
-              <div class="lib-vs-label bad">Standard job boards</div>
-              <div class="lib-vs-desc">Advertise in a generic radius circle. Every zip code treated equally regardless of driver population.</div>
-            </div>
-            <div class="lib-vs-item">
-              <div class="lib-vs-label good">Jobpeak</div>
-              <div class="lib-vs-desc">Census-ranked city list by job title. Up to 20 locations sorted by driver density. You see exactly where you advertise.</div>
-            </div>
+            <div class="lib-vs-item"><div class="lib-vs-label bad">Standard job boards</div><div class="lib-vs-desc">Advertise in a generic radius circle. Every zip code treated equally regardless of driver population.</div></div>
+            <div class="lib-vs-item"><div class="lib-vs-label good">Jobpeak</div><div class="lib-vs-desc">Census-ranked city list by job title. Up to 20 locations sorted by driver density. You see exactly where you advertise.</div></div>
           </div>
         </div>
 
@@ -1068,21 +303,9 @@
           <div class="field">
             <label>Advertising Radius</label>
             <div class="radius-opts">
-              <label class="r-opt" data-r="25" onclick="selectRadius(this, 25)">
-                <input type="radio" name="radius" value="25">
-                <div class="r-val">25mi</div>
-                <div class="r-desc">Local</div>
-              </label>
-              <label class="r-opt active" data-r="50" onclick="selectRadius(this, 50)">
-                <input type="radio" name="radius" value="50" checked>
-                <div class="r-val">50mi</div>
-                <div class="r-desc">Regional</div>
-              </label>
-              <label class="r-opt" data-r="100" onclick="selectRadius(this, 100)">
-                <input type="radio" name="radius" value="100">
-                <div class="r-val">100mi</div>
-                <div class="r-desc">Wide</div>
-              </label>
+              <label class="r-opt" data-r="25" onclick="selectRadius(this,25)"><input type="radio" name="radius" value="25"><div class="r-val">25mi</div><div class="r-desc">Local</div></label>
+              <label class="r-opt active" data-r="50" onclick="selectRadius(this,50)"><input type="radio" name="radius" value="50" checked><div class="r-val">50mi</div><div class="r-desc">Regional</div></label>
+              <label class="r-opt" data-r="100" onclick="selectRadius(this,100)"><input type="radio" name="radius" value="100"><div class="r-val">100mi</div><div class="r-desc">Wide</div></label>
             </div>
           </div>
         </div>
@@ -1090,17 +313,14 @@
         <div id="locPreview" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
             <div style="font-size:13px;font-weight:600;color:var(--text-secondary);">Advertising in <span class="loc-count-badge" id="locCount">0</span> locations</div>
-            <div style="display:flex;gap:8px;">
-              <button class="loc-action-btn" onclick="selectAllLocs(true)">Select All</button>
-              <button class="loc-action-btn" onclick="selectAllLocs(false)">Clear All</button>
-            </div>
+            <div style="display:flex;gap:8px;"><button class="loc-action-btn" onclick="selectAllLocs(true)">Select All</button><button class="loc-action-btn" onclick="selectAllLocs(false)">Clear All</button></div>
           </div>
           <div class="loc-grid" id="locGrid"></div>
           <div class="field-hint" style="margin-top:8px;">Ranked by CDL driver density · Uncheck any locations you don't want</div>
         </div>
 
         <hr class="section-divider">
-        <div class="section-label">Pay & Schedule</div>
+        <div class="section-label">Pay &amp; Schedule</div>
 
         <div class="field-row" style="grid-template-columns:1fr 1fr 1fr 1fr;">
           <div class="field" id="field-payType">
@@ -1118,7 +338,7 @@
           <div class="field">
             <label>Pay Min <span class="req">*</span></label>
             <input type="text" id="payMin" placeholder="e.g. 0.55" onblur="formatSalaryField(this)">
-            <div class="field-hint">Enter a number — we format it automatically</div>
+            <div class="field-hint">Enter a number — formats automatically</div>
           </div>
           <div class="field">
             <label>Pay Max <span class="opt">(optional)</span></label>
@@ -1126,29 +346,18 @@
           </div>
           <div class="field">
             <label>Sign-On Bonus <span class="opt">(optional)</span></label>
-            <input type="text" id="bonus" placeholder="e.g. $3,000" oninput="formatBonusField(this)">
+            <input type="text" id="bonus" placeholder="e.g. $3,000" onblur="formatBonusField(this)">
           </div>
         </div>
 
-        <!-- Urgency Toggle -->
         <div class="urgency-bar" id="urgencyBar" onclick="toggleUrgency()">
-          <div class="urgency-label">
-            <span>🚨</span>
-            <div>
-              <div>Mark as Urgently Hiring</div>
-              <div style="font-size:12px;font-weight:400;color:var(--text-secondary);">Adds a free Urgently Hiring badge to your listing — drives more applications</div>
-            </div>
-          </div>
+          <div class="urgency-label"><span>🚨</span><div><div>Mark as Urgently Hiring</div><div style="font-size:12px;font-weight:400;color:var(--text-secondary);">Adds a free Urgently Hiring badge to your listing — drives more applications</div></div></div>
           <div class="toggle-switch" id="urgencyToggle"></div>
         </div>
         <input type="hidden" id="urgentHiring" value="false">
 
-        <!-- CDL Toggle -->
         <div class="cdl-toggle-bar" onclick="toggleCdlFields()" style="margin-bottom:0;border-radius:var(--radius) var(--radius) 0 0;" id="cdlToggleBar">
-          <div class="cdl-toggle-label">
-            🚛 This is a CDL / Trucking job
-            <span class="cdl-toggle-sub">Unlock CDL-specific fields and auto-screener questions</span>
-          </div>
+          <div class="cdl-toggle-label">🚛 This is a CDL / Trucking job<span class="cdl-toggle-sub">Unlock CDL-specific fields and auto-screener questions</span></div>
           <div class="toggle-switch" id="cdlToggleSwitch"></div>
         </div>
         <div id="nonCdlMsg" style="background:#F8F9FA;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 0 var(--radius) var(--radius);padding:10px 16px;font-size:12px;color:var(--text-secondary);margin-bottom:24px;">
@@ -1156,95 +365,44 @@
         </div>
         <div class="cdl-fields-panel" id="cdlFieldsPanel">
           <div class="field-row" style="margin-bottom:16px;">
-            <div class="field">
-              <label>CDL Class Required</label>
-              <select id="cdlClass">
-                <option value="">Any / Not Required</option>
-                <option value="A">CDL-A</option>
-                <option value="B">CDL-B</option>
-                <option value="C">CDL-C</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Home Time</label>
-              <select id="homeTime">
-                <option value="">Select...</option>
-                <option value="Daily">Home Daily</option>
-                <option value="Weekly">Home Weekly</option>
-                <option value="Biweekly">Home Biweekly</option>
-                <option value="OTR">OTR (out 2-3 weeks)</option>
-              </select>
-            </div>
+            <div class="field"><label>CDL Class Required</label><select id="cdlClass"><option value="">Any / Not Required</option><option value="A">CDL-A</option><option value="B">CDL-B</option><option value="C">CDL-C</option></select></div>
+            <div class="field"><label>Home Time</label><select id="homeTime"><option value="">Select...</option><option value="Daily">Home Daily</option><option value="Weekly">Home Weekly</option><option value="Biweekly">Home Biweekly</option><option value="OTR">OTR (out 2-3 weeks)</option></select></div>
           </div>
           <div class="field-row" style="margin-bottom:16px;">
-            <div class="field">
-              <label>Route Type</label>
-              <select id="routeType">
-                <option value="">Select...</option>
-                <option value="Local">Local</option>
-                <option value="Regional">Regional</option>
-                <option value="OTR">OTR</option>
-                <option value="Dedicated">Dedicated Lane</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Job Type</label>
-              <select id="jobType">
-                <option value="full-time">Full-Time</option>
-                <option value="part-time">Part-Time</option>
-                <option value="contract">Contract</option>
-              </select>
-            </div>
+            <div class="field"><label>Route Type</label><select id="routeType"><option value="">Select...</option><option value="Local">Local</option><option value="Regional">Regional</option><option value="OTR">OTR</option><option value="Dedicated">Dedicated Lane</option></select></div>
+            <div class="field"><label>Job Type</label><select id="jobType"><option value="full-time">Full-Time</option><option value="part-time">Part-Time</option><option value="contract">Contract</option></select></div>
           </div>
-
-          <!-- CDL Screener Questions -->
           <div class="screener-section">
             <div class="screener-title">✅ CDL Screener Questions</div>
             <div class="screener-sub">Select which qualifications to screen for. Drivers who don't qualify are flagged automatically — you only see qualified applicants. Indeed charges extra for this. It's included free.</div>
-            <div class="screener-grid">
-              <label class="screener-item" onclick="toggleScreener(this)">
-                <input type="checkbox" id="sq_cdla" value="cdla">
-                <div>
-                  <div class="screener-item-text">Valid CDL-A Required</div>
-                  <div class="screener-item-sub">Auto-reject without CDL-A</div>
-                </div>
-              </label>
-              <label class="screener-item" onclick="toggleScreener(this)">
-                <input type="checkbox" id="sq_experience" value="experience">
-                <div>
-                  <div class="screener-item-text">Minimum Experience</div>
-                  <div class="screener-item-sub">Filter by years of OTR/local experience</div>
-                </div>
-              </label>
-              <label class="screener-item" onclick="toggleScreener(this)">
-                <input type="checkbox" id="sq_accidents" value="accidents">
-                <div>
-                  <div class="screener-item-text">Clean MVR Required</div>
-                  <div class="screener-item-sub">Screen for preventable accidents</div>
-                </div>
-              </label>
-              <label class="screener-item" onclick="toggleScreener(this)">
-                <input type="checkbox" id="sq_location" value="location">
-                <div>
-                  <div class="screener-item-text">Must Report to Location</div>
-                  <div class="screener-item-sub">Confirm daily commute willingness</div>
-                </div>
-              </label>
-              <label class="screener-item" onclick="toggleScreener(this)">
-                <input type="checkbox" id="sq_drug" value="drug">
-                <div>
-                  <div class="screener-item-text">Drug Screening Consent</div>
-                  <div class="screener-item-sub">Pre-employment drug test required</div>
-                </div>
-              </label>
-              <label class="screener-item" onclick="toggleScreener(this)">
-                <input type="checkbox" id="sq_hometime" value="hometime">
-                <div>
-                  <div class="screener-item-text">Home Time Preference</div>
-                  <div class="screener-item-sub">Match on home daily/weekly/OTR</div>
-                </div>
-              </label>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Core Qualifications</div>
+            <div class="screener-grid" style="margin-bottom:16px;">
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_cdla" value="cdla"><div><div class="screener-item-text">Valid CDL-A Required</div><div class="screener-item-sub">Auto-reject without CDL-A</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_experience" value="experience"><div><div class="screener-item-text">Minimum Experience</div><div class="screener-item-sub">Filter by years of OTR/local experience</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_accidents" value="accidents"><div><div class="screener-item-text">Clean MVR Required</div><div class="screener-item-sub">Screen for preventable accidents</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_location" value="location"><div><div class="screener-item-text">Must Report to Location</div><div class="screener-item-sub">Confirm daily commute willingness</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_drug" value="drug"><div><div class="screener-item-text">Drug Screening Consent</div><div class="screener-item-sub">Pre-employment drug test required</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_hometime" value="hometime"><div><div class="screener-item-text">Home Time Preference</div><div class="screener-item-sub">Match on home daily/weekly/OTR</div></div></label>
             </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Required Endorsements</div>
+            <div class="screener-grid" style="margin-bottom:16px;">
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_hazmat" value="hazmat"><div><div class="screener-item-text">Hazmat</div><div class="screener-item-sub">Valid Hazmat endorsement required</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_tanker" value="tanker"><div><div class="screener-item-text">Tanker</div><div class="screener-item-sub">Valid Tanker endorsement required</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_doubles" value="doubles"><div><div class="screener-item-text">Doubles/Triples</div><div class="screener-item-sub">Doubles/Triples endorsement required</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_twic" value="twic"><div><div class="screener-item-text">TWIC Card</div><div class="screener-item-sub">Valid TWIC card required</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_passenger" value="passenger"><div><div class="screener-item-text">Passenger</div><div class="screener-item-sub">Passenger endorsement required</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_schoolbus" value="schoolbus"><div><div class="screener-item-text">School Bus</div><div class="screener-item-sub">School Bus endorsement required</div></div></label>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Driver Type</div>
+            <div class="screener-grid">
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_companydriver" value="companydriver"><div><div class="screener-item-text">Company Driver</div><div class="screener-item-sub">W-2 employee position</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_owneroperator" value="owneroperator"><div><div class="screener-item-text">Owner Operator</div><div class="screener-item-sub">Driver must have own authority or truck</div></div></label>
+              <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_leasepurchase" value="leasepurchase"><div><div class="screener-item-text">Lease Purchase</div><div class="screener-item-sub">Lease-to-own program available</div></div></label>
+            </div>
+
             <div class="screener-note">💡 Selected screener questions appear on the apply form automatically — no setup needed</div>
           </div>
         </div>
@@ -1255,69 +413,32 @@
         <div style="background:#F7F8FA;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;">How to get the best description:</div>
           <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);">
-              <div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-              Enter your job title, hiring location, and pay above
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);">
-              <div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-              Toggle on CDL fields if applicable (home time, route type)
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);">
-              <div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-              Hit <strong style="color:var(--accent);">Write it for me</strong> — done in seconds. Edit freely after.
-            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);"><div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>Enter your job title, hiring location, and pay above</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);"><div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>Toggle on CDL fields if applicable (home time, route type)</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);"><div style="width:22px;height:22px;background:var(--accent);border-radius:50%;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>Hit <strong style="color:var(--accent);">Write it for me</strong> — done in seconds. Edit freely after.</div>
           </div>
         </div>
         <div class="ai-desc-bar">
-          <div class="ai-desc-left">
-            <span class="ai-icon">✨</span>
-            <div class="ai-desc-text">Let <span>Jobpeak AI</span> write a driver-ready description — CDL-specific, not generic</div>
-          </div>
+          <div class="ai-desc-left"><span class="ai-icon">✨</span><div class="ai-desc-text">Let <span>Jobpeak AI</span> write a driver-ready description — CDL-specific, not generic</div></div>
           <button class="ai-write-btn" id="aiWriteBtn" onclick="generateDescription()">Write it for me</button>
         </div>
-
-        <div class="ai-loading" id="aiLoading">
-          <div class="ai-spinner"></div>
-          Writing your job description...
-        </div>
+        <div class="ai-loading" id="aiLoading"><div class="ai-spinner"></div>Writing your job description...</div>
 
         <div class="field">
           <label>Description <span class="req">*</span></label>
           <div id="quillEditor"></div>
-          <script>
-            // Inline init as final fallback
-            (function tryQuill() {
-              if (typeof Quill !== 'undefined' && !window._quillInitDone) {
-                window._quillInitDone = true;
-                quill = new Quill('#quillEditor', {
-                  theme: 'snow',
-                  placeholder: 'Describe the role, daily responsibilities, requirements, benefits...',
-                  modules: { toolbar: [['bold','italic','underline'],[{'list':'ordered'},{'list':'bullet'}],['clean']] }
-                });
-              } else if (!window._quillInitDone) {
-                setTimeout(tryQuill, 100);
-              }
-            })();
-          </script>
           <div class="field-hint">AI-written descriptions get 40% more applicants on average</div>
         </div>
 
         <hr class="section-divider">
-        <div class="section-label">Apply Link & Contact</div>
+        <div class="section-label">Apply Link &amp; Contact</div>
 
         <div class="field">
           <label>Apply URL <span class="opt">(optional for CDL jobs)</span></label>
           <input type="url" id="applyUrl" placeholder="https://intelliapp.driverapponline.com/c/yourcompany" oninput="checkApplyUrl()">
-          <div style="font-size:12px;color:var(--text-muted);margin-top:5px;display:flex;align-items:center;gap:6px;">
-            🚛 <strong>Using Tenstreet?</strong> Paste your Intelliapp URL here — drivers apply directly in your ATS
-          </div>
-          <div id="applyUrlWarning" style="display:none;background:#FFF9EC;border:1px solid #F59E0B;border-radius:6px;padding:8px 12px;color:#92400E;font-size:12px;margin-top:6px;">
-            ⚠️ No apply URL entered — paste your Tenstreet Intelliapp link, ATS URL, or career page. Or toggle on CDL mode above to use our hosted apply form.
-          </div>
-          <div class="field-hint" style="background:#F0FFF8;border:1px solid #10B981;border-radius:6px;padding:8px 12px;color:#065F46;margin-top:6px;">
-            ✓ Leave blank — we automatically build your CDL screening form using the questions you selected above. Every applicant gets screened. You get emailed instantly with their answers.
-          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:5px;display:flex;align-items:center;gap:6px;">🚛 <strong>Using Tenstreet?</strong> Paste your Intelliapp URL here — drivers apply directly in your ATS</div>
+          <div id="applyUrlWarning" style="display:none;background:#FFF9EC;border:1px solid #F59E0B;border-radius:6px;padding:8px 12px;color:#92400E;font-size:12px;margin-top:6px;">⚠️ No apply URL entered — paste your website application form or ATS URL. Or toggle on CDL mode above to use our hosted apply form.</div>
+          <div class="field-hint" style="background:#F0FFF8;border:1px solid #10B981;border-radius:6px;padding:8px 12px;color:#065F46;margin-top:6px;">✓ Leave blank — we automatically build your CDL screening form using the questions you selected above. Driver's city &amp; state are always collected. Every applicant gets screened. You get emailed instantly with their answers.</div>
         </div>
 
         <div class="field">
@@ -1329,69 +450,41 @@
 
         <hr class="section-divider">
         <div class="section-label">Company Logo <span style="font-weight:400;color:var(--text-muted);font-size:11px;text-transform:none;letter-spacing:0">optional</span></div>
-
         <div class="logo-upload" id="logoUploadArea">
           <input type="file" id="logoFile" accept="image/*" onchange="handleLogoUpload(event)">
           <img class="logo-preview" id="logoPreview" alt="Logo preview">
           <div class="logo-upload-icon" id="logoUploadIcon">🏢</div>
-          <div class="logo-upload-text">
-            <strong>Upload company logo</strong><br>
-            PNG, JPG up to 5MB
-          </div>
+          <div class="logo-upload-text"><strong>Upload company logo</strong><br>PNG, JPG up to 5MB</div>
         </div>
 
       </div>
       <div class="form-footer">
         <div style="font-size:13px;color:var(--text-muted);">Step 1 of 3</div>
-        <button class="btn-next" onclick="goToPreview()">
-          Preview Job
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
+        <button class="btn-next" onclick="goToPreview()">Preview Job <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
       </div>
     </div>
 
-    <!-- STEP 2: PREVIEW -->
+    <!-- STEP 2 -->
     <div class="form-section" id="section-2">
       <div class="form-card-header">
         <div class="form-card-title">Here's how it looks to drivers</div>
         <div class="form-card-sub">This is exactly what CDL drivers will see on Jobpeak, Talroo, and WhatJobs.</div>
       </div>
       <div class="form-body">
-
         <div style="margin-bottom:20px;">
           <div style="font-size:12px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Your job goes live across all of these instantly:</div>
           <div class="dist-badge-row">
-            <div class="dist-badge">
-              <div class="check">✓</div>
-              <span>Jobpeak.io</span>
-            </div>
-            <div class="dist-badge">
-              <div class="check">✓</div>
-              <span>Talroo Network<br><span style="font-size:10px;font-weight:400;color:var(--text-muted);">1B+ monthly matches</span></span>
-            </div>
-            <div class="dist-badge">
-              <div class="check">✓</div>
-              <span>WhatJobs</span>
-            </div>
-            <div class="dist-badge">
-              <div class="check">✓</div>
-              <span>Google for Jobs</span>
-            </div>
-            <div class="dist-badge ai">
-              <div class="check">✓</div>
-              <span>AI Search<br><span style="font-size:10px;font-weight:400;">ChatGPT · Perplexity · Gemini</span></span>
-            </div>
+            <div class="dist-badge"><div class="check">✓</div><span>Jobpeak.io</span></div>
+            <div class="dist-badge"><div class="check">✓</div><span>Talroo Network<br><span style="font-size:10px;font-weight:400;color:var(--text-muted);">1B+ monthly matches</span></span></div>
+            <div class="dist-badge"><div class="check">✓</div><span>WhatJobs</span></div>
+            <div class="dist-badge"><div class="check">✓</div><span>Google for Jobs</span></div>
+            <div class="dist-badge ai"><div class="check">✓</div><span>AI Search<br><span style="font-size:10px;font-weight:400;">ChatGPT · Perplexity · Gemini</span></span></div>
           </div>
-          <div id="urgencyPreviewBadge" style="display:none;margin-top:8px;">
-            <span style="background:#EF4444;color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px;letter-spacing:.04em;">🚨 URGENTLY HIRING</span>
-          </div>
+          <div id="urgencyPreviewBadge" style="display:none;margin-top:8px;"><span style="background:#EF4444;color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px;letter-spacing:.04em;">🚨 URGENTLY HIRING</span></div>
         </div>
-
         <div class="preview-job-card">
           <div class="preview-label">✓ Live Preview</div>
-          <div id="previewLogoWrap" style="display:none;margin-bottom:12px;">
-            <img id="previewLogo" style="width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--border);" alt="">
-          </div>
+          <div id="previewLogoWrap" style="display:none;margin-bottom:12px;"><img id="previewLogo" style="width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--border);" alt=""></div>
           <div class="preview-title" id="previewTitle">—</div>
           <div class="preview-company" id="previewCompany">—</div>
           <div class="preview-meta">
@@ -1403,45 +496,29 @@
           </div>
           <div class="preview-desc" id="previewDesc">—</div>
         </div>
-
-        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:13px;color:var(--text-secondary);">
-          <strong style="color:var(--text);">✏️ Need to make changes?</strong> Go back and edit — your details are saved.
-        </div>
-
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:13px;color:var(--text-secondary);"><strong style="color:var(--text);">✏️ Need to make changes?</strong> Go back and edit — your details are saved.</div>
       </div>
       <div class="form-footer">
         <button class="btn-back" onclick="goToStep(1)">✏️ Edit Details</button>
-        <button class="btn-next" onclick="goToStep(3)">
-          Looks good — Go Live
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
+        <button class="btn-next" onclick="goToStep(3)">Looks good — Go Live <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
       </div>
     </div>
 
-    <!-- STEP 3: ACTIVATE -->
+    <!-- STEP 3 -->
     <div class="form-section" id="section-3">
       <div class="form-card-header">
         <div class="form-card-title">Your job is ready. Go live.</div>
         <div class="form-card-sub">Stays live and sponsored until you hire. Cancel anytime.</div>
       </div>
       <div class="form-body">
-
         <div class="activate-plan">
           <div class="activate-plan-badge">CDL Sponsored Listing</div>
-
-          <!-- Daily first, monthly second -->
-          <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;margin-bottom:4px;">
-            <div class="activate-price" style="font-size:64px;">$6.57</div>
-            <div style="font-size:20px;color:var(--text-secondary);font-weight:600;">/day</div>
-          </div>
+          <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;margin-bottom:4px;"><div class="activate-price" style="font-size:64px;">$6.57</div><div style="font-size:20px;color:var(--text-secondary);font-weight:600;">/day</div></div>
           <div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">Billed monthly at $197 · Renews automatically · Cancel anytime</div>
-
-          <!-- CDL Premium explanation -->
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:20px;text-align:left;">
             <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;">CDL Driver Premium</div>
             <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Standard job boards start at $5/day. CDL-A placement requires more — tighter driver pools, higher competition, title-level optimization. We price it accurately so your listing actually performs.</div>
           </div>
-
           <div class="activate-features">
             <div class="activate-feature">Sponsored placement on Jobpeak</div>
             <div class="activate-feature">Talroo distribution</div>
@@ -1456,138 +533,63 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
             Activate My Job — $197/mo
           </button>
-          <div class="stripe-note">
-            🔒 Secured by Stripe · Renews monthly · Cancel anytime — your job stays live until the end of your billing period, no partial charges
-          </div>
-
-          <!-- Trust badge tray -->
+          <div class="stripe-note">🔒 Secured by Stripe · Renews monthly · Cancel anytime — your job stays live until the end of your billing period, no partial charges</div>
           <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
-            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              SSL Encrypted
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-              Stripe Payments
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
-              Cancel Anytime
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              No Contracts
-            </div>
+            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL Encrypted</div>
+            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Stripe Payments</div>
+            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>Cancel Anytime</div>
+            <div style="display:flex;align-items:center;gap:5px;background:#F7F8FA;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>No Contracts</div>
           </div>
         </div>
-
         <div style="background:#F7F8FA;border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;">
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;">⚙️ How we keep your job in front of drivers</div>
-          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
-            While Indeed makes you manage daily budgets and compete in an auction you can't see — Jobpeak handles all of it automatically.<br><br>
-            Our system optimizes your placement across Talroo, WhatJobs, and Jobpeak at the <strong style="color:var(--text);">job title level</strong> using US Census driver density data. CDL-A OTR in Columbus competes differently than Local Driver in Dallas. We know that. Indeed doesn't care.<br><br>
-            Because we run CDL exclusively, we know exactly what each title costs in each market. No wild swings. No January surprises. <strong style="color:var(--text);">One price. Always on.</strong>
-          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">⚙️ How we keep your job in front of drivers</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">While Indeed makes you manage daily budgets and compete in an auction you can't see — Jobpeak handles all of it automatically.<br><br>Our system optimizes your placement across Talroo, WhatJobs, and Jobpeak at the <strong style="color:var(--text);">job title level</strong> using US Census driver density data. CDL-A OTR in Columbus competes differently than Local Driver in Dallas. We know that. Indeed doesn't care.<br><br>Because we run CDL exclusively, we know exactly what each title costs in each market. No wild swings. No January surprises. <strong style="color:var(--text);">One price. Always on.</strong></div>
         </div>
-
         <div style="background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius);padding:16px;">
           <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;">💡 Add Max AI Recruiter Copilot — $299/mo</div>
-          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">
-            Max texts every applicant within 2 minutes, prequalifies their CDL class and experience, and books confirmed phone screenings on your calendar. Our clients average <strong style="color:var(--text);">35% of applicants become confirmed calls</strong>.
-          </div>
-          <label class="checkbox-item">
-            <input type="checkbox" id="addMax">
-            Add Max AI Copilot (+$299/mo) — I want confirmed calls, not a list of names
-          </label>
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">Max texts every applicant within 2 minutes, prequalifies their CDL class and experience, and books confirmed phone screenings on your calendar. Our clients average <strong style="color:var(--text);">35% of applicants become confirmed calls</strong>.</div>
+          <label class="checkbox-item"><input type="checkbox" id="addMax">Add Max AI Copilot (+$299/mo) — I want confirmed calls, not a list of names</label>
         </div>
-
       </div>
       <div class="form-footer">
         <button class="btn-back" onclick="goToStep(2)">← Back to Preview</button>
-        <div style="font-size:12px;color:var(--text-muted);text-align:right;">
-          Questions? <a href="mailto:hello@jobpeak.io" style="color:var(--accent);text-decoration:none;">hello@jobpeak.io</a>
-        </div>
+        <div style="font-size:12px;color:var(--text-muted);text-align:right;">Questions? <a href="mailto:hello@jobpeak.io" style="color:var(--accent);text-decoration:none;">hello@jobpeak.io</a></div>
       </div>
     </div>
 
   </div>
 
-  <!-- ── SIDEBAR ── -->
+  <!-- SIDEBAR -->
   <div class="sidebar">
-
     <div class="price-card">
       <div class="price-card-label">CDL Sponsored Listing</div>
-      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:2px;">
-        <div class="price-card-amount">$6.57</div>
-        <div style="font-size:16px;color:var(--text-secondary);font-weight:600;">/day</div>
-      </div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:2px;"><div class="price-card-amount">$6.57</div><div style="font-size:16px;color:var(--text-secondary);font-weight:600;">/day</div></div>
       <div class="price-card-period">Billed monthly at $197 · Cancel anytime</div>
       <div class="price-includes">
         <div class="price-include-item">Sponsored placement on Jobpeak</div>
         <div class="price-include-item">Talroo + WhatJobs distribution</div>
         <div class="price-include-item">Google for Jobs indexing</div>
-        <div class="price-include-item">Click & applicant tracking</div>
+        <div class="price-include-item">Click &amp; applicant tracking</div>
         <div class="price-include-item">AI-written job description</div>
         <div class="price-include-item">Cancel anytime</div>
       </div>
     </div>
-
     <div class="sidebar-card">
-      <div class="sidebar-card-title">
-        🚀 Your job appears on
-      </div>
-      <div class="distribution-item">
-        <div class="dist-check">✓</div>
-        <div>
-          <div style="font-weight:600;color:var(--text);font-size:14px;">Jobpeak.io</div>
-          <div style="font-size:12px;color:var(--text-muted);">CDL-specific AI job search</div>
-        </div>
-      </div>
-      <div class="distribution-item">
-        <div class="dist-check">✓</div>
-        <div>
-          <div style="font-weight:600;color:var(--text);font-size:14px;">Talroo</div>
-          <div style="font-size:12px;color:var(--text-muted);">Largest trucking job network</div>
-        </div>
-      </div>
-      <div class="distribution-item">
-        <div class="dist-check">✓</div>
-        <div>
-          <div style="font-weight:600;color:var(--text);font-size:14px;">WhatJobs</div>
-          <div style="font-size:12px;color:var(--text-muted);">Global job aggregator</div>
-        </div>
-      </div>
-      <div class="distribution-item">
-        <div class="dist-check">✓</div>
-        <div>
-          <div style="font-weight:600;color:var(--text);font-size:14px;">Google for Jobs</div>
-          <div style="font-size:12px;color:var(--text-muted);">Search results visibility</div>
-        </div>
-      </div>
+      <div class="sidebar-card-title">🚀 Your job appears on</div>
+      <div class="distribution-item"><div class="dist-check">✓</div><div><div style="font-weight:600;color:var(--text);font-size:14px;">Jobpeak.io</div><div style="font-size:12px;color:var(--text-muted);">CDL-specific AI job search</div></div></div>
+      <div class="distribution-item"><div class="dist-check">✓</div><div><div style="font-weight:600;color:var(--text);font-size:14px;">Talroo</div><div style="font-size:12px;color:var(--text-muted);">Largest trucking job network</div></div></div>
+      <div class="distribution-item"><div class="dist-check">✓</div><div><div style="font-weight:600;color:var(--text);font-size:14px;">WhatJobs</div><div style="font-size:12px;color:var(--text-muted);">Global job aggregator</div></div></div>
+      <div class="distribution-item"><div class="dist-check">✓</div><div><div style="font-weight:600;color:var(--text);font-size:14px;">Google for Jobs</div><div style="font-size:12px;color:var(--text-muted);">Search results visibility</div></div></div>
     </div>
-
     <div class="sidebar-card">
       <div class="sidebar-card-title">Why carriers choose Jobpeak</div>
       <div class="trust-badges">
-        <div class="trust-badge">
-          <div class="trust-badge-icon">🎯</div>
-          <div>CDL drivers only — no noise from unqualified applicants</div>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-badge-icon">⚡</div>
-          <div>Live in under 10 minutes — same as Indeed, without the complexity</div>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-badge-icon">📊</div>
-          <div>See clicks, applicants, and market data in your dashboard</div>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-badge-icon">🚫</div>
-          <div>No per-click surprises — flat $197/mo, cancel anytime</div>
-        </div>
+        <div class="trust-badge"><div class="trust-badge-icon">🎯</div><div>CDL drivers only — no noise from unqualified applicants</div></div>
+        <div class="trust-badge"><div class="trust-badge-icon">⚡</div><div>Live in under 10 minutes — same as Indeed, without the complexity</div></div>
+        <div class="trust-badge"><div class="trust-badge-icon">📊</div><div>See clicks, applicants, and market data in your dashboard</div></div>
+        <div class="trust-badge"><div class="trust-badge-icon">🚫</div><div>No per-click surprises — flat $197/mo, cancel anytime</div></div>
       </div>
     </div>
-
   </div>
 
 </div>
@@ -1602,39 +604,38 @@
   let cdlOpen = false;
   let urgentActive = false;
 
-  // ── JOB TITLE CHANGE — regenerate locations ──
+  // ── QUILL INIT — window.load fires after all resources ──
+  window.addEventListener('load', function() {
+    if (typeof Quill !== 'undefined' && !quill) {
+      quill = new Quill('#quillEditor', {
+        theme: 'snow',
+        placeholder: 'Describe the role, daily responsibilities, requirements, benefits, and what makes this opportunity great for drivers...',
+        modules: { toolbar: [['bold','italic','underline'],[{'list':'ordered'},{'list':'bullet'}],['clean']] }
+      });
+    }
+  });
+
   function onJobTitleChange() {
     const loc = document.getElementById('location').value.trim();
     if (loc && document.getElementById('hiringLat').value) generateLocations();
   }
 
-  // ── APPLY URL WARNING for non-CDL ──
   function checkApplyUrl() {
     const val = document.getElementById('applyUrl').value.trim();
     const warning = document.getElementById('applyUrlWarning');
     if (!warning) return;
-    // Only show warning if CDL toggle is off and field is empty
-    if (!cdlOpen && !val) {
-      warning.style.display = 'block';
-    } else {
-      warning.style.display = 'none';
-    }
+    if (!cdlOpen && !val) { warning.style.display = 'block'; } else { warning.style.display = 'none'; }
   }
 
-  // ── CDL TOGGLE ──
   function toggleCdlFields() {
     cdlOpen = !cdlOpen;
     document.getElementById('cdlFieldsPanel').classList.toggle('open', cdlOpen);
     document.getElementById('cdlToggleSwitch').classList.toggle('on', cdlOpen);
-    document.getElementById('cdlToggleBar').style.borderRadius = cdlOpen
-      ? 'var(--radius) var(--radius) 0 0'
-      : 'var(--radius)';
-    // Hide non-CDL message when CDL is toggled on
-    const nonCdlMsg = document.getElementById('nonCdlMsg');
-    if (nonCdlMsg) nonCdlMsg.style.display = cdlOpen ? 'none' : 'block';
+    document.getElementById('cdlToggleBar').style.borderRadius = cdlOpen ? 'var(--radius) var(--radius) 0 0' : 'var(--radius)';
+    const msg = document.getElementById('nonCdlMsg');
+    if (msg) msg.style.display = cdlOpen ? 'none' : 'block';
   }
 
-  // ── URGENCY TOGGLE ──
   function toggleUrgency() {
     urgentActive = !urgentActive;
     document.getElementById('urgencyToggle').classList.toggle('on', urgentActive);
@@ -1642,46 +643,22 @@
     document.getElementById('urgentHiring').value = urgentActive ? 'true' : 'false';
   }
 
-  // ── SCREENER QUESTION TOGGLE ──
   function toggleScreener(label) {
     const cb = label.querySelector('input[type="checkbox"]');
     cb.checked = !cb.checked;
     label.classList.toggle('selected', cb.checked);
   }
 
-  // ── GET SELECTED SCREENERS ──
   function getSelectedScreeners() {
-    const items = document.querySelectorAll('.screener-item input[type="checkbox"]');
-    return Array.from(items).filter(cb => cb.checked).map(cb => cb.value);
+    return Array.from(document.querySelectorAll('.screener-item input[type="checkbox"]')).filter(cb => cb.checked).map(cb => cb.value);
   }
 
-  // ── QUILL INIT — called after all scripts load ──
-  function initQuill() {
-    if (document.getElementById('quillEditor') && typeof Quill !== 'undefined' && !quill) {
-      quill = new Quill('#quillEditor', {
-        theme: 'snow',
-        placeholder: 'Describe the role, daily responsibilities, requirements, benefits, and what makes this opportunity great for drivers...',
-        modules: {
-          toolbar: [
-            ['bold', 'italic', 'underline'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            ['clean']
-          ]
-        }
-      });
-    }
-  }
-
-  // ── LOCATION INPUT CHANGE ──
   let locationTimer = null;
   function locationInputChanged() {
     clearTimeout(locationTimer);
-    locationTimer = setTimeout(() => {
-      generateLocations();
-    }, 600); // debounce 600ms after typing stops
+    locationTimer = setTimeout(generateLocations, 700);
   }
 
-  // ── RADIUS SELECTOR ──
   function selectRadius(el, val) {
     document.querySelectorAll('.r-opt').forEach(o => o.classList.remove('active'));
     el.classList.add('active');
@@ -1689,7 +666,6 @@
     if (document.getElementById('location').value.trim()) generateLocations();
   }
 
-  // ── LOCATION ENGINE ──
   const CITIES_DB = [
     {city:'Columbus',state:'OH',lat:39.9612,lon:-82.9988},{city:'Cleveland',state:'OH',lat:41.4993,lon:-81.6944},{city:'Cincinnati',state:'OH',lat:39.1031,lon:-84.5120},{city:'Toledo',state:'OH',lat:41.6528,lon:-83.5379},{city:'Akron',state:'OH',lat:41.0814,lon:-81.5190},{city:'Dayton',state:'OH',lat:39.7589,lon:-84.1916},{city:'Youngstown',state:'OH',lat:41.0998,lon:-80.6495},{city:'Canton',state:'OH',lat:40.7989,lon:-81.3784},{city:'Lorain',state:'OH',lat:41.4523,lon:-82.1824},{city:'Hamilton',state:'OH',lat:39.3995,lon:-84.5613},{city:'Springfield',state:'OH',lat:39.9242,lon:-83.8088},{city:'Findlay',state:'OH',lat:41.0442,lon:-83.6499},{city:'Lima',state:'OH',lat:40.7423,lon:-84.1052},{city:'Mansfield',state:'OH',lat:40.7584,lon:-82.5154},{city:'Elyria',state:'OH',lat:41.3684,lon:-82.1077},
     {city:'Philadelphia',state:'PA',lat:39.9526,lon:-75.1652},{city:'Pittsburgh',state:'PA',lat:40.4406,lon:-79.9959},{city:'Allentown',state:'PA',lat:40.6084,lon:-75.4902},{city:'Erie',state:'PA',lat:42.1292,lon:-80.0851},{city:'Reading',state:'PA',lat:40.3356,lon:-75.9269},{city:'Scranton',state:'PA',lat:41.4090,lon:-75.6624},{city:'Harrisburg',state:'PA',lat:40.2732,lon:-76.8867},{city:'Lancaster',state:'PA',lat:40.0379,lon:-76.3055},{city:'York',state:'PA',lat:39.9626,lon:-76.7277},{city:'Bethlehem',state:'PA',lat:40.6259,lon:-75.3705},
@@ -1723,87 +699,66 @@
     let lat = parseFloat(document.getElementById('hiringLat').value);
     let lng = parseFloat(document.getElementById('hiringLng').value);
 
-    // Fallback: look up in CITIES_DB if Google Maps hasn't fired yet
+    // CITIES_DB fallback when Google Maps hasn't fired yet
     if (!lat || !lng) {
-      const locLower = loc.toLowerCase();
+      const locLower = loc.toLowerCase().trim();
       const found = CITIES_DB.find(c => {
-        const cityState = (c.city + ', ' + c.state).toLowerCase();
-        const cityOnly = c.city.toLowerCase();
-        return cityState === locLower || cityOnly === locLower ||
-               locLower.startsWith(cityOnly) || cityState.startsWith(locLower);
+        const cs = (c.city + ', ' + c.state).toLowerCase();
+        const co = c.city.toLowerCase();
+        return cs === locLower || co === locLower || cs.startsWith(locLower) ||
+               locLower.startsWith(co + ',') || locLower.startsWith(co + ' ');
       });
       if (found) {
-        lat = found.lat;
-        lng = found.lon;
+        lat = found.lat; lng = found.lon;
         document.getElementById('hiringLat').value = lat;
         document.getElementById('hiringLng').value = lng;
-      } else {
-        return; // Can't generate without coordinates
-      }
+      } else { return; }
     }
 
     const radius = parseInt(document.querySelector('input[name="radius"]:checked')?.value || 50);
-    const category = 'trucking';
     const jobTitle = document.getElementById('jobTitle').value.trim();
-
     document.getElementById('locPreview').style.display = 'block';
     document.getElementById('locGrid').innerHTML = '<div style="font-size:13px;color:#9BA3AF;padding:8px;">Analyzing driver density by location...</div>';
 
-    const inRadius = CITIES_DB
-      .map(c => ({ ...c, d: Math.round(distMiles(lat, lng, c.lat, c.lon)) }))
-      .filter(c => c.d <= radius)
-      .slice(0, 50);
+    const inRadius = CITIES_DB.map(c => ({...c, d: Math.round(distMiles(lat, lng, c.lat, c.lon))}))
+      .filter(c => c.d <= radius).slice(0, 50);
+
+    if (!inRadius.length) {
+      document.getElementById('locGrid').innerHTML = '<div style="font-size:13px;color:#9BA3AF;padding:8px;">No cities found in this radius — try a wider range.</div>';
+      return;
+    }
 
     try {
       const cityParams = inRadius.map(c => `${c.city}, ${c.state}`).join('|');
-      const titleParam = jobTitle ? `&title=${encodeURIComponent(jobTitle)}` : ''; const res = await fetch(`${API}/demographics?cities=${encodeURIComponent(cityParams)}&category=${category}${titleParam}`);
+      const titleParam = jobTitle ? `&title=${encodeURIComponent(jobTitle)}` : '';
+      const res = await fetch(`${API}/demographics?cities=${encodeURIComponent(cityParams)}&category=trucking${titleParam}`);
       const data = await res.json();
       const scores = data.scores || {};
-
       const scored = inRadius.map(c => {
         const key = `${c.city}, ${c.state}`;
         const demoScore = scores[key] !== undefined ? scores[key] : 50;
         const distScore = Math.max(0, 100 - (c.d / radius * 100));
-        return { ...c, demoScore, totalScore: (demoScore * 0.6) + (distScore * 0.4) };
+        return {...c, demoScore, totalScore: (demoScore * 0.6) + (distScore * 0.4)};
       });
-
       scored.sort((a, b) => b.totalScore - a.totalScore);
-      const top = scored.slice(0, 20);
-
-      selectedLocations = top.map(c => ({
-        city: c.city, state: c.state, d: c.d, demoScore: Math.round(c.demoScore), checked: true
-      }));
+      selectedLocations = scored.slice(0, 20).map(c => ({city:c.city, state:c.state, d:c.d, demoScore:Math.round(c.demoScore), checked:true}));
     } catch(err) {
-      selectedLocations = inRadius.sort((a,b) => a.d - b.d).slice(0,20)
-        .map(c => ({ city: c.city, state: c.state, d: c.d, demoScore: null, checked: true }));
+      selectedLocations = inRadius.sort((a,b) => a.d-b.d).slice(0,20).map(c => ({city:c.city, state:c.state, d:c.d, demoScore:null, checked:true}));
     }
-
     renderLocations();
   }
 
   function renderLocations() {
-    const grid = document.getElementById('locGrid');
-    const count = document.getElementById('locCount');
     const n = selectedLocations.filter(l => l.checked).length;
-    count.textContent = n;
-    grid.innerHTML = selectedLocations.map((l, i) => `
-      <span class="loc-chip ${l.checked ? 'checked' : ''} ${l.d < 5 ? 'primary' : ''}" onclick="toggleLoc(${i})">
-        ${l.city}, ${l.state}
-        <span style="opacity:.6;font-size:10px">${l.d}mi</span>
-      </span>`).join('');
+    document.getElementById('locCount').textContent = n;
+    document.getElementById('locGrid').innerHTML = selectedLocations.map((l, i) =>
+      `<span class="loc-chip ${l.checked ? 'checked' : ''} ${l.d < 5 ? 'primary' : ''}" onclick="toggleLoc(${i})">${l.city}, ${l.state} <span style="opacity:.6;font-size:10px">${l.d}mi</span></span>`
+    ).join('');
   }
 
-  function toggleLoc(i) {
-    selectedLocations[i].checked = !selectedLocations[i].checked;
-    renderLocations();
-  }
+  function toggleLoc(i) { selectedLocations[i].checked = !selectedLocations[i].checked; renderLocations(); }
+  function selectAllLocs(v) { selectedLocations.forEach(l => l.checked = v); renderLocations(); }
 
-  function selectAllLocs(v) {
-    selectedLocations.forEach(l => l.checked = v);
-    renderLocations();
-  }
-
-  // ── PAY FORMATTING ──
   function formatSalaryField(input) {
     const payType = document.getElementById('payType').value;
     const raw = input.value.replace(/[^0-9.]/g, '');
@@ -1811,148 +766,88 @@
     const num = parseFloat(raw);
     if (isNaN(num)) return;
     if (payType === 'cpm') {
-      // CPM always formats as $0.XX — never a whole dollar
-      // Handle input like "65" → $0.65, "0.65" → $0.65
-      let cpmVal = num;
-      if (cpmVal >= 1) cpmVal = cpmVal / 100; // user typed 65 instead of 0.65
-      input.value = '$' + cpmVal.toFixed(2) + ' CPM';
+      let v = num; if (v >= 1) v = v / 100;
+      input.value = '$' + v.toFixed(2) + ' CPM';
     } else if (payType === 'hourly') {
       input.value = '$' + num.toFixed(2) + '/hr';
     } else {
-      input.value = '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      input.value = '$' + num.toLocaleString('en-US', {maximumFractionDigits: 0});
     }
   }
 
   function updatePayPlaceholders() {
     const type = document.getElementById('payType').value;
-    const minEl = document.getElementById('payMin');
-    const maxEl = document.getElementById('payMax');
-    const map = {
-      cpm:    ['0.55', '0.65'],
-      hourly: ['22.00', '28.00'],
-      weekly: ['1200', '1600'],
-      annual: ['65000', '85000'],
-      flat:   ['150', '250'],
-    };
-    const vals = map[type] || ['amount', 'amount'];
-    if (minEl) minEl.placeholder = 'e.g. ' + vals[0];
-    if (maxEl) maxEl.placeholder = 'e.g. ' + vals[1];
+    const map = {cpm:['0.55','0.65'],hourly:['22.00','28.00'],weekly:['1200','1600'],annual:['65000','85000'],flat:['150','250']};
+    const vals = map[type] || ['amount','amount'];
+    document.getElementById('payMin').placeholder = 'e.g. ' + vals[0];
+    document.getElementById('payMax').placeholder = 'e.g. ' + vals[1];
   }
 
   function formatBonusField(input) {
-    const value = input.value.replace(/[^\d.]/g, '');
-    if (value) {
-      const num = parseFloat(value);
-      if (!isNaN(num)) {
-        input.value = '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
-      }
-    }
-    // If not a number leave as text
+    const raw = input.value.replace(/[^\d.]/g, '');
+    if (!raw) return;
+    const num = parseFloat(raw);
+    if (!isNaN(num)) input.value = '$' + num.toLocaleString('en-US', {maximumFractionDigits: 0});
   }
 
-  // ── STEP NAVIGATION ──
   function goToStep(step) {
     document.getElementById(`section-${currentStep}`).classList.remove('active');
-    
-    // Update progress indicators
     for (let i = 1; i <= 3; i++) {
       const ind = document.getElementById(`step-indicator-${i}`);
       ind.classList.remove('active', 'done');
-      if (i < step) ind.classList.add('done');
-      else if (i === step) ind.classList.add('active');
+      if (i < step) ind.classList.add('done'); else if (i === step) ind.classList.add('active');
     }
-
-    for (let i = 1; i <= 2; i++) {
-      const line = document.getElementById(`line-${i}`);
-      line.classList.toggle('done', i < step);
-    }
-
+    for (let i = 1; i <= 2; i++) document.getElementById(`line-${i}`).classList.toggle('done', i < step);
     currentStep = step;
     document.getElementById(`section-${step}`).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
-  // ── VALIDATION ──
   function validateStep1() {
     let valid = true;
-
-    const required = [
-      { id: 'jobTitle', fieldId: 'field-jobTitle' },
-      { id: 'company', fieldId: 'field-company' },
-      { id: 'location', fieldId: 'field-location' },
-      { id: 'employerEmail', fieldId: null },
-    ];
-
-    // Reset errors
     document.querySelectorAll('.field.error').forEach(f => f.classList.remove('error'));
-
-    if (!document.getElementById('jobTitle').value.trim()) {
-      document.getElementById('field-jobTitle').classList.add('error');
-      valid = false;
-    }
-
-    if (!document.getElementById('company').value.trim()) {
-      document.getElementById('field-company').classList.add('error');
-      valid = false;
-    }
-
-    if (!document.getElementById('location').value.trim()) {
-      document.getElementById('field-location').classList.add('error');
-      valid = false;
-    }
-
+    if (!document.getElementById('jobTitle').value.trim()) { document.getElementById('field-jobTitle').classList.add('error'); valid = false; }
+    if (!document.getElementById('company').value.trim()) { document.getElementById('field-company').classList.add('error'); valid = false; }
+    if (!document.getElementById('location').value.trim()) { document.getElementById('field-location').classList.add('error'); valid = false; }
     const email = document.getElementById('employerEmail').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('employerEmail').closest('.field') && 
-        document.getElementById('employerEmail').parentElement.classList.add('error');
-      valid = false;
-    }
-
+    if (!email || !email.includes('@')) { document.getElementById('employerEmail').parentElement.classList.add('error'); valid = false; }
     const descText = quill ? quill.getText().trim() : '';
     const qlContainer = document.querySelector('.ql-container');
-    if (!descText || descText.length < 10) {
-      if (qlContainer) qlContainer.style.borderColor = '#EF4444';
-      valid = false;
-    } else {
-      if (qlContainer) qlContainer.style.borderColor = '';
-    }
-
-    // Warn if non-CDL and no apply URL
+    if (!descText || descText.length < 10) { if (qlContainer) qlContainer.style.borderColor = '#EF4444'; valid = false; }
+    else { if (qlContainer) qlContainer.style.borderColor = ''; }
     const applyUrl = document.getElementById('applyUrl').value.trim();
-    const warning = document.getElementById('applyUrlWarning');
     if (!cdlOpen && !applyUrl) {
-      if (warning) warning.style.display = 'block';
-      document.getElementById('applyUrl').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const w = document.getElementById('applyUrlWarning');
+      if (w) w.style.display = 'block';
+      document.getElementById('applyUrl').scrollIntoView({behavior: 'smooth', block: 'center'});
       valid = false;
     }
-
     return valid;
   }
 
   function goToPreview() {
     if (!validateStep1()) {
-      // Scroll to first error
-      const firstError = document.querySelector('.field.error input, .field.error select, .field.error textarea');
-      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const firstError = document.querySelector('.field.error input, .field.error select');
+      if (firstError) firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
       return;
     }
     buildPreview();
     goToStep(2);
   }
 
-  // ── BUILD PREVIEW ──
+  // ── BUILD PREVIEW ── FIX: removed undefined `desc` variable
   function buildPreview() {
     const title = document.getElementById('jobTitle').value.trim();
     const company = document.getElementById('company').value.trim();
     const location = document.getElementById('location').value.trim();
-    const salary = [document.getElementById('payMin').value, document.getElementById('payMax').value].filter(Boolean).join(' — ');
     const bonus = document.getElementById('bonus').value.trim();
-    const homeTime = document.getElementById('homeTime').value;
-    const jobType = document.getElementById('jobType').value;
-    // Show urgency badge in preview
+    const homeTimeEl = document.getElementById('homeTime');
+    const jobTypeEl = document.getElementById('jobType');
+    const homeTime = homeTimeEl ? homeTimeEl.value : '';
+    const jobType = jobTypeEl ? jobTypeEl.value : 'full-time';
+
     const urgencyPreview = document.getElementById('urgencyPreviewBadge');
     if (urgencyPreview) urgencyPreview.style.display = urgentActive ? 'block' : 'none';
-    // Urgency badge in preview
     const existingBadge = document.getElementById('previewUrgentBadge');
     if (existingBadge) existingBadge.remove();
     if (urgentActive) {
@@ -1960,103 +855,81 @@
       badge.id = 'previewUrgentBadge';
       badge.style.cssText = 'display:inline-block;background:#EF4444;color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px;letter-spacing:.04em;margin-bottom:10px;';
       badge.textContent = '🚨 URGENTLY HIRING';
-      document.querySelector('.preview-job-card').insertBefore(badge, document.querySelector('.preview-title'));
+      const previewCard = document.querySelector('.preview-job-card');
+      const previewTitle = document.getElementById('previewTitle');
+      if (previewCard && previewTitle) previewCard.insertBefore(badge, previewTitle);
     }
+
     document.getElementById('previewTitle').textContent = title || '—';
     document.getElementById('previewCompany').textContent = company || '—';
     document.getElementById('previewLocation').textContent = location || '—';
-    document.getElementById('previewSalary').textContent = (document.getElementById('payMin').value || '') + (document.getElementById('payMax').value ? ' — ' + document.getElementById('payMax').value : '') || 'Competitive';
+    const payMin = document.getElementById('payMin').value;
+    const payMax = document.getElementById('payMax').value;
+    document.getElementById('previewSalary').textContent = payMin ? (payMax ? payMin + ' — ' + payMax : payMin) : 'Competitive';
     document.getElementById('previewJobType').textContent = jobType === 'full-time' ? 'Full-Time' : jobType === 'part-time' ? 'Part-Time' : 'Contract';
-    const rawDesc = quill ? quill.getText().trim() : desc; document.getElementById('previewDesc').textContent = rawDesc ? rawDesc.substring(0, 400) + (rawDesc.length > 400 ? '...' : '') : '—';
+    // FIX: was `: desc` — desc was undefined. Now safely uses empty string fallback.
+    const rawDesc = quill ? quill.getText().trim() : '';
+    document.getElementById('previewDesc').textContent = rawDesc ? rawDesc.substring(0, 400) + (rawDesc.length > 400 ? '...' : '') : '—';
 
-    if (homeTime) {
-      document.getElementById('previewHomeTime').textContent = homeTime;
-      document.getElementById('previewHomeTimeWrap').style.display = 'flex';
-    }
-
-    if (bonus) {
-      document.getElementById('previewBonus').textContent = bonus;
-      document.getElementById('previewBonusWrap').style.display = 'flex';
-    }
-
-    if (logoDataUrl) {
-      document.getElementById('previewLogo').src = logoDataUrl;
-      document.getElementById('previewLogoWrap').style.display = 'block';
-    }
+    if (homeTime) { document.getElementById('previewHomeTime').textContent = homeTime; document.getElementById('previewHomeTimeWrap').style.display = 'flex'; }
+    if (bonus) { document.getElementById('previewBonus').textContent = bonus; document.getElementById('previewBonusWrap').style.display = 'flex'; }
+    if (logoDataUrl) { document.getElementById('previewLogo').src = logoDataUrl; document.getElementById('previewLogoWrap').style.display = 'block'; }
   }
 
-  // ── AI DESCRIPTION WRITER ──
   async function generateDescription() {
     const title = document.getElementById('jobTitle').value.trim();
     const company = document.getElementById('company').value.trim();
     const location = document.getElementById('location').value.trim();
-    const salary = [document.getElementById('payMin').value, document.getElementById('payMax').value].filter(Boolean).join(' — ');
+    const payMin = document.getElementById('payMin').value;
+    const payMax = document.getElementById('payMax').value;
+    const salary = [payMin, payMax].filter(Boolean).join(' — ');
     const bonus = document.getElementById('bonus').value.trim();
     const cdlClass = document.getElementById('cdlClass') ? document.getElementById('cdlClass').value : '';
     const homeTime = document.getElementById('homeTime') ? document.getElementById('homeTime').value : '';
     const routeType = document.getElementById('routeType') ? document.getElementById('routeType').value : '';
     const payType = document.getElementById('payType').value;
 
-    if (!title || !company) {
-      alert('Please fill in Job Title and Company Name first.');
-      return;
-    }
+    if (!title || !company) { alert('Please fill in Job Title and Company Name first.'); return; }
 
     const btn = document.getElementById('aiWriteBtn');
     const loading = document.getElementById('aiLoading');
-    btn.disabled = true;
-    btn.textContent = 'Writing...';
-    loading.classList.add('active');
+    btn.disabled = true; btn.textContent = 'Writing...'; loading.classList.add('active');
 
-    const prompt = `Write a compelling CDL driver job posting for the following position. Output valid HTML only — no markdown, no backticks. Use these HTML elements:
-- <h3> for section headers (What We Offer, Requirements, Why Drive For Us)
-- <p> for short paragraphs
-- <ul><li> for bullet lists
-- <strong> for key highlights like pay, bonus, home time
-
-Write in plain, direct language that appeals to working CDL drivers — no corporate fluff, no buzzwords. Focus on what matters to drivers: pay, home time, routes, and company culture.
+    const prompt = `Write a compelling CDL driver job posting. Output valid HTML only — no markdown, no backtick fences. Use <h3> for section headers, <p> for paragraphs, <ul><li> for bullets, <strong> for pay and home time highlights. Plain direct language, no corporate fluff.
 
 Job Title: ${title}
 Company: ${company}
 Location: ${location}
-${salary ? \`Pay: ${salary}\` : ''}
-${bonus ? \`Sign-On Bonus: ${bonus}\` : ''}
-${cdlClass ? \`CDL Class Required: CDL-${cdlClass}\` : ''}
-${homeTime ? \`Home Time: ${homeTime}\` : ''}
-${routeType ? \`Route Type: ${routeType}\` : ''}
-${payType ? \`Pay Type: ${payType}\` : ''}
+${salary ? 'Pay: ' + salary : ''}
+${bonus ? 'Sign-On Bonus: ' + bonus : ''}
+${cdlClass ? 'CDL Class: CDL-' + cdlClass : ''}
+${homeTime ? 'Home Time: ' + homeTime : ''}
+${routeType ? 'Route Type: ' + routeType : ''}
+${payType ? 'Pay Type: ' + payType : ''}
 
-Structure: Opening hook (1-2 sentences), What We Offer section with bullets, Requirements section with bullets, closing call to action. Keep it under 250 words total. Make the pay and home time the first bullets — that's what drivers read first.`;
+Structure: 1-2 sentence hook, What We Offer bullets (pay first), Requirements bullets, short CTA. Under 250 words.`;
 
     try {
       const res = await fetch(`${API}/ai-search`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 600,
-          messages: [{ role: 'user', content: prompt }]
-        })
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({model: 'claude-haiku-4-5-20251001', max_tokens: 600, messages: [{role: 'user', content: prompt}]})
       });
-
       const data = await res.json();
       const text = data.content?.find(c => c.type === 'text')?.text || '';
-      if (text) {
-        if (quill) { const clean = text.replace(/```html/g,'').replace(/```/g,'').trim(); quill.root.innerHTML = clean; document.querySelector('.ql-container').style.borderColor = ''; } else { console.warn('Quill not ready'); }
+      if (text && quill) {
+        const clean = text.replace(/^```html\s*/i, '').replace(/```\s*$/i, '').trim();
+        quill.root.innerHTML = clean;
+        const qlContainer = document.querySelector('.ql-container');
+        if (qlContainer) qlContainer.style.borderColor = '';
       }
-    } catch (err) {
-      console.error('AI write error:', err);
-    }
+    } catch (err) { console.error('AI write error:', err); }
 
-    btn.disabled = false;
-    btn.textContent = 'Rewrite';
-    loading.classList.remove('active');
+    btn.disabled = false; btn.textContent = 'Rewrite'; loading.classList.remove('active');
   }
 
-  // ── LOGO UPLOAD ──
   function handleLogoUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; if (!file) return;
     logoFile = file;
     const reader = new FileReader();
     reader.onload = function(ev) {
@@ -2068,37 +941,34 @@ Structure: Opening hook (1-2 sentences), What We Offer section with bullets, Req
     reader.readAsDataURL(file);
   }
 
-  // ── CHECKOUT ──
   async function handleCheckout() {
     const btn = document.getElementById('activateBtn');
     btn.disabled = true;
-    btn.innerHTML = `<div style="width:20px;height:20px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite"></div> Processing...`;
-
+    btn.innerHTML = '<div style="width:20px;height:20px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite"></div> Processing...';
     const addMax = document.getElementById('addMax').checked;
-
     try {
-      // First post the job
       let logoUrl = null;
       if (logoFile) {
-        const formData = new FormData();
-        formData.append('logo', logoFile);
-        const logoRes = await fetch(`${API}/upload/logo`, { method: 'POST', body: formData });
-        const logoData = await logoRes.json();
-        logoUrl = logoData.url || null;
+        const formData = new FormData(); formData.append('logo', logoFile);
+        const logoRes = await fetch(`${API}/upload/logo`, {method: 'POST', body: formData});
+        const logoData = await logoRes.json(); logoUrl = logoData.url || null;
       }
-
+      const cdlClassEl = document.getElementById('cdlClass');
+      const homeTimeEl = document.getElementById('homeTime');
+      const routeTypeEl = document.getElementById('routeType');
+      const jobTypeEl = document.getElementById('jobType');
       const jobPayload = {
         title: document.getElementById('jobTitle').value.trim(),
         company: document.getElementById('company').value.trim(),
         hiringLocation: document.getElementById('location').value.trim(),
         salary: [document.getElementById('payMin').value, document.getElementById('payMax').value].filter(v => v.trim()).join(' — '),
         bonus: document.getElementById('bonus').value.trim() || null,
-        cdlClass: document.getElementById('cdlClass').value || null,
-        homeTime: document.getElementById('homeTime').value || null,
-        routeType: document.getElementById('routeType').value || null,
-        jobType: document.getElementById('jobType').value,
+        cdlClass: cdlClassEl ? cdlClassEl.value || null : null,
+        homeTime: homeTimeEl ? homeTimeEl.value || null : null,
+        routeType: routeTypeEl ? routeTypeEl.value || null : null,
+        jobType: jobTypeEl ? jobTypeEl.value : 'full-time',
         payType: document.getElementById('payType').value || null,
-        description: quill ? quill.root.innerHTML : document.getElementById('description')?.value?.trim() || '',
+        description: quill ? quill.root.innerHTML : '',
         applyUrl: document.getElementById('applyUrl').value.trim() || null,
         category: 'trucking',
         targetLocations: JSON.stringify(selectedLocations.filter(l => l.checked).map(l => `${l.city}, ${l.state}`)),
@@ -2106,66 +976,25 @@ Structure: Opening hook (1-2 sentences), What We Offer section with bullets, Req
         screenerQuestions: JSON.stringify(getSelectedScreeners()),
         logoUrl,
       };
-
-      const jobRes = await fetch(`${API}/jobs`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(jobPayload)
-      });
-
+      const jobRes = await fetch(`${API}/jobs`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(jobPayload)});
       const jobData = await jobRes.json();
       if (!jobData.success) throw new Error(jobData.error || 'Failed to create job');
-
-      const jobId = jobData.job.id;
-      const employerEmail = document.getElementById('employerEmail').value.trim();
-      const amount = addMax ? 496 : 197;
-
-      // Create Stripe checkout
       const checkoutRes = await fetch(`${API}/create-checkout-session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jobId,
-          amount,
-          category: 'trucking',
-          employerEmail
-        })
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({jobId: jobData.job.id, amount: addMax ? 496 : 197, category: 'trucking', employerEmail: document.getElementById('employerEmail').value.trim()})
       });
-
       const checkoutData = await checkoutRes.json();
-      if (checkoutData.url) {
-        window.location.href = checkoutData.url;
-      } else {
-        throw new Error('No checkout URL returned');
-      }
-
+      if (checkoutData.url) { window.location.href = checkoutData.url; }
+      else throw new Error('No checkout URL returned');
     } catch (err) {
       console.error('Checkout error:', err);
       btn.disabled = false;
-      btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Activate My Job — $197/mo`;
+      btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Activate My Job — $197/mo';
       alert('Something went wrong. Please try again or email hello@jobpeak.io');
     }
   }
-
-  // ── RADIO CARD SELECTION ──
-  document.querySelectorAll('.radio-card').forEach(card => {
-    card.addEventListener('click', function() {
-      const name = this.querySelector('input[type="radio"]').name;
-      document.querySelectorAll(`.radio-card input[name="${name}"]`).forEach(r => {
-        r.closest('.radio-card').classList.remove('selected');
-      });
-      this.classList.add('selected');
-      this.querySelector('input[type="radio"]').checked = true;
-    });
-  });
 </script>
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPO41zo918dmVLtEgKZCjTyCSHVaapGsw&libraries=places&callback=initAutocomplete" defer></script>
-  <script>
-    // Init Quill after all scripts fully loaded
-    window.addEventListener('load', function() {
-      initQuill();
-    });
-  </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPO41zo918dmVLtEgKZCjTyCSHVaapGsw&libraries=places&callback=initAutocomplete" defer></script>
 </body>
 </html>
