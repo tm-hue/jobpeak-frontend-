@@ -895,19 +895,39 @@
     const loading = document.getElementById('aiLoading');
     btn.disabled = true; btn.textContent = 'Writing...'; loading.classList.add('active');
 
-    const prompt = `Write a compelling CDL driver job posting. Output valid HTML only — no markdown, no backtick fences. Use <h3> for section headers, <p> for paragraphs, <ul><li> for bullets, <strong> for pay and home time highlights. Plain direct language, no corporate fluff.
+    const prompt = `You are writing a CDL truck driver job posting. Output ONLY valid HTML — no title, no markdown, no backticks, no preamble. Start immediately with a <p> tag.
+
+REQUIRED FORMAT (use exactly this structure):
+<p><strong>[1-2 sentence hook about pay, home time, and route]</strong></p>
+<h3>What We Offer</h3>
+<ul>
+<li><strong>Pay:</strong> [pay details]</li>
+<li><strong>Home Time:</strong> [home time details]</li>
+<li><strong>Route:</strong> [route details]</li>
+<li>[benefit 4]</li>
+<li>[benefit 5]</li>
+</ul>
+<h3>Requirements</h3>
+<ul>
+<li>[requirement 1]</li>
+<li>[requirement 2]</li>
+<li>[requirement 3]</li>
+<li>[requirement 4]</li>
+</ul>
+<h3>Ready to Apply?</h3>
+<p>[1 sentence CTA with company name]</p>
+
+Fill in every bullet with real content based on the job details below. Never leave a bullet empty. Plain direct language — no corporate fluff.
 
 Job Title: ${title}
 Company: ${company}
 Location: ${location}
 ${salary ? 'Pay: ' + salary : ''}
 ${bonus ? 'Sign-On Bonus: ' + bonus : ''}
-${cdlClass ? 'CDL Class: CDL-' + cdlClass : ''}
+${cdlClass ? 'CDL Class Required: CDL-' + cdlClass : ''}
 ${homeTime ? 'Home Time: ' + homeTime : ''}
 ${routeType ? 'Route Type: ' + routeType : ''}
-${payType ? 'Pay Type: ' + payType : ''}
-
-Structure: 1-2 sentence hook, What We Offer bullets (pay first), Requirements bullets, short CTA. Under 250 words.`;
+${payType ? 'Pay Type: ' + payType : ''}`;
 
     try {
       const res = await fetch(`${API}/ai-search`, {
@@ -918,7 +938,9 @@ Structure: 1-2 sentence hook, What We Offer bullets (pay first), Requirements bu
       const data = await res.json();
       const text = data.content?.find(c => c.type === 'text')?.text || '';
       if (text && quill) {
-        const clean = text.replace(/^```html\s*/i, '').replace(/```\s*$/i, '').trim();
+        let clean = text.replace(/^```html\s*/i, '').replace(/```\s*$/i, '').trim();
+        // Strip any leading plain-text line (e.g. job title echoed back before HTML)
+        clean = clean.replace(/^[^<\n]+\n+/, '');
         quill.root.innerHTML = clean;
         const qlContainer = document.querySelector('.ql-container');
         if (qlContainer) qlContainer.style.borderColor = '';
