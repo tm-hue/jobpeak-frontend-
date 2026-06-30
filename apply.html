@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply — Jobpeak</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23111318'/><text x='45' y='75' font-family='Archivo,sans-serif' font-size='80' font-weight='800' text-anchor='middle' fill='%23ffffff'>j</text><circle cx='85' cy='70' r='8' fill='%23F97316'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F8FA; --surface: #FFFFFF; --border: #E4E6EA; --border-focus: #F97316;
+      --text: #111318; --text-secondary: #545B6B; --text-muted: #9BA3AF;
+      --accent: #1D4ED8; --accent-dark: #1E40AF; --accent-light: #EFF6FF;
+      --green: #10B981; --green-light: #ECFDF5;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06); --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10); --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Work Sans', -apple-system, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased; min-height: 100vh;
+    }
+    .header { background: var(--surface); border-bottom: 1px solid var(--border); height: 60px; display: flex; align-items: center; padding: 0 32px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+    .header-inner { max-width: 680px; margin: 0 auto; width: 100%; }
+    .logo { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); text-decoration: none; }
+    .logo span { color: #F97316; }
+    .page { max-width: 680px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    /* Job summary card */
+    .job-summary { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+    .job-summary-logo { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); margin-bottom: 12px; display: none; }
+    .job-title { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .job-company { font-size: 15px; color: var(--text-secondary); margin-bottom: 12px; }
+    .job-meta-row { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--text-secondary); }
+    .job-meta-item { display: flex; align-items: center; gap: 5px; }
+
+    /* Form card */
+    .form-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .form-card-header { padding: 24px 28px 18px; border-bottom: 1px solid var(--border); }
+    .form-card-title { font-family: 'Archivo', sans-serif; font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .form-card-sub { font-size: 13px; color: var(--text-secondary); }
+    .form-body { padding: 28px; }
+
+    .field { margin-bottom: 20px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    .field-row .field { margin-bottom: 0; }
+    .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    .field-row-3 .field { margin-bottom: 0; }
+
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    label .req { color: var(--accent); margin-left: 2px; }
+
+    input[type="text"], input[type="email"], input[type="tel"], select {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius);
+      font-size: 15px; font-family: 'Work Sans', sans-serif; color: var(--text); background: var(--surface);
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s; appearance: none;
+    }
+    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,78,216,0.12); }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239BA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer;
+    }
+    .field-hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+    .field-error { font-size: 12px; color: #EF4444; margin-top: 5px; display: none; }
+    .field.error input, .field.error select { border-color: #EF4444; }
+    .field.error .field-error { display: block; }
+
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+
+    .zip-status { font-size: 12px; margin-top: 5px; display: none; align-items: center; gap: 5px; }
+    .zip-status.found { display: flex; color: var(--green); }
+    .zip-status.checking { display: flex; color: var(--text-muted); }
+
+    .submit-btn {
+      width: 100%; font-family: 'Work Sans', sans-serif; font-size: 16px; font-weight: 700; color: white;
+      background: var(--accent); border: none; padding: 16px 32px; border-radius: var(--radius); cursor: pointer;
+      transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px;
+    }
+    .submit-btn:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(29,78,216,0.3); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .submit-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 12px; }
+
+    /* Success state */
+    .success-state { display: none; text-align: center; padding: 60px 28px; }
+    .success-state.active { display: block; }
+    .check-ring { width: 72px; height: 72px; border-radius: 50%; background: var(--green-light); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .success-title { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .success-sub { font-size: 14px; color: var(--text-secondary); max-width: 380px; margin: 0 auto; }
+
+    /* Loading state */
+    .loading-state { text-align: center; padding: 80px 20px; color: var(--text-secondary); font-size: 14px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .submit-spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+
+    @media (max-width: 600px) {
+      .page { padding: 20px 16px 60px; }
+      .form-body { padding: 20px; }
+      .field-row, .field-row-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="https://www.jobpeak.io/jobseeker_search.html" class="logo">jobpeak<span>.</span></a>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      Loading job details...
+    </div>
+
+    <div id="applyContent" style="display:none;">
+
+      <div class="job-summary">
+        <img class="job-summary-logo" id="jobLogo" alt="">
+        <div class="job-title" id="jobTitle">—</div>
+        <div class="job-company" id="jobCompany">—</div>
+        <div class="job-meta-row">
+          <div class="job-meta-item">📍 <span id="jobLocation">—</span></div>
+          <div class="job-meta-item">💰 <span id="jobSalary">—</span></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="form-card-title">Apply for this position</div>
+          <div class="form-card-sub">Takes less than 2 minutes. Your recruiter is notified instantly.</div>
+        </div>
+        <div class="form-body" id="formBody">
+
+          <div class="field-row">
+            <div class="field" id="field-firstName">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" id="firstName" placeholder="John">
+              <div class="field-error">First name is required</div>
+            </div>
+            <div class="field" id="field-lastName">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" id="lastName" placeholder="Smith">
+              <div class="field-error">Last name is required</div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field" id="field-phone">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" id="phone" placeholder="(555) 000-0000">
+              <div class="field-error">Phone number is required</div>
+            </div>
+            <div class="field" id="field-email">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="you@email.com">
+              <div class="field-error">Valid email is required</div>
+            </div>
+          </div>
+
+          <hr class="section-divider">
+          <div class="section-label">Your Location</div>
+
+          <div class="field-row-3">
+            <div class="field" id="field-zip">
+              <label>Zip Code <span class="opt" style="color:var(--text-muted);font-weight:400;font-size:12px;">(optional)</label>
+              <input type="text" id="zip" placeholder="43215" maxlength="5" inputmode="numeric" oninput="onZipInput()">
+              <div class="zip-status" id="zipStatus"></div>
+            </div>
+            <div class="field" id="field-city">
+              <label>City <span class="req">*</span></label>
+              <input type="text" id="city" placeholder="Columbus">
+              <div class="field-error">City is required</div>
+            </div>
+            <div class="field" id="field-state">
+              <label>State <span class="req">*</span></label>
+              <input type="text" id="state" placeholder="OH" maxlength="2" style="text-transform:uppercase;">
+              <div class="field-error">State is required</div>
+            </div>
+          </div>
+
+          <div id="screenerContainer"></div>
+
+          <button class="submit-btn" id="submitBtn" onclick="submitApplication()">
+            Submit Application
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <div class="submit-note">🔒 Your information is shared only with this employer</div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="success-state" id="successState">
+      <div class="check-ring">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="success-title">Application Submitted</div>
+      <div class="success-sub" id="successMessage">Thanks for applying! The hiring team has been notified and will reach out if you're a good fit.</div>
+    </div>
+
+  </div>
+
+  <script>
+    const API = 'https://jobpeak-production.up.railway.app';
+    let currentJob = null;
+    let zipTimer = null;
+
+    // ── Screener question definitions (shared with post-a-job.html) ──
+    const screenerLabels = {
+      cdla: 'Do you have a valid CDL-A?',
+      experience: 'How many years of verifiable tractor-trailer experience do you have?',
+      accidents: 'Do you have a clean MVR (no preventable accidents in the last 3 years)?',
+      location: 'Are you willing to report to our hiring location daily?',
+      drug: 'Do you consent to a pre-employment drug screen?',
+      hometime: 'What is your home time preference?',
+      hazmat: 'Do you have a valid Hazmat endorsement?',
+      tanker: 'Do you have a valid Tanker endorsement?',
+      doubles: 'Do you have a valid Doubles/Triples endorsement?',
+      twic: 'Do you have a valid TWIC card?',
+      passenger: 'Do you have a valid Passenger endorsement?',
+      schoolbus: 'Do you have a valid School Bus endorsement?',
+      companydriver: 'Are you applying as a Company Driver?',
+      owneroperator: 'Do you have your own truck or authority (Owner Operator)?',
+      leasepurchase: 'Are you interested in a Lease Purchase program?',
+    };
+
+    const screenerOptions = {
+      cdla: ['Yes, I have a valid CDL-A', 'No, I do not have a CDL-A'],
+      experience: ['Less than 6 months', '6 months – 1 year', '1 – 2 years', '2 – 5 years', '5+ years'],
+      accidents: ['Clean record — no preventable accidents', '1 minor accident in past 3 years', '2+ accidents in past 3 years'],
+      location: ['Yes, I can report to the location daily', 'No, I cannot commute to this location'],
+      drug: ['Yes, I consent to a pre-employment drug screen', 'No, I do not consent'],
+      hometime: ['Home daily', 'Home weekly', 'Home every 2 weeks', 'OTR (out 3+ weeks)'],
+      hazmat: ['Yes, I have a valid Hazmat endorsement', 'No, I do not have Hazmat'],
+      tanker: ['Yes, I have a valid Tanker endorsement', 'No, I do not have Tanker'],
+      doubles: ['Yes, I have a valid Doubles/Triples endorsement', 'No, I do not have Doubles/Triples'],
+      twic: ['Yes, I have a valid TWIC card', 'No, I do not have a TWIC card'],
+      passenger: ['Yes, I have a valid Passenger endorsement', 'No, I do not have Passenger'],
+      schoolbus: ['Yes, I have a valid School Bus endorsement', 'No, I do not have School Bus'],
+      companydriver: ['Yes, I am applying as a Company Driver', 'No, I am not looking for a company driver position'],
+      owneroperator: ['Yes, I have my own truck and/or authority', 'No, I do not have my own equipment'],
+      leasepurchase: ['Yes, I am interested in lease purchase', 'No, I prefer a different arrangement'],
+    };
+
+    // ── ZIP → City/State autofill ──
+    function onZipInput() {
+      clearTimeout(zipTimer);
+      const zip = document.getElementById('zip').value.trim();
+      const statusEl = document.getElementById('zipStatus');
+      if (zip.length !== 5) { statusEl.className = 'zip-status'; return; }
+      statusEl.className = 'zip-status checking';
+      statusEl.textContent = 'Looking up...';
+      zipTimer = setTimeout(() => lookupZip(zip), 400);
+    }
+
+    async function lookupZip(zip) {
+      const statusEl = document.getElementById('zipStatus');
+      try {
+        const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+        if (!res.ok) throw new Error('Invalid zip');
+        const data = await res.json();
+        const place = data.places?.[0];
+        if (place) {
+          document.getElementById('city').value = place['place name'];
+          document.getElementById('state').value = place['state abbreviation'];
+          statusEl.className = 'zip-status found';
+          statusEl.textContent = `✓ ${place['place name']}, ${place['state abbreviation']}`;
+        }
+      } catch (err) {
+        statusEl.className = 'zip-status';
+        // Silent fail — city/state remain manually editable
+      }
+    }
+
+    // ── Load job details ──
+    async function loadJob() {
+      const params = new URLSearchParams(window.location.search);
+      const jobId = params.get('job');
+
+      if (!jobId) {
+        document.getElementById('loadingState').innerHTML = '<div style="color:var(--text-secondary);">No job specified. Please use the link from the job listing.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/jobs/${jobId}`);
+        if (!res.ok) throw new Error('Job not found');
+        currentJob = await res.json();
+
+        document.getElementById('jobTitle').textContent = currentJob.title || 'CDL Driver Position';
+        document.getElementById('jobCompany').textContent = currentJob.company || '';
+        document.getElementById('jobLocation').textContent = currentJob.hiring_location || currentJob.location || '—';
+        document.getElementById('jobSalary').textContent = currentJob.salary || 'Competitive';
+
+        if (currentJob.logo_url) {
+          const logoEl = document.getElementById('jobLogo');
+          logoEl.src = currentJob.logo_url;
+          logoEl.style.display = 'block';
+        }
+
+        renderScreeners();
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('applyContent').style.display = 'block';
+      } catch (err) {
+        console.error('Failed to load job:', err);
+        document.getElementById('loadingState').innerHTML = '<div style="color:var(--text-secondary);">This job could not be found. It may have been filled or removed.</div>';
+      }
+    }
+
+    function renderScreeners() {
+      let screeners = [];
+      try {
+        screeners = JSON.parse(currentJob.screener_questions || '[]');
+      } catch (e) { screeners = []; }
+
+      if (!screeners.length) return;
+
+      const container = document.getElementById('screenerContainer');
+      let html = '<hr class="section-divider"><div class="section-label">A Few Quick Questions</div>';
+
+      screeners.forEach((s, i) => {
+        const label = screenerLabels[s] || s;
+        const options = screenerOptions[s] || ['Yes', 'No'];
+        const optHTML = options.map(o => `<option value="${o}">${o}</option>`).join('');
+        html += `
+          <div class="field" id="field-screener-${i}">
+            <label>${label} <span class="req">*</span></label>
+            <select id="screener-${s}" data-screener-key="${s}" data-screener-label="${label}">
+              <option value="">Select...</option>
+              ${optHTML}
+            </select>
+            <div class="field-error">This field is required</div>
+          </div>`;
+      });
+
+      container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function validateForm() {
+      let valid = true;
+      document.querySelectorAll('.field.error').forEach(f => f.classList.remove('error'));
+
+      if (!document.getElementById('firstName').value.trim()) { document.getElementById('field-firstName').classList.add('error'); valid = false; }
+      if (!document.getElementById('lastName').value.trim()) { document.getElementById('field-lastName').classList.add('error'); valid = false; }
+      if (!document.getElementById('phone').value.trim()) { document.getElementById('field-phone').classList.add('error'); valid = false; }
+      const email = document.getElementById('email').value.trim();
+      if (!email || !email.includes('@')) { document.getElementById('field-email').classList.add('error'); valid = false; }
+      if (!document.getElementById('city').value.trim()) { document.getElementById('field-city').classList.add('error'); valid = false; }
+      if (!document.getElementById('state').value.trim()) { document.getElementById('field-state').classList.add('error'); valid = false; }
+
+      document.querySelectorAll('[id^="field-screener-"]').forEach(field => {
+        const select = field.querySelector('select');
+        if (select && !select.value) { field.classList.add('error'); valid = false; }
+      });
+
+      return valid;
+    }
+
+    async function submitApplication() {
+      if (!validateForm()) {
+        const firstError = document.querySelector('.field.error input, .field.error select');
+        if (firstError) firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="submit-spinner"></div> Submitting...';
+
+      const screenerAnswers = {};
+      document.querySelectorAll('[data-screener-key]').forEach(select => {
+        screenerAnswers[select.dataset.screenerLabel] = select.value;
+      });
+
+      const payload = {
+        jobId: currentJob.id,
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        state: document.getElementById('state').value.trim().toUpperCase(),
+        zip: document.getElementById('zip').value.trim() || null,
+        screenerAnswers
+      };
+
+      try {
+        const res = await fetch(`${API}/apply`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Application failed');
+
+        document.getElementById('applyContent').style.display = 'none';
+        document.getElementById('successMessage').textContent =
+          `Thanks ${payload.firstName}! ${currentJob.company} has been notified and will reach out if you're a good fit.`;
+        document.getElementById('successState').classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      } catch (err) {
+        console.error('Submit error:', err);
+        btn.disabled = false;
+        btn.innerHTML = 'Submit Application <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        alert('Something went wrong submitting your application. Please try again.');
+      }
+    }
+
+    loadJob();
+  </script>
+
+</body>
+</html>
