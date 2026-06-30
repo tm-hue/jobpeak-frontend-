@@ -76,6 +76,68 @@
     .zip-status.found { display: flex; color: var(--green); }
     .zip-status.checking { display: flex; color: var(--text-muted); }
 
+    /* ── A2P SMS CONSENT BLOCK ── */
+    .sms-consent-block {
+      background: #F8F9FB;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .sms-consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .sms-consent-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+    }
+    .sms-consent-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .sms-consent-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .sms-consent-text a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .sms-consent-text a:hover { text-decoration: underline; }
+    .sms-optional-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      background: var(--border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .legal-note {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+    .legal-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .legal-note a:hover { text-decoration: underline; }
+
     .submit-btn {
       width: 100%; font-family: 'Work Sans', sans-serif; font-size: 16px; font-weight: 700; color: white;
       background: var(--accent); border: none; padding: 16px 32px; border-radius: var(--radius); cursor: pointer;
@@ -96,7 +158,6 @@
     .loading-state { text-align: center; padding: 80px 20px; color: var(--text-secondary); font-size: 14px; }
     .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .submit-spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
 
     @media (max-width: 600px) {
@@ -171,7 +232,7 @@
 
           <div class="field-row-3">
             <div class="field" id="field-zip">
-              <label>Zip Code <span class="opt" style="color:var(--text-muted);font-weight:400;font-size:12px;">(optional)</label>
+              <label>Zip Code <span style="color:var(--text-muted);font-weight:400;font-size:12px;">(optional)</span></label>
               <input type="text" id="zip" placeholder="43215" maxlength="5" inputmode="numeric" oninput="onZipInput()">
               <div class="zip-status" id="zipStatus"></div>
             </div>
@@ -189,7 +250,27 @@
 
           <div id="screenerContainer"></div>
 
-          <button class="submit-btn" id="submitBtn" onclick="submitApplication()">
+          <!-- ── A2P SMS CONSENT — optional, never blocks submission ── -->
+          <hr class="section-divider">
+
+          <div class="sms-consent-block">
+            <div class="sms-consent-row">
+              <input type="checkbox" id="smsConsent">
+              <div class="sms-consent-text">
+                <strong>Receive text updates about this job</strong>
+                <span class="sms-optional-tag">Optional</span><br>
+                By checking this box, I consent to receive job-related text messages from Jobpeak, including application status updates and recruiter communications. Message frequency varies. Msg &amp; data rates may apply. Reply <strong>HELP</strong> for help, <strong>STOP</strong> to cancel. Consent is not a condition of applying.
+              </div>
+            </div>
+          </div>
+
+          <div class="legal-note">
+            By submitting this form, you agree to our
+            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> and
+            <a href="/terms-of-service.html" target="_blank">Terms &amp; Conditions</a>.
+          </div>
+
+          <button class="submit-btn" id="submitBtn" onclick="submitApplication()" style="margin-top:16px;">
             Submit Application
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
@@ -215,7 +296,6 @@
     let currentJob = null;
     let zipTimer = null;
 
-    // ── Screener question definitions (shared with post-a-job.html) ──
     const screenerLabels = {
       cdla: 'Do you have a valid CDL-A?',
       experience: 'How many years of verifiable tractor-trailer experience do you have?',
@@ -252,7 +332,6 @@
       leasepurchase: ['Yes, I am interested in lease purchase', 'No, I prefer a different arrangement'],
     };
 
-    // ── ZIP → City/State autofill ──
     function onZipInput() {
       clearTimeout(zipTimer);
       const zip = document.getElementById('zip').value.trim();
@@ -278,11 +357,9 @@
         }
       } catch (err) {
         statusEl.className = 'zip-status';
-        // Silent fail — city/state remain manually editable
       }
     }
 
-    // ── Load job details ──
     async function loadJob() {
       const params = new URLSearchParams(window.location.search);
       const jobId = params.get('job');
@@ -320,10 +397,7 @@
 
     function renderScreeners() {
       let screeners = [];
-      try {
-        screeners = JSON.parse(currentJob.screener_questions || '[]');
-      } catch (e) { screeners = []; }
-
+      try { screeners = JSON.parse(currentJob.screener_questions || '[]'); } catch (e) { screeners = []; }
       if (!screeners.length) return;
 
       const container = document.getElementById('screenerContainer');
@@ -359,6 +433,7 @@
       if (!document.getElementById('city').value.trim()) { document.getElementById('field-city').classList.add('error'); valid = false; }
       if (!document.getElementById('state').value.trim()) { document.getElementById('field-state').classList.add('error'); valid = false; }
 
+      // Screener questions are required; SMS consent checkbox is NOT validated
       document.querySelectorAll('[id^="field-screener-"]').forEach(field => {
         const select = field.querySelector('select');
         if (select && !select.value) { field.classList.add('error'); valid = false; }
@@ -392,6 +467,7 @@
         city: document.getElementById('city').value.trim(),
         state: document.getElementById('state').value.trim().toUpperCase(),
         zip: document.getElementById('zip').value.trim() || null,
+        smsConsent: document.getElementById('smsConsent').checked,  // captured but never required
         screenerAnswers
       };
 
