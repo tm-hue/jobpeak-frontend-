@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're Live — Jobpeak</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23111318'/><text x='45' y='75' font-family='Archivo,sans-serif' font-size='80' font-weight='800' text-anchor='middle' fill='%23ffffff'>j</text><circle cx='85' cy='70' r='8' fill='%23F97316'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F8FA; --surface: #FFFFFF; --border: #E4E6EA; --border-focus: #F97316;
+      --text: #111318; --text-secondary: #545B6B; --text-muted: #9BA3AF;
+      --accent: #F97316; --accent-dark: #D95F00; --accent-light: #FFF3EB;
+      --green: #10B981; --green-light: #ECFDF5;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06); --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10); --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Work Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      box-shadow: var(--shadow-sm);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .logo {
+      font-family: 'Archivo', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+
+    .page {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 64px 24px 80px;
+    }
+
+    /* ── SUCCESS HERO ── */
+    .success-hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .check-ring {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: var(--green-light);
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .check-ring svg { stroke: var(--green); }
+
+    .success-title {
+      font-family: 'Archivo', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .success-sub {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* ── JOB CARD ── */
+    .job-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .job-card-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .job-title {
+      font-family: 'Archivo', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .job-meta {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .job-meta strong { color: var(--text); font-weight: 600; }
+
+    /* ── DISTRIBUTION LIST ── */
+    .dist-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .dist-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .dist-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .dist-item .dot {
+      width: 16px;
+      height: 16px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 9px;
+      flex-shrink: 0;
+    }
+
+    /* ── NEXT STEPS ── */
+    .next-card {
+      background: var(--accent-light);
+      border: 1.5px solid var(--accent);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+    }
+
+    .next-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .next-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .next-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .next-num {
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 50%;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .next-item strong { color: var(--text); }
+
+    /* ── CTA ── */
+    .cta-btn {
+      width: 100%;
+      font-family: 'Work Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      background: var(--accent);
+      border: none;
+      padding: 16px 32px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-bottom: 14px;
+    }
+
+    .cta-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(249,115,22,0.3);
+    }
+
+    .cta-note {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .cta-note strong { color: var(--text-secondary); }
+
+    /* ── SUPPORT ── */
+    .support-row {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .support-row a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ── LOADING STATE ── */
+    .loading-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .page { padding: 40px 16px 60px; }
+      .job-card { padding: 22px; }
+      .next-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="https://www.jobpeak.io/jobseeker_search.html" class="logo">jobpeak<span>.</span></a>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <!-- LOADING STATE — shown while fetching job details -->
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      Confirming your job is live...
+    </div>
+
+    <!-- SUCCESS CONTENT — hidden until job data loads -->
+    <div id="successContent" style="display:none;">
+
+      <div class="success-hero">
+        <div class="check-ring">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="success-title">Your job is live</div>
+        <div class="success-sub">Drivers can start applying right now. Here's everything that's happening behind the scenes.</div>
+      </div>
+
+      <div class="job-card">
+        <div class="job-card-eyebrow">✓ Now Live</div>
+        <div class="job-title" id="jobTitle">—</div>
+        <div class="job-meta"><strong id="jobCompany">—</strong> · <span id="jobLocation">—</span></div>
+
+        <div class="dist-label">Distributing across</div>
+        <div class="dist-row">
+          <div class="dist-item"><div class="dot">✓</div>Jobpeak.io</div>
+          <div class="dist-item"><div class="dot">✓</div>Talroo Network</div>
+          <div class="dist-item"><div class="dot">✓</div>WhatJobs</div>
+          <div class="dist-item"><div class="dot">✓</div>Google for Jobs</div>
+          <div class="dist-item"><div class="dot">✓</div>AI Search</div>
+        </div>
+      </div>
+
+      <div class="next-card">
+        <div class="next-title">⚡ What happens next</div>
+        <div class="next-list">
+          <div class="next-item"><div class="next-num">1</div>We've emailed your dashboard link to <strong id="employerEmailDisplay">your inbox</strong> — bookmark it, that's where applicants show up.</div>
+          <div class="next-item"><div class="next-num">2</div>Your listing goes live across all five channels within the next few minutes.</div>
+          <div class="next-item"><div class="next-num">3</div>Every applicant is screened automatically using the questions you selected — you'll only see qualified drivers.</div>
+        </div>
+      </div>
+
+      <a href="#" class="cta-btn" id="dashboardBtn">
+        Go to your dashboard
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <div class="cta-note">🔒 Secured by Stripe · Cancel anytime from your dashboard</div>
+
+      <div class="support-row">
+        Questions? Email <a href="mailto:support@jobpeak.io">support@jobpeak.io</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const API = 'https://jobpeak-production.up.railway.app';
+
+    async function loadJobDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const jobId = params.get('job');
+
+      if (!jobId) {
+        showFallback();
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/jobs/${jobId}`);
+        if (!res.ok) throw new Error('Job not found');
+        const job = await res.json();
+
+        document.getElementById('jobTitle').textContent = job.title || 'Your CDL Job';
+        document.getElementById('jobCompany').textContent = job.company || '';
+        document.getElementById('jobLocation').textContent = job.hiring_location || job.location || '';
+
+        if (job.employer_email) {
+          document.getElementById('employerEmailDisplay').textContent = job.employer_email;
+        }
+
+        // Dashboard link — placeholder until dashboard.html is built
+        const dashBtn = document.getElementById('dashboardBtn');
+        dashBtn.href = `https://www.jobpeak.io/dashboard.html?job=${jobId}`;
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('successContent').style.display = 'block';
+      } catch (err) {
+        console.error('Failed to load job:', err);
+        showFallback();
+      }
+    }
+
+    function showFallback() {
+      document.getElementById('jobTitle').textContent = 'Your job is live';
+      document.getElementById('jobCompany').textContent = '';
+      document.getElementById('jobLocation').textContent = '';
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('successContent').style.display = 'block';
+    }
+
+    loadJobDetails();
+  </script>
+
+</body>
+</html>
