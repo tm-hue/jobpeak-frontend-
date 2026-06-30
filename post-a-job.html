@@ -585,11 +585,6 @@
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">⚙️ How we keep your job in front of drivers</div>
           <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">While Indeed makes you manage daily budgets and compete in an auction you can't see — Jobpeak handles all of it automatically.<br><br>Our system optimizes your placement across Talroo, WhatJobs, and Jobpeak at the <strong style="color:var(--text);">job title level</strong> using US Census driver density data. CDL-A OTR in Columbus competes differently than Local Driver in Dallas. We know that. Indeed doesn't care.<br><br>Because we run CDL exclusively, we know exactly what each title costs in each market. No wild swings. No January surprises. <strong style="color:var(--text);">One price. Always on.</strong></div>
         </div>
-        <div style="background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius);padding:16px;">
-          <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;">💡 Add Max AI Recruiter Copilot — $299/mo</div>
-          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">Max texts every applicant within 2 minutes, prequalifies their CDL class and experience, and books confirmed phone screenings on your calendar. Our clients average <strong style="color:var(--text);">35% of applicants become confirmed calls</strong>.</div>
-          <label class="checkbox-item"><input type="checkbox" id="addMax">Add Max AI Copilot (+$299/mo) — I want confirmed calls, not a list of names</label>
-        </div>
       </div>
       <div class="form-footer">
         <button class="btn-back" onclick="goToStep(2)">← Back to Preview</button>
@@ -1105,7 +1100,7 @@ ${payType ? 'Pay Type: ' + payType : ''}`;
     const btn = document.getElementById('activateBtn');
     btn.disabled = true;
     btn.innerHTML = '<div style="width:20px;height:20px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite"></div> Processing...';
-    const addMax = document.getElementById('addMax').checked;
+    const addMax = false;
     try {
       let logoUrl = null;
       if (logoFile) {
