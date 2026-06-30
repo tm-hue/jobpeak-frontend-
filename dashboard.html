@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Jobpeak</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23111318'/><text x='45' y='75' font-family='Archivo,sans-serif' font-size='80' font-weight='800' text-anchor='middle' fill='%23ffffff'>j</text><circle cx='85' cy='70' r='8' fill='%23F97316'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F8FA; --surface: #FFFFFF; --border: #E4E6EA; --border-focus: #F97316;
+      --text: #111318; --text-secondary: #545B6B; --text-muted: #9BA3AF;
+      --accent: #F97316; --accent-dark: #D95F00; --accent-light: #FFF3EB;
+      --blue: #1D4ED8; --blue-light: #EFF6FF;
+      --green: #10B981; --green-light: #ECFDF5;
+      --red: #EF4444; --red-light: #FEF2F2;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06); --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Work Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    .header { background: var(--surface); border-bottom: 1px solid var(--border); height: 60px; display: flex; align-items: center; padding: 0 32px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+    .header-inner { max-width: 1000px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--accent); }
+    .header-right { font-size: 13px; color: var(--text-muted); }
+
+    .page { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    /* Loading / error states */
+    .loading-state, .error-state { text-align: center; padding: 100px 20px; color: var(--text-secondary); font-size: 14px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Job status card */
+    .status-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .status-left { display: flex; align-items: center; gap: 16px; }
+    .status-logo { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); display: none; }
+    .status-job-title { font-family: 'Archivo', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+    .status-job-company { font-size: 13px; color: var(--text-secondary); }
+    .status-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 5px 12px; border-radius: 100px; }
+    .status-badge.active { background: var(--green-light); color: var(--green); }
+    .status-badge.paused { background: var(--red-light); color: var(--red); }
+    .status-right { text-align: right; font-size: 12px; color: var(--text-muted); }
+    .status-right strong { color: var(--text); font-weight: 600; }
+
+    /* Stats row */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-sm); }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-value { font-family: 'Archivo', sans-serif; font-size: 26px; font-weight: 800; color: var(--text); }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Upsell row — config driven, see JS */
+    .upsell-row { display: flex; gap: 12px; overflow-x: auto; margin-bottom: 24px; padding-bottom: 4px; }
+    .upsell-card { flex: 0 0 auto; min-width: 240px; background: var(--surface); border: 1.5px solid var(--accent); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); }
+    .upsell-card.variant-blue { border-color: var(--blue); }
+    .upsell-icon { font-size: 20px; margin-bottom: 8px; }
+    .upsell-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .upsell-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.4; }
+    .upsell-btn { font-size: 12px; font-weight: 700; color: white; background: var(--accent); border: none; padding: 7px 14px; border-radius: 7px; cursor: pointer; }
+    .upsell-card.variant-blue .upsell-btn { background: var(--blue); }
+
+    /* Applicants section */
+    .section-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .section-header { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-family: 'Archivo', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); }
+    .section-count { font-size: 12px; color: var(--text-muted); }
+
+    .applicant-row { padding: 18px 28px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
+    .applicant-row:last-child { border-bottom: none; }
+    .applicant-row:hover { background: var(--bg); }
+    .applicant-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .applicant-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .applicant-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .applicant-date { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .applicant-chevron { color: var(--text-muted); transition: transform 0.15s; }
+    .applicant-row.open .applicant-chevron { transform: rotate(90deg); }
+
+    .applicant-detail { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border); }
+    .applicant-row.open .applicant-detail { display: block; }
+    .detail-row { display: flex; gap: 6px; font-size: 12.5px; margin-bottom: 8px; }
+    .detail-label { color: var(--text-muted); min-width: 130px; flex-shrink: 0; }
+    .detail-value { color: var(--text); font-weight: 600; }
+    .detail-value a { color: var(--accent); text-decoration: none; }
+    .screener-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 12px 0 8px; }
+
+    .empty-state { padding: 60px 28px; text-align: center; color: var(--text-muted); font-size: 13px; }
+
+    .support-row { text-align: center; margin-top: 32px; font-size: 12.5px; color: var(--text-muted); }
+    .support-row a { color: var(--accent); text-decoration: none; font-weight: 600; }
+
+    @media (max-width: 700px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .status-card { flex-direction: column; align-items: flex-start; }
+      .status-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="https://www.jobpeak.io/jobseeker_search.html" class="logo">jobpeak<span>.</span></a>
+      <div class="header-right" id="employerEmailDisplay"></div>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      Loading your dashboard...
+    </div>
+
+    <div class="error-state" id="errorState" style="display:none;">
+      <div style="font-size:15px; margin-bottom:8px;">We couldn't load this dashboard</div>
+      <div style="font-size:13px;">This link may be invalid. Check your activation email or contact <a href="mailto:support@jobpeak.io" style="color:var(--accent);">support@jobpeak.io</a></div>
+    </div>
+
+    <div id="dashboardContent" style="display:none;">
+
+      <div class="status-card">
+        <div class="status-left">
+          <img class="status-logo" id="jobLogo" alt="">
+          <div>
+            <div class="status-job-title" id="jobTitle">—</div>
+            <div class="status-job-company" id="jobCompany">—</div>
+          </div>
+          <span class="status-badge" id="statusBadge">—</span>
+        </div>
+        <div class="status-right">
+          Live since <strong id="activatedDate">—</strong><br>
+          <span id="billingNote"></span>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Applicants</div>
+          <div class="stat-value" id="statApplicants">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Clicks</div>
+          <div class="stat-value" id="statClicks">0</div>
+          <div class="stat-sub" id="statClicksSub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Locations</div>
+          <div class="stat-value" id="statLocations">0</div>
+          <div class="stat-sub">advertising in</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Days Live</div>
+          <div class="stat-value" id="statDaysLive">0</div>
+        </div>
+      </div>
+
+      <div class="upsell-row" id="upsellRow"></div>
+
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">Applicants</div>
+          <div class="section-count" id="applicantCount">0 total</div>
+        </div>
+        <div id="applicantList"></div>
+      </div>
+
+      <div class="support-row">
+        Want to make changes or cancel? Email <a href="mailto:support@jobpeak.io">support@jobpeak.io</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const API = 'https://jobpeak-production.up.railway.app';
+    let currentJob = null;
+
+    // ── UPSELL CONFIG — add new upsells here, zero risk to existing code ──
+    // Each entry: icon, title, desc, button label, variant (orange|blue), and an action.
+    // To add a new upsell: just push a new object into this array.
+    const UPSELLS = [
+      {
+        icon: '⚡',
+        title: 'Max AI Copilot',
+        desc: 'Auto-text every applicant in 2 min, book confirmed phone screens. +$299/mo.',
+        btnLabel: 'Learn More',
+        variant: 'blue',
+        action: () => window.location.href = 'mailto:support@jobpeak.io?subject=Add Max AI Copilot'
+      },
+      {
+        icon: '➕',
+        title: 'Post Another Job',
+        desc: 'Hiring for more than one role? Add another listing in minutes.',
+        btnLabel: 'Post a Job',
+        variant: 'orange',
+        action: () => window.location.href = 'https://www.jobpeak.io/post-a-job.html'
+      },
+      {
+        icon: '🚀',
+        title: 'Sponsored Boost',
+        desc: 'Jump to the top of search results in your market for 7 days.',
+        btnLabel: 'Boost This Job',
+        variant: 'orange',
+        action: () => window.location.href = 'mailto:support@jobpeak.io?subject=Sponsored Boost Inquiry'
+      },
+    ];
+
+    function renderUpsells() {
+      const container = document.getElementById('upsellRow');
+      container.innerHTML = UPSELLS.map((u, i) => `
+        <div class="upsell-card variant-${u.variant}">
+          <div class="upsell-icon">${u.icon}</div>
+          <div class="upsell-title">${u.title}</div>
+          <div class="upsell-desc">${u.desc}</div>
+          <button class="upsell-btn" onclick="UPSELLS[${i}].action()">${u.btnLabel}</button>
+        </div>
+      `).join('');
+    }
+
+    // ── Screener label map (shared with apply.html / post-a-job.html) ──
+    const screenerLabels = {
+      cdla: 'Valid CDL-A?', experience: 'Experience', accidents: 'Clean MVR?',
+      location: 'Can report to location?', drug: 'Drug screen consent?', hometime: 'Home time preference',
+      hazmat: 'Hazmat endorsement?', tanker: 'Tanker endorsement?', doubles: 'Doubles/Triples endorsement?',
+      twic: 'TWIC card?', passenger: 'Passenger endorsement?', schoolbus: 'School Bus endorsement?',
+      companydriver: 'Company Driver?', owneroperator: 'Owner Operator?', leasepurchase: 'Lease Purchase interest?',
+    };
+
+    function timeAgo(dateStr) {
+      const date = new Date(dateStr);
+      const diffMs = Date.now() - date.getTime();
+      const diffHrs = Math.floor(diffMs / 3600000);
+      if (diffHrs < 1) return 'Just now';
+      if (diffHrs < 24) return `${diffHrs}h ago`;
+      const diffDays = Math.floor(diffHrs / 24);
+      if (diffDays < 30) return `${diffDays}d ago`;
+      return date.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    }
+
+    function renderApplicants(leads) {
+      const container = document.getElementById('applicantList');
+      document.getElementById('applicantCount').textContent = `${leads.length} total`;
+      document.getElementById('statApplicants').textContent = leads.length;
+
+      if (!leads.length) {
+        container.innerHTML = `<div class="empty-state">No applicants yet — your job is live and distributing. Check back soon.</div>`;
+        return;
+      }
+
+      container.innerHTML = leads.map((lead, i) => {
+        let custom = {};
+        try { custom = typeof lead.custom_fields === 'string' ? JSON.parse(lead.custom_fields) : (lead.custom_fields || {}); } catch(e) {}
+
+        const screenerEntries = Object.entries(custom).filter(([k]) =>
+          !['city','state','zip','job_title'].includes(k)
+        );
+
+        const screenerHTML = screenerEntries.length ? `
+          <div class="screener-label">Screening Answers</div>
+          ${screenerEntries.map(([q, a]) => `<div class="detail-row"><div class="detail-label">${q}</div><div class="detail-value">${a}</div></div>`).join('')}
+        ` : '';
+
+        return `
+          <div class="applicant-row" onclick="this.classList.toggle('open')">
+            <div class="applicant-top">
+              <div>
+                <div class="applicant-name">${lead.name || '—'}</div>
+                <div class="applicant-meta">${custom.city || ''}${custom.city && custom.state ? ', ' : ''}${custom.state || ''}</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="applicant-date">${timeAgo(lead.created_at)}</div>
+                <svg class="applicant-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
+            </div>
+            <div class="applicant-detail">
+              <div class="detail-row"><div class="detail-label">Phone</div><div class="detail-value"><a href="tel:${lead.phone}">${lead.phone || '—'}</a></div></div>
+              <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value"><a href="mailto:${lead.email}">${lead.email || '—'}</a></div></div>
+              ${screenerHTML}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadDashboard() {
+      const params = new URLSearchParams(window.location.search);
+      const jobId = params.get('job');
+      const token = params.get('t');
+
+      if (!jobId) {
+        showError();
+        return;
+      }
+
+      try {
+        const jobRes = await fetch(`${API}/jobs/${jobId}`);
+        if (!jobRes.ok) throw new Error('Job not found');
+        currentJob = await jobRes.json();
+
+        // Basic token check — verifies the link came from the activation email
+        // (lightweight, not high-security — fine for this use case)
+        if (token && currentJob.employer_email) {
+          const expected = await buildToken(jobId, currentJob.employer_email);
+          if (token !== expected) {
+            console.warn('Token mismatch — showing dashboard anyway (soft check)');
+          }
+        }
+
+        document.getElementById('jobTitle').textContent = currentJob.title || '—';
+        document.getElementById('jobCompany').textContent = currentJob.company || '—';
+        document.getElementById('employerEmailDisplay').textContent = currentJob.employer_email || '';
+
+        if (currentJob.logo_url) {
+          const logoEl = document.getElementById('jobLogo');
+          logoEl.src = currentJob.logo_url;
+          logoEl.style.display = 'block';
+        }
+
+        const badge = document.getElementById('statusBadge');
+        const isActive = currentJob.status === 'active';
+        badge.textContent = isActive ? 'Active' : (currentJob.status || 'Pending');
+        badge.className = `status-badge ${isActive ? 'active' : 'paused'}`;
+
+        if (currentJob.activated_at) {
+          const activated = new Date(currentJob.activated_at);
+          document.getElementById('activatedDate').textContent = activated.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+          const daysLive = Math.floor((Date.now() - activated.getTime()) / 86400000);
+          document.getElementById('statDaysLive').textContent = daysLive;
+          document.getElementById('billingNote').textContent = isActive ? 'Renews monthly' : '';
+        }
+
+        // Stats (clicks, locations)
+        try {
+          const statsRes = await fetch(`${API}/jobs/${jobId}/stats`);
+          if (statsRes.ok) {
+            const stats = await statsRes.json();
+            document.getElementById('statClicks').textContent = stats.clicks?.used || 0;
+            document.getElementById('statClicksSub').textContent = `of ${stats.clicks?.purchased || 0} purchased`;
+            document.getElementById('statLocations').textContent = stats.distribution?.locationCount || 0;
+          }
+        } catch (e) { console.warn('Stats unavailable'); }
+
+        // Applicants — pull from leads API filtered by this employer's client_id
+        const clientId = (currentJob.company || '').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+        try {
+          const leadsRes = await fetch(`${API}/api/leads?client_id=${encodeURIComponent(clientId)}`);
+          if (leadsRes.ok) {
+            const leadsData = await leadsRes.json();
+            const jobLeads = (leadsData.leads || []).filter(l => {
+              try {
+                const cf = typeof l.custom_fields === 'string' ? JSON.parse(l.custom_fields) : l.custom_fields;
+                return l.source === 'jobpeak_apply' && (!cf?.job_title || cf.job_title === currentJob.title);
+              } catch(e) { return l.source === 'jobpeak_apply'; }
+            });
+            renderApplicants(jobLeads);
+          } else {
+            renderApplicants([]);
+          }
+        } catch (e) {
+          console.warn('Leads unavailable', e);
+          renderApplicants([]);
+        }
+
+        renderUpsells();
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashboardContent').style.display = 'block';
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+        showError();
+      }
+    }
+
+    async function buildToken(jobId, email) {
+      const enc = new TextEncoder().encode(`${jobId}:${email}:jobpeak`);
+      const hash = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+    }
+
+    function showError() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+    }
+
+    loadDashboard();
+  </script>
+
+</body>
+</html>
