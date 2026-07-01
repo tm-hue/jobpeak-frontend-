@@ -17,6 +17,7 @@
       --blue: #1D4ED8; --blue-light: #EFF6FF;
       --green: #10B981; --green-light: #ECFDF5;
       --red: #EF4444; --red-light: #FEF2F2;
+      --purple: #7C3AED; --purple-light: #F5F3FF;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
       --radius: 10px;
     }
@@ -63,10 +64,12 @@
     .stat-value { font-family: 'Archivo', sans-serif; font-size: 26px; font-weight: 800; color: var(--text); }
     .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
+    /* Upsell row — 3 columns */
     .upsell-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
     .upsell-card { background: var(--surface); border: 1.5px solid var(--accent); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
     .upsell-card.variant-blue { border-color: var(--blue); }
     .upsell-card.variant-green { border-color: var(--green); }
+    .upsell-card.variant-purple { border-color: var(--purple); }
     .upsell-icon { font-size: 20px; margin-bottom: 8px; }
     .upsell-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
     .upsell-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; flex: 1; }
@@ -78,7 +81,33 @@
     .upsell-card.variant-blue .upsell-btn:hover { background: #1E40AF; }
     .upsell-card.variant-green .upsell-btn { background: var(--green); }
     .upsell-card.variant-green .upsell-btn:hover { background: #059669; }
+    .upsell-card.variant-purple .upsell-btn { background: var(--purple); }
+    .upsell-card.variant-purple .upsell-btn:hover { background: #6D28D9; }
 
+    /* See examples link */
+    .see-examples-link { font-size: 11px; font-weight: 600; color: var(--purple); text-decoration: none; cursor: pointer; background: none; border: none; padding: 0; margin-top: 6px; display: inline-block; }
+    .see-examples-link:hover { text-decoration: underline; }
+
+    /* Lightbox */
+    .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox { background: var(--surface); border-radius: 16px; max-width: 860px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.4); }
+    .lightbox-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .lightbox-title { font-family: 'Archivo', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); }
+    .lightbox-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .lightbox-close { width: 32px; height: 32px; background: var(--bg); border: none; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); flex-shrink: 0; }
+    .lightbox-body { padding: 24px 28px; }
+    .flyer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .flyer-item { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: transform .15s, box-shadow .15s; }
+    .flyer-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .flyer-item img { width: 100%; height: auto; display: block; }
+    .flyer-caption { padding: 10px 12px; font-size: 11px; font-weight: 600; color: var(--text-secondary); background: var(--bg); text-transform: uppercase; letter-spacing: 0.06em; }
+    .lightbox-cta { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; }
+    .lightbox-cta-text { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+    .lightbox-cta-btn { display: inline-block; font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 700; color: white; background: var(--purple); border: none; padding: 13px 28px; border-radius: var(--radius); cursor: pointer; text-decoration: none; transition: background .15s; }
+    .lightbox-cta-btn:hover { background: #6D28D9; }
+
+    /* Section cards */
     .section-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 20px; }
     .section-header { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
     .section-title { font-family: 'Archivo', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); }
@@ -123,12 +152,14 @@
     .detail-value a { color: var(--accent); text-decoration: none; }
     .screener-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 12px 0 8px; }
     .empty-state { padding: 60px 28px; text-align: center; color: var(--text-muted); font-size: 13px; }
+
     .support-row { text-align: center; margin-top: 32px; font-size: 12.5px; color: var(--text-muted); }
     .support-row a { color: var(--accent); text-decoration: none; font-weight: 600; }
 
     @media (max-width: 700px) {
       .stats-row { grid-template-columns: 1fr 1fr; }
       .upsell-row { grid-template-columns: 1fr; }
+      .flyer-grid { grid-template-columns: 1fr; }
       .status-card { flex-direction: column; align-items: flex-start; }
       .status-right { text-align: left; }
       .jd-grid { grid-template-columns: 1fr 1fr; }
@@ -153,6 +184,39 @@
       <div class="header-right" id="employerEmailDisplay"></div>
     </div>
   </header>
+
+  <!-- FLYER LIGHTBOX -->
+  <div class="lightbox-overlay" id="flyerLightbox" onclick="if(event.target===this)closeLightbox()">
+    <div class="lightbox">
+      <div class="lightbox-header">
+        <div>
+          <div class="lightbox-title">Exclusive Meta Reach — Real Campaigns</div>
+          <div class="lightbox-sub">Custom creative built for your job, leads delivered to your dashboard.</div>
+        </div>
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+      </div>
+      <div class="lightbox-body">
+        <div class="flyer-grid">
+          <div class="flyer-item">
+            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936081/CaliforniaOverland_Updated_jghrog.png" alt="California Overland campaign">
+            <div class="flyer-caption">California Overland · OTR Reefer</div>
+          </div>
+          <div class="flyer-item">
+            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936121/Bell_Logistics_Flatbed_Ad_6_w6ueol.png" alt="Bell Logistics campaign">
+            <div class="flyer-caption">Bell Logistics · Regional Flatbed</div>
+          </div>
+          <div class="flyer-item">
+            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936104/BRT_Client_f5qtlv.jpg" alt="BRT campaign">
+            <div class="flyer-caption">BRT Inc. · Hazmat Tanker</div>
+          </div>
+        </div>
+        <div class="lightbox-cta">
+          <div class="lightbox-cta-text">We build the creative, run the campaign, leads land in your dashboard. You just hire.</div>
+          <a href="https://buy.stripe.com/14A5kvcqxgIl8imcxi9oc07" class="lightbox-cta-btn">Get Started — $597</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="page">
 
@@ -215,13 +279,13 @@
 
       <div class="section-card">
         <div class="section-header" onclick="toggleJobDetails()" style="cursor:pointer;">
-  <div class="section-title">Job Details <span id="jobDetailsChevron" style="font-size:12px;color:var(--text-muted);margin-left:6px;">▼ show</span></div>
-  <a href="#" class="view-listing-btn" id="viewListingBtn" target="_blank" onclick="event.stopPropagation()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    View Live Listing
-  </a>
-</div>
-<div class="job-details-body" id="jobDetailsBody" style="display:none;"></div>
+          <div class="section-title">Job Details <span id="jobDetailsChevron" style="font-size:12px;color:var(--text-muted);margin-left:6px;">▼ show</span></div>
+          <a href="#" class="view-listing-btn" id="viewListingBtn" target="_blank" onclick="event.stopPropagation()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View Live Listing
+          </a>
+        </div>
+        <div class="job-details-body" id="jobDetailsBody" style="display:none;"></div>
       </div>
 
       <div class="section-card">
@@ -233,7 +297,7 @@
       </div>
 
       <div class="support-row">
-        Want to make changes or cancel? Email <a href="mailto:support@jobpeak.io">support@jobpeak.io</a>
+        Want to make changes or cancel? Email <a href="mailto:support@jobpeak.io">support@jobpeak.io</a> &nbsp;·&nbsp; <a href="https://www.jobpeak.io/post-a-job.html">Post another job →</a>
       </div>
 
     </div>
@@ -255,15 +319,6 @@
         action: () => window.location.href = 'mailto:support@jobpeak.io?subject=Add Max AI Copilot'
       },
       {
-        icon: '➕',
-        title: 'Post Another Job',
-        desc: 'Hiring for more than one role? Each listing gets its own applicant pipeline, dashboard, and distribution.',
-        price: '$197/mo',
-        btnLabel: 'Post a Job',
-        variant: 'orange',
-        action: () => window.location.href = 'https://www.jobpeak.io/post-a-job.html'
-      },
-      {
         icon: '🎯',
         title: 'Featured Listing',
         desc: 'Move to the top of search results on Talroo and Jobpeak in your market. Typically 2–3x more applicants in the first week.',
@@ -271,6 +326,16 @@
         btnLabel: 'Get Featured',
         variant: 'green',
         action: () => window.location.href = 'https://buy.stripe.com/7sY3cn3U12Rv56aapa9oc06'
+      },
+      {
+        icon: '📡',
+        title: 'Exclusive Meta Reach',
+        desc: 'We build the creative, run the campaign, leads land in your dashboard. You just hire. 30 days, everything included.',
+        price: '$597 one-time',
+        btnLabel: 'Get Started',
+        variant: 'purple',
+        hasExamples: true,
+        action: () => window.location.href = 'https://buy.stripe.com/14A5kvcqxgIl8imcxi9oc07'
       },
     ];
 
@@ -280,7 +345,8 @@
           <div class="upsell-icon">${u.icon}</div>
           <div class="upsell-title">${u.title}</div>
           <div class="upsell-desc">${u.desc}</div>
-          <div class="upsell-footer">
+          ${u.hasExamples ? `<button class="see-examples-link" onclick="openLightbox()">See real campaigns →</button>` : ''}
+          <div class="upsell-footer" style="margin-top:${u.hasExamples ? '10px' : '0'}">
             <div class="upsell-price">${u.price}</div>
             <button class="upsell-btn" onclick="UPSELLS[${i}].action()">${u.btnLabel}</button>
           </div>
@@ -288,9 +354,19 @@
       `).join('');
     }
 
+    function openLightbox() { document.getElementById('flyerLightbox').classList.add('open'); }
+    function closeLightbox() { document.getElementById('flyerLightbox').classList.remove('open'); }
+
+    function toggleJobDetails() {
+      const body = document.getElementById('jobDetailsBody');
+      const chevron = document.getElementById('jobDetailsChevron');
+      const isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : 'block';
+      chevron.textContent = isOpen ? '▼ show' : '▲ hide';
+    }
+
     function renderJobDetails(job) {
       const locs = (() => { try { return JSON.parse(job.target_locations || '[]'); } catch { return []; } })();
-
       const fields = [
         { label: 'Hiring Location', value: job.hiring_location || job.location },
         { label: 'Pay', value: job.salary },
@@ -302,28 +378,15 @@
         { label: 'Pay Type', value: job.pay_type },
         { label: 'Experience Min', value: job.experience_years != null ? job.experience_years + ' yr' + (job.experience_years !== 1 ? 's' : '') : null },
       ].filter(f => f.value);
-
       while (fields.length % 3 !== 0) fields.push({ label: '', value: '' });
-
       const gridHTML = fields.length > 0
-        ? `<div class="jd-grid">${fields.map(f => `<div class="jd-item"><div class="jd-label">${f.label}</div><div class="jd-value">${f.value}</div></div>`).join('')}</div>`
-        : '';
-
-      const descHTML = job.description
-        ? `<div class="jd-section"><div class="jd-section-label">Job Description</div><div class="jd-desc">${job.description}</div></div>` : '';
-
-      const locsHTML = locs.length > 0
-        ? `<div class="jd-section"><div class="jd-section-label">Advertising In — ${locs.length} location${locs.length !== 1 ? 's' : ''}</div><div class="jd-locs">${locs.map(l => `<span class="jd-loc-chip">${l}</span>`).join('')}</div></div>` : '';
-
-      const applyLinkHTML = job.apply_url
-        ? `<div class="jd-section"><div class="jd-section-label">Apply URL</div><a href="${job.apply_url}" target="_blank" class="jd-apply-link">${job.apply_url}</a></div>` : '';
-
+        ? `<div class="jd-grid">${fields.map(f => `<div class="jd-item"><div class="jd-label">${f.label}</div><div class="jd-value">${f.value}</div></div>`).join('')}</div>` : '';
+      const descHTML = job.description ? `<div class="jd-section"><div class="jd-section-label">Job Description</div><div class="jd-desc">${job.description}</div></div>` : '';
+      const locsHTML = locs.length > 0 ? `<div class="jd-section"><div class="jd-section-label">Advertising In — ${locs.length} location${locs.length !== 1 ? 's' : ''}</div><div class="jd-locs">${locs.map(l => `<span class="jd-loc-chip">${l}</span>`).join('')}</div></div>` : '';
+      const applyLinkHTML = job.apply_url ? `<div class="jd-section"><div class="jd-section-label">Apply URL</div><a href="${job.apply_url}" target="_blank" class="jd-apply-link">${job.apply_url}</a></div>` : '';
       document.getElementById('jobDetailsBody').innerHTML = gridHTML + descHTML + locsHTML + applyLinkHTML;
-
       const listingBtn = document.getElementById('viewListingBtn');
-      listingBtn.href = job.slug
-        ? `https://www.jobpeak.io/jobs/${job.id}-${job.slug}`
-        : `https://www.jobpeak.io/jobs/${job.id}`;
+      listingBtn.href = job.slug ? `https://www.jobpeak.io/jobs/${job.id}-${job.slug}` : `https://www.jobpeak.io/jobs/${job.id}`;
     }
 
     function timeAgo(dateStr) {
@@ -340,19 +403,16 @@
       const container = document.getElementById('applicantList');
       document.getElementById('applicantCount').textContent = leads.length + ' total';
       document.getElementById('statApplicants').textContent = leads.length;
-
       if (!leads.length) {
         container.innerHTML = '<div class="empty-state">No applicants yet — your job is live and distributing. Check back soon.</div>';
         return;
       }
-
       container.innerHTML = leads.map((lead) => {
         let custom = {};
         try { custom = typeof lead.custom_fields === 'string' ? JSON.parse(lead.custom_fields) : (lead.custom_fields || {}); } catch(e) {}
         const screenerEntries = Object.entries(custom).filter(([k]) => !['city','state','zip','job_title'].includes(k));
         const screenerHTML = screenerEntries.length
-          ? `<div class="screener-label">Screening Answers</div>${screenerEntries.map(([q, a]) => `<div class="detail-row"><div class="detail-label">${q}</div><div class="detail-value">${a}</div></div>`).join('')}`
-          : '';
+          ? `<div class="screener-label">Screening Answers</div>${screenerEntries.map(([q, a]) => `<div class="detail-row"><div class="detail-label">${q}</div><div class="detail-value">${a}</div></div>`).join('')}` : '';
         return `
           <div class="applicant-row" onclick="this.classList.toggle('open')">
             <div class="applicant-top">
@@ -399,57 +459,38 @@
         btn.textContent = 'Send my dashboard link';
       }
     }
-    function toggleJobDetails() {
-  const body = document.getElementById('jobDetailsBody');
-  const chevron = document.getElementById('jobDetailsChevron');
-  const isOpen = body.style.display !== 'none';
-  body.style.display = isOpen ? 'none' : 'block';
-  chevron.textContent = isOpen ? '▼ show' : '▲ hide';
-}
 
     async function loadDashboard() {
       const params = new URLSearchParams(window.location.search);
       const jobId = params.get('job');
       const token = params.get('t');
-
       if (!jobId) { showError(); return; }
-
       try {
         const jobRes = await fetch(`${API}/jobs/${jobId}`);
         if (!jobRes.ok) throw new Error('Job not found');
         currentJob = await jobRes.json();
-
-        // Hard token check
         if (currentJob.employer_email) {
           const expected = await buildToken(jobId, currentJob.employer_email);
-          if (!token || token !== expected) {
-            showError();
-            return;
-          }
+          if (!token || token !== expected) { showError(); return; }
         }
-
         document.getElementById('jobTitle').textContent = currentJob.title || '—';
         document.getElementById('jobCompany').textContent = currentJob.company || '—';
         document.getElementById('employerEmailDisplay').textContent = currentJob.employer_email || '';
-
         if (currentJob.logo_url) {
           const logo = document.getElementById('jobLogo');
           logo.src = currentJob.logo_url;
           logo.style.display = 'block';
         }
-
         const badge = document.getElementById('statusBadge');
         const isActive = currentJob.status === 'active';
         badge.textContent = isActive ? 'Active' : (currentJob.status || 'Pending');
         badge.className = 'status-badge ' + (isActive ? 'active' : 'paused');
-
         if (currentJob.activated_at) {
           const activated = new Date(currentJob.activated_at);
           document.getElementById('activatedDate').textContent = activated.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
           document.getElementById('statDaysLive').textContent = Math.floor((Date.now() - activated.getTime()) / 86400000);
           document.getElementById('billingNote').textContent = isActive ? 'Renews monthly' : '';
         }
-
         try {
           const statsRes = await fetch(`${API}/jobs/${jobId}/stats`);
           if (statsRes.ok) {
@@ -459,26 +500,17 @@
             document.getElementById('statLocations').textContent = stats.distribution?.locationCount || 0;
           }
         } catch(e) { console.warn('Stats unavailable'); }
-
         renderJobDetails(currentJob);
-
         try {
           const leadsRes = await fetch(`${API}/api/leads?job_id=${encodeURIComponent(jobId)}`);
           if (leadsRes.ok) {
             const data = await leadsRes.json();
             renderApplicants(data.leads || []);
-          } else {
-            renderApplicants([]);
-          }
-        } catch(e) {
-          console.warn('Leads unavailable', e);
-          renderApplicants([]);
-        }
-
+          } else { renderApplicants([]); }
+        } catch(e) { console.warn('Leads unavailable', e); renderApplicants([]); }
         renderUpsells();
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('dashboardContent').style.display = 'block';
-
       } catch(err) {
         console.error('Dashboard load error:', err);
         showError();
