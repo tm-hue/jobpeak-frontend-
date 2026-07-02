@@ -13,7 +13,7 @@
     :root {
       --bg: #F7F8FA; --surface: #FFFFFF; --border: #E4E6EA;
       --text: #111318; --text-secondary: #545B6B; --text-muted: #9BA3AF;
-      --accent: #F97316; --accent-dark: #D95F00; --accent-light: #FFF3EB;
+      --accent: #F97316; --accent-dark: #D95F00;
       --blue: #1D4ED8; --blue-light: #EFF6FF;
       --green: #10B981; --green-light: #ECFDF5;
       --red: #EF4444; --red-light: #FEF2F2;
@@ -34,7 +34,6 @@
     .loading-state, .error-state { text-align: center; padding: 100px 20px; color: var(--text-secondary); font-size: 14px; }
     .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .error-state .error-icon { font-size: 40px; margin-bottom: 16px; }
     .error-state .error-title { font-family: 'Archivo', sans-serif; font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
     .error-state .error-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; max-width: 400px; margin-left: auto; margin-right: auto; }
@@ -64,7 +63,6 @@
     .stat-value { font-family: 'Archivo', sans-serif; font-size: 26px; font-weight: 800; color: var(--text); }
     .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-    /* Upsell row — 3 columns */
     .upsell-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
     .upsell-card { background: var(--surface); border: 1.5px solid var(--accent); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
     .upsell-card.variant-blue { border-color: var(--blue); }
@@ -72,7 +70,8 @@
     .upsell-card.variant-purple { border-color: var(--purple); }
     .upsell-icon { font-size: 20px; margin-bottom: 8px; }
     .upsell-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-    .upsell-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; flex: 1; }
+    .upsell-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.5; flex: 1; }
+    .upsell-stat { font-size: 11px; font-weight: 700; color: var(--purple); background: var(--purple-light); padding: 4px 8px; border-radius: 6px; display: inline-block; margin-bottom: 10px; }
     .upsell-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .upsell-price { font-size: 12px; font-weight: 700; color: var(--text-muted); }
     .upsell-btn { font-size: 12px; font-weight: 700; color: white; background: var(--accent); border: none; padding: 7px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; transition: background .15s; }
@@ -83,36 +82,75 @@
     .upsell-card.variant-green .upsell-btn:hover { background: #059669; }
     .upsell-card.variant-purple .upsell-btn { background: var(--purple); }
     .upsell-card.variant-purple .upsell-btn:hover { background: #6D28D9; }
-
-    /* See examples link */
-    .see-examples-link { font-size: 11px; font-weight: 600; color: var(--purple); text-decoration: none; cursor: pointer; background: none; border: none; padding: 0; margin-top: 6px; display: inline-block; }
+    .see-examples-link { font-size: 11px; font-weight: 600; color: var(--purple); background: none; border: none; padding: 0; cursor: pointer; margin-bottom: 10px; display: inline-block; }
     .see-examples-link:hover { text-decoration: underline; }
 
     /* Lightbox */
-    .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     .lightbox-overlay.open { display: flex; }
-    .lightbox { background: var(--surface); border-radius: 16px; max-width: 860px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.4); }
-    .lightbox-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .lightbox-title { font-family: 'Archivo', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); }
-    .lightbox-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-    .lightbox-close { width: 32px; height: 32px; background: var(--bg); border: none; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); flex-shrink: 0; }
-    .lightbox-body { padding: 24px 28px; }
-    .flyer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .flyer-item { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: transform .15s, box-shadow .15s; }
-    .flyer-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .lightbox { background: var(--surface); border-radius: 16px; max-width: 920px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.4); }
+    .lightbox-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .lightbox-title { font-family: 'Archivo', sans-serif; font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .lightbox-sub { font-size: 13px; color: var(--text-secondary); }
+    .lightbox-close { width: 32px; height: 32px; background: var(--bg); border: none; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); flex-shrink: 0; }
+    .lightbox-body { padding: 28px; }
+
+    /* Stat banner */
+    .stat-banner { background: linear-gradient(135deg, var(--purple-light) 0%, #EDE9FE 100%); border: 1px solid #DDD6FE; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
+    .stat-banner-number { font-family: 'Archivo', sans-serif; font-size: 36px; font-weight: 800; color: var(--purple); line-height: 1; }
+    .stat-banner-label { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .stat-banner-label strong { color: var(--text); }
+
+    /* Phone mockup */
+    .mockup-section { margin-bottom: 28px; }
+    .mockup-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 16px; }
+    .mockup-wrapper { display: flex; gap: 24px; align-items: flex-start; }
+    .phone-frame { flex-shrink: 0; width: 200px; background: #111318; border-radius: 28px; padding: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.1); }
+    .phone-screen { background: #fff; border-radius: 20px; overflow: hidden; }
+    .phone-status-bar { background: #111318; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .phone-notch { width: 60px; height: 16px; background: #111318; border-radius: 0 0 12px 12px; }
+    .ig-header { background: #fff; padding: 8px 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f0f0f0; }
+    .ig-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #F97316, #1D4ED8); flex-shrink: 0; }
+    .ig-name { font-size: 10px; font-weight: 700; color: #111; }
+    .ig-sponsored { font-size: 8px; color: #888; }
+    .ig-ad-image { width: 100%; background: linear-gradient(160deg, #111318 0%, #1D4ED8 100%); padding: 14px 12px; }
+    .ig-ad-headline { font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 2px; }
+    .ig-ad-sub { font-size: 8px; color: rgba(255,255,255,0.7); }
+    .ig-ad-pay { font-family: 'Archivo', sans-serif; font-size: 14px; font-weight: 800; color: #F97316; margin-top: 6px; }
+    .ig-form { padding: 10px 12px; background: #fff; }
+    .ig-form-title { font-size: 9px; font-weight: 700; color: #111; margin-bottom: 8px; }
+    .ig-field { background: #F7F8FA; border: 1px solid #E4E6EA; border-radius: 6px; padding: 5px 8px; margin-bottom: 5px; }
+    .ig-field-label { font-size: 7px; color: #9BA3AF; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ig-field-value { font-size: 9px; color: #111318; font-weight: 600; }
+    .ig-field.prefilled { border-color: #10B981; background: #ECFDF5; }
+    .ig-field.prefilled .ig-field-label { color: #10B981; }
+    .ig-submit { width: 100%; background: #1D4ED8; color: white; border: none; border-radius: 6px; padding: 7px; font-size: 9px; font-weight: 700; text-align: center; margin-top: 6px; cursor: pointer; }
+
+    .mockup-explainer { flex: 1; }
+    .explainer-item { display: flex; gap: 10px; margin-bottom: 16px; }
+    .explainer-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; margin-top: 1px; }
+    .explainer-dot.green { background: var(--green); }
+    .explainer-dot.blue { background: var(--blue); }
+    .explainer-dot.purple { background: var(--purple); }
+    .explainer-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .explainer-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* Flyers */
+    .flyer-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 16px; }
+    .flyer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .flyer-item { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
     .flyer-item img { width: 100%; height: auto; display: block; }
-    .flyer-caption { padding: 10px 12px; font-size: 11px; font-weight: 600; color: var(--text-secondary); background: var(--bg); text-transform: uppercase; letter-spacing: 0.06em; }
+    .flyer-caption { padding: 10px 12px; font-size: 11px; font-weight: 600; color: var(--text-secondary); background: var(--bg); text-transform: uppercase; letter-spacing: 0.05em; }
+
     .lightbox-cta { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; }
     .lightbox-cta-text { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
-    .lightbox-cta-btn { display: inline-block; font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 700; color: white; background: var(--purple); border: none; padding: 13px 28px; border-radius: var(--radius); cursor: pointer; text-decoration: none; transition: background .15s; }
+    .lightbox-cta-btn { display: inline-block; font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 700; color: white; background: var(--purple); border: none; padding: 14px 32px; border-radius: var(--radius); cursor: pointer; text-decoration: none; transition: background .15s; }
     .lightbox-cta-btn:hover { background: #6D28D9; }
 
-    /* Section cards */
     .section-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 20px; }
     .section-header { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
     .section-title { font-family: 'Archivo', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); }
     .section-count { font-size: 12px; color: var(--text-muted); }
-
     .view-listing-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--blue); background: var(--blue-light); border: 1px solid #BFDBFE; padding: 6px 12px; border-radius: 7px; text-decoration: none; transition: background .15s; }
     .view-listing-btn:hover { background: #DBEAFE; }
 
@@ -126,7 +164,7 @@
     .jd-section { margin-top: 24px; }
     .jd-section-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
     .jd-desc { font-size: 14px; line-height: 1.75; color: var(--text-secondary); }
-    .jd-desc h1, .jd-desc h2, .jd-desc h3 { color: var(--text); margin: 14px 0 6px; font-size: 14px; font-weight: 700; font-family: 'Work Sans', sans-serif; }
+    .jd-desc h1, .jd-desc h2, .jd-desc h3 { color: var(--text); margin: 14px 0 6px; font-size: 14px; font-weight: 700; }
     .jd-desc ul, .jd-desc ol { padding-left: 20px; margin: 6px 0 10px; }
     .jd-desc li { margin-bottom: 3px; }
     .jd-desc strong { color: var(--text); }
@@ -152,7 +190,6 @@
     .detail-value a { color: var(--accent); text-decoration: none; }
     .screener-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 12px 0 8px; }
     .empty-state { padding: 60px 28px; text-align: center; color: var(--text-muted); font-size: 13px; }
-
     .support-row { text-align: center; margin-top: 32px; font-size: 12.5px; color: var(--text-muted); }
     .support-row a { color: var(--accent); text-decoration: none; font-weight: 600; }
 
@@ -160,19 +197,10 @@
       .stats-row { grid-template-columns: 1fr 1fr; }
       .upsell-row { grid-template-columns: 1fr; }
       .flyer-grid { grid-template-columns: 1fr; }
+      .mockup-wrapper { flex-direction: column; }
       .status-card { flex-direction: column; align-items: flex-start; }
       .status-right { text-align: left; }
       .jd-grid { grid-template-columns: 1fr 1fr; }
-      .jd-item:nth-child(3n) { border-right: 1px solid var(--border); }
-      .jd-item:nth-child(2n) { border-right: none; }
-      .jd-item:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
-      .jd-item:nth-last-child(-n+2) { border-bottom: none; }
-    }
-    @media (max-width: 480px) {
-      .jd-grid { grid-template-columns: 1fr; }
-      .jd-item { border-right: none !important; }
-      .jd-item:last-child { border-bottom: none !important; }
-      .jd-item:nth-last-child(n+2) { border-bottom: 1px solid var(--border) !important; }
     }
   </style>
 </head>
@@ -185,35 +213,121 @@
     </div>
   </header>
 
-  <!-- FLYER LIGHTBOX -->
+  <!-- LIGHTBOX -->
   <div class="lightbox-overlay" id="flyerLightbox" onclick="if(event.target===this)closeLightbox()">
     <div class="lightbox">
       <div class="lightbox-header">
         <div>
-          <div class="lightbox-title">Exclusive Meta Reach — Real Campaigns</div>
-          <div class="lightbox-sub">Custom creative built for your job, leads delivered to your dashboard.</div>
+          <div class="lightbox-title">Exclusive Meta Reach — How It Works</div>
+          <div class="lightbox-sub">Custom creative, native lead form, real-time delivery to your dashboard.</div>
         </div>
         <button class="lightbox-close" onclick="closeLightbox()">✕</button>
       </div>
       <div class="lightbox-body">
+
+        <!-- Stat banner -->
+        <div class="stat-banner">
+          <div class="stat-banner-number">36%</div>
+          <div class="stat-banner-label">
+            <strong>Higher conversion vs. link-out campaigns.</strong><br>
+            Drivers apply without leaving Instagram or Facebook — name, phone, and email pre-filled automatically.
+          </div>
+        </div>
+
+        <!-- Phone mockup + explainer -->
+        <div class="mockup-section">
+          <div class="mockup-section-label">What the driver sees</div>
+          <div class="mockup-wrapper">
+
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <div class="phone-status-bar">
+                  <div class="phone-notch"></div>
+                </div>
+                <div class="ig-header">
+                  <div class="ig-avatar"></div>
+                  <div>
+                    <div class="ig-name">Renee's Trucking</div>
+                    <div class="ig-sponsored">Sponsored</div>
+                  </div>
+                </div>
+                <div class="ig-ad-image">
+                  <div class="ig-ad-headline">OTR Driver.<br>Home Weekends.</div>
+                  <div class="ig-ad-sub">Now hiring in your area</div>
+                  <div class="ig-ad-pay">$1,700/wk</div>
+                </div>
+                <div class="ig-form">
+                  <div class="ig-form-title">Quick Apply — Takes 10 seconds</div>
+                  <div class="ig-field prefilled">
+                    <div class="ig-field-label">✓ Auto-filled</div>
+                    <div class="ig-field-value">John Smith</div>
+                  </div>
+                  <div class="ig-field prefilled">
+                    <div class="ig-field-label">✓ Auto-filled</div>
+                    <div class="ig-field-value">john@email.com</div>
+                  </div>
+                  <div class="ig-field prefilled">
+                    <div class="ig-field-label">✓ Auto-filled</div>
+                    <div class="ig-field-value">(614) 555-0192</div>
+                  </div>
+                  <div class="ig-field">
+                    <div class="ig-field-label">Do you have a CDL-A?</div>
+                    <div class="ig-field-value">Yes, I have a valid CDL-A</div>
+                  </div>
+                  <div class="ig-submit">Submit Application →</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mockup-explainer">
+              <div class="explainer-item">
+                <div class="explainer-dot green">1</div>
+                <div>
+                  <div class="explainer-title">Driver sees your ad while scrolling</div>
+                  <div class="explainer-desc">Your custom creative runs on Facebook and Instagram, targeted to CDL drivers in your hiring market.</div>
+                </div>
+              </div>
+              <div class="explainer-item">
+                <div class="explainer-dot blue">2</div>
+                <div>
+                  <div class="explainer-title">Native form opens — no redirect</div>
+                  <div class="explainer-desc">Name, phone, and email are pre-filled from their Facebook profile. They never leave the app. One tap to submit.</div>
+                </div>
+              </div>
+              <div class="explainer-item">
+                <div class="explainer-dot purple">3</div>
+                <div>
+                  <div class="explainer-title">Lead lands in your dashboard instantly</div>
+                  <div class="explainer-desc">You get notified. The driver's info appears right here — no spreadsheet, no middleman, no delay.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Real campaign flyers -->
+        <div class="flyer-section-label">Real campaigns we've built</div>
         <div class="flyer-grid">
           <div class="flyer-item">
-            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936081/CaliforniaOverland_Updated_jghrog.png" alt="California Overland campaign">
+            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936081/CaliforniaOverland_Updated_jghrog.png" alt="California Overland">
             <div class="flyer-caption">California Overland · OTR Reefer</div>
           </div>
           <div class="flyer-item">
-            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936121/Bell_Logistics_Flatbed_Ad_6_w6ueol.png" alt="Bell Logistics campaign">
+            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936121/Bell_Logistics_Flatbed_Ad_6_w6ueol.png" alt="Bell Logistics">
             <div class="flyer-caption">Bell Logistics · Regional Flatbed</div>
           </div>
           <div class="flyer-item">
-            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936104/BRT_Client_f5qtlv.jpg" alt="BRT campaign">
+            <img src="https://res.cloudinary.com/dzhhq3xkz/image/upload/v1782936104/BRT_Client_f5qtlv.jpg" alt="BRT Inc">
             <div class="flyer-caption">BRT Inc. · Hazmat Tanker</div>
           </div>
         </div>
+
         <div class="lightbox-cta">
-          <div class="lightbox-cta-text">We build the creative, run the campaign, leads land in your dashboard. You just hire.</div>
+          <div class="lightbox-cta-text">30 days. Custom creative. Leads in your dashboard. Everything included.</div>
           <a href="https://buy.stripe.com/14A5kvcqxgIl8imcxi9oc07" class="lightbox-cta-btn">Get Started — $597</a>
         </div>
+
       </div>
     </div>
   </div>
@@ -255,24 +369,10 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-label">Total Applicants</div>
-          <div class="stat-value" id="statApplicants">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Clicks</div>
-          <div class="stat-value" id="statClicks">0</div>
-          <div class="stat-sub" id="statClicksSub"></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Locations</div>
-          <div class="stat-value" id="statLocations">0</div>
-          <div class="stat-sub">advertising in</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Days Live</div>
-          <div class="stat-value" id="statDaysLive">0</div>
-        </div>
+        <div class="stat-card"><div class="stat-label">Total Applicants</div><div class="stat-value" id="statApplicants">0</div></div>
+        <div class="stat-card"><div class="stat-label">Clicks</div><div class="stat-value" id="statClicks">0</div><div class="stat-sub" id="statClicksSub"></div></div>
+        <div class="stat-card"><div class="stat-label">Locations</div><div class="stat-value" id="statLocations">0</div><div class="stat-sub">advertising in</div></div>
+        <div class="stat-card"><div class="stat-label">Days Live</div><div class="stat-value" id="statDaysLive">0</div></div>
       </div>
 
       <div class="upsell-row" id="upsellRow"></div>
@@ -301,7 +401,6 @@
       </div>
 
     </div>
-
   </div>
 
   <script>
@@ -330,7 +429,8 @@
       {
         icon: '📡',
         title: 'Exclusive Meta Reach',
-        desc: 'We build the creative, run the campaign, leads land in your dashboard. You just hire. 30 days, everything included.',
+        desc: 'Custom creative + native Meta lead form. Drivers tap to apply without leaving Instagram or Facebook — name, phone, and email pre-filled automatically. No landing page, no drop-off.',
+        stat: '36% higher conversion vs. link-out',
         price: '$597 one-time',
         btnLabel: 'Get Started',
         variant: 'purple',
@@ -345,8 +445,9 @@
           <div class="upsell-icon">${u.icon}</div>
           <div class="upsell-title">${u.title}</div>
           <div class="upsell-desc">${u.desc}</div>
-          ${u.hasExamples ? `<button class="see-examples-link" onclick="openLightbox()">See real campaigns →</button>` : ''}
-          <div class="upsell-footer" style="margin-top:${u.hasExamples ? '10px' : '0'}">
+          ${u.stat ? `<div class="upsell-stat">📈 ${u.stat}</div>` : ''}
+          ${u.hasExamples ? `<button class="see-examples-link" onclick="openLightbox()">See how it works + real campaigns →</button>` : ''}
+          <div class="upsell-footer">
             <div class="upsell-price">${u.price}</div>
             <button class="upsell-btn" onclick="UPSELLS[${i}].action()">${u.btnLabel}</button>
           </div>
@@ -354,8 +455,8 @@
       `).join('');
     }
 
-    function openLightbox() { document.getElementById('flyerLightbox').classList.add('open'); }
-    function closeLightbox() { document.getElementById('flyerLightbox').classList.remove('open'); }
+    function openLightbox() { document.getElementById('flyerLightbox').classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeLightbox() { document.getElementById('flyerLightbox').classList.remove('open'); document.body.style.overflow = ''; }
 
     function toggleJobDetails() {
       const body = document.getElementById('jobDetailsBody');
@@ -379,8 +480,7 @@
         { label: 'Experience Min', value: job.experience_years != null ? job.experience_years + ' yr' + (job.experience_years !== 1 ? 's' : '') : null },
       ].filter(f => f.value);
       while (fields.length % 3 !== 0) fields.push({ label: '', value: '' });
-      const gridHTML = fields.length > 0
-        ? `<div class="jd-grid">${fields.map(f => `<div class="jd-item"><div class="jd-label">${f.label}</div><div class="jd-value">${f.value}</div></div>`).join('')}</div>` : '';
+      const gridHTML = fields.length > 0 ? `<div class="jd-grid">${fields.map(f => `<div class="jd-item"><div class="jd-label">${f.label}</div><div class="jd-value">${f.value}</div></div>`).join('')}</div>` : '';
       const descHTML = job.description ? `<div class="jd-section"><div class="jd-section-label">Job Description</div><div class="jd-desc">${job.description}</div></div>` : '';
       const locsHTML = locs.length > 0 ? `<div class="jd-section"><div class="jd-section-label">Advertising In — ${locs.length} location${locs.length !== 1 ? 's' : ''}</div><div class="jd-locs">${locs.map(l => `<span class="jd-loc-chip">${l}</span>`).join('')}</div></div>` : '';
       const applyLinkHTML = job.apply_url ? `<div class="jd-section"><div class="jd-section-label">Apply URL</div><a href="${job.apply_url}" target="_blank" class="jd-apply-link">${job.apply_url}</a></div>` : '';
@@ -403,34 +503,23 @@
       const container = document.getElementById('applicantList');
       document.getElementById('applicantCount').textContent = leads.length + ' total';
       document.getElementById('statApplicants').textContent = leads.length;
-      if (!leads.length) {
-        container.innerHTML = '<div class="empty-state">No applicants yet — your job is live and distributing. Check back soon.</div>';
-        return;
-      }
+      if (!leads.length) { container.innerHTML = '<div class="empty-state">No applicants yet — your job is live and distributing. Check back soon.</div>'; return; }
       container.innerHTML = leads.map((lead) => {
         let custom = {};
         try { custom = typeof lead.custom_fields === 'string' ? JSON.parse(lead.custom_fields) : (lead.custom_fields || {}); } catch(e) {}
         const screenerEntries = Object.entries(custom).filter(([k]) => !['city','state','zip','job_title'].includes(k));
-        const screenerHTML = screenerEntries.length
-          ? `<div class="screener-label">Screening Answers</div>${screenerEntries.map(([q, a]) => `<div class="detail-row"><div class="detail-label">${q}</div><div class="detail-value">${a}</div></div>`).join('')}` : '';
-        return `
-          <div class="applicant-row" onclick="this.classList.toggle('open')">
-            <div class="applicant-top">
-              <div>
-                <div class="applicant-name">${lead.name || '—'}</div>
-                <div class="applicant-meta">${custom.city || ''}${custom.city && custom.state ? ', ' : ''}${custom.state || ''}</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;">
-                <div class="applicant-date">${timeAgo(lead.created_at)}</div>
-                <svg class="applicant-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
-              </div>
-            </div>
-            <div class="applicant-detail">
-              <div class="detail-row"><div class="detail-label">Phone</div><div class="detail-value"><a href="tel:${lead.phone}">${lead.phone || '—'}</a></div></div>
-              <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value"><a href="mailto:${lead.email}">${lead.email || '—'}</a></div></div>
-              ${screenerHTML}
-            </div>
-          </div>`;
+        const screenerHTML = screenerEntries.length ? `<div class="screener-label">Screening Answers</div>${screenerEntries.map(([q, a]) => `<div class="detail-row"><div class="detail-label">${q}</div><div class="detail-value">${a}</div></div>`).join('')}` : '';
+        return `<div class="applicant-row" onclick="this.classList.toggle('open')">
+          <div class="applicant-top">
+            <div><div class="applicant-name">${lead.name || '—'}</div><div class="applicant-meta">${custom.city || ''}${custom.city && custom.state ? ', ' : ''}${custom.state || ''}</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div class="applicant-date">${timeAgo(lead.created_at)}</div><svg class="applicant-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          <div class="applicant-detail">
+            <div class="detail-row"><div class="detail-label">Phone</div><div class="detail-value"><a href="tel:${lead.phone}">${lead.phone || '—'}</a></div></div>
+            <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value"><a href="mailto:${lead.email}">${lead.email || '—'}</a></div></div>
+            ${screenerHTML}
+          </div>
+        </div>`;
       }).join('');
     }
 
@@ -444,20 +533,12 @@
       const email = document.getElementById('resendEmail').value.trim();
       if (!email || !email.includes('@')) { document.getElementById('resendEmail').focus(); return; }
       const btn = document.getElementById('resendBtn');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
+      btn.disabled = true; btn.textContent = 'Sending...';
       try {
-        await fetch(`${API}/resend-dashboard-link`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
+        await fetch(`${API}/resend-dashboard-link`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email}) });
         document.getElementById('resendSuccess').style.display = 'block';
         btn.textContent = 'Sent';
-      } catch(e) {
-        btn.disabled = false;
-        btn.textContent = 'Send my dashboard link';
-      }
+      } catch(e) { btn.disabled = false; btn.textContent = 'Send my dashboard link'; }
     }
 
     async function loadDashboard() {
@@ -476,11 +557,7 @@
         document.getElementById('jobTitle').textContent = currentJob.title || '—';
         document.getElementById('jobCompany').textContent = currentJob.company || '—';
         document.getElementById('employerEmailDisplay').textContent = currentJob.employer_email || '';
-        if (currentJob.logo_url) {
-          const logo = document.getElementById('jobLogo');
-          logo.src = currentJob.logo_url;
-          logo.style.display = 'block';
-        }
+        if (currentJob.logo_url) { const logo = document.getElementById('jobLogo'); logo.src = currentJob.logo_url; logo.style.display = 'block'; }
         const badge = document.getElementById('statusBadge');
         const isActive = currentJob.status === 'active';
         badge.textContent = isActive ? 'Active' : (currentJob.status || 'Pending');
@@ -503,18 +580,13 @@
         renderJobDetails(currentJob);
         try {
           const leadsRes = await fetch(`${API}/api/leads?job_id=${encodeURIComponent(jobId)}`);
-          if (leadsRes.ok) {
-            const data = await leadsRes.json();
-            renderApplicants(data.leads || []);
-          } else { renderApplicants([]); }
+          if (leadsRes.ok) { const data = await leadsRes.json(); renderApplicants(data.leads || []); }
+          else { renderApplicants([]); }
         } catch(e) { console.warn('Leads unavailable', e); renderApplicants([]); }
         renderUpsells();
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('dashboardContent').style.display = 'block';
-      } catch(err) {
-        console.error('Dashboard load error:', err);
-        showError();
-      }
+      } catch(err) { console.error('Dashboard load error:', err); showError(); }
     }
 
     function showError() {
