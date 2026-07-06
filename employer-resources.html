@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8LNYW43VBJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8LNYW43VBJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CDL Employer Resources — Free Tools & Templates — Jobpeak</title>
+  <meta name="description" content="Free CDL recruiting tools and job description templates for trucking employers. AI job description generator, freight-specific templates, and hiring guides. Built for CDL recruiting.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23111318'/><text x='45' y='75' font-family='Archivo,sans-serif' font-size='80' font-weight='800' text-anchor='middle' fill='%23ffffff'>j</text><circle cx='85' cy='70' r='8' fill='%23F97316'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#FAFAFA;--white:#FFFFFF;--navy:#111318;--orange:#F97316;--orange-hover:#EA6C0A;--blue:#0A84FF;--blue-hover:#0070E0;--border:#E4E6EA;--text:#0A0A0A;--sub:#666666;--mist:#F5F6F8;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Work Sans',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;}
+    .jp-header{position:sticky;top:0;z-index:999;background:var(--white);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 32px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+    .jp-header-inner{max-width:960px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
+    .jp-logo{font-family:'Archivo',sans-serif;font-size:22px;font-weight:800;color:var(--navy);text-decoration:none;letter-spacing:-.02em;}
+    .jp-logo span{color:var(--orange);}
+    .jp-header-nav{display:flex;align-items:center;gap:8px;}
+    .jp-nav-link{font-size:14px;font-weight:500;color:#545B6B;text-decoration:none;padding:6px 12px;border-radius:8px;}
+    .jp-nav-link:hover{color:var(--navy);}
+    .jp-post-btn{font-size:14px;font-weight:700;color:#fff;background:var(--blue);text-decoration:none;padding:8px 18px;border-radius:8px;transition:background .15s;}
+    .jp-post-btn:hover{background:var(--blue-hover);}
+
+    /* HERO */
+    .hero{background:var(--navy);padding:56px 32px 52px;}
+    .hero-inner{max-width:960px;margin:0 auto;}
+    .hero-eyebrow{display:inline-block;background:rgba(249,115,22,.15);color:var(--orange);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:16px;}
+    .hero h1{font-family:'Archivo',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.03em;margin-bottom:14px;}
+    .hero h1 em{font-style:normal;color:var(--orange);}
+    .hero p{color:#8892A4;font-size:17px;max-width:560px;}
+
+    /* MAIN */
+    .page-wrap{max-width:960px;margin:0 auto;padding:56px 20px 80px;}
+    .section-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+    .section-title{font-family:'Archivo',sans-serif;font-size:26px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-.02em;}
+    .section-sub{color:var(--sub);font-size:15px;margin-bottom:24px;}
+
+    /* FEATURED TOOL */
+    .featured-tool{background:var(--navy);border-radius:16px;padding:36px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;margin-bottom:56px;}
+    @media(max-width:640px){.featured-tool{grid-template-columns:1fr;}}
+    .featured-tool h2{font-family:'Archivo',sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:8px;}
+    .featured-tool p{color:#8892A4;font-size:14px;line-height:1.65;max-width:480px;}
+    .featured-tool-btns{display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+    .btn-orange{background:var(--orange);color:#fff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;text-align:center;transition:background .15s;}
+    .btn-orange:hover{background:var(--orange-hover);}
+    .btn-ghost{background:rgba(255,255,255,.08);color:#fff;font-weight:600;font-size:13px;padding:10px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;text-align:center;transition:background .15s;}
+    .btn-ghost:hover{background:rgba(255,255,255,.14);}
+
+    /* RESOURCE GRID */
+    .resource-section{margin-bottom:52px;}
+    .resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+    .resource-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:22px;text-decoration:none;color:var(--text);transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column;gap:10px;}
+    .resource-card:hover{border-color:var(--orange);box-shadow:0 4px 16px rgba(249,115,22,.08);}
+    .resource-card-icon{font-size:28px;line-height:1;}
+    .resource-card h3{font-family:'Archivo',sans-serif;font-size:16px;font-weight:800;color:var(--navy);letter-spacing:-.02em;}
+    .resource-card p{font-size:13px;color:var(--sub);line-height:1.6;flex:1;}
+    .resource-card-tag{display:inline-block;background:var(--mist);border:1px solid var(--border);color:#545B6B;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:100px;width:fit-content;}
+    .resource-card-tag.tag-tool{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.2);color:var(--orange);}
+    .resource-card-tag.tag-guide{background:rgba(10,132,255,.1);border-color:rgba(10,132,255,.2);color:var(--blue);}
+
+    /* POST CTA */
+    .post-cta-strip{background:var(--mist);border:1.5px solid var(--border);border-radius:14px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:16px;}
+    .post-cta-strip h2{font-family:'Archivo',sans-serif;font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.02em;margin-bottom:6px;}
+    .post-cta-strip p{font-size:14px;color:var(--sub);max-width:480px;}
+    .post-cta-strip a{background:var(--blue);color:#fff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s;}
+    .post-cta-strip a:hover{background:var(--blue-hover);}
+
+    /* FOOTER */
+    .jp-footer{background:var(--navy);color:#8892A4;font-size:13px;padding:32px 24px;margin-top:0;}
+    .jp-footer-inner{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;}
+    .jp-footer-brand{font-family:'Archivo',sans-serif;font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.02em;}
+    .jp-footer-brand span{color:var(--orange);}
+    .jp-footer-links{display:flex;flex-wrap:wrap;gap:20px;}
+    .jp-footer-links a{color:#8892A4;text-decoration:none;}
+    .jp-footer-links a:hover{color:#fff;}
+    .jp-footer-seo{width:100%;max-width:960px;margin:24px auto 0;padding-top:24px;border-top:1px solid #1E2330;}
+    .jp-footer-seo-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#545B6B;margin-bottom:12px;}
+    .jp-footer-seo-links{display:flex;flex-wrap:wrap;gap:8px 20px;}
+    .jp-footer-seo-links a{font-size:13px;color:#545B6B;text-decoration:none;transition:color .15s;}
+    .jp-footer-seo-links a:hover{color:#8892A4;}
+    .jp-footer-copy{width:100%;max-width:960px;margin:16px auto 0;padding-top:16px;border-top:1px solid #1E2330;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;}
+    .jp-footer-copy span{font-size:12px;color:#545B6B;}
+    @media(max-width:600px){.jp-header{padding:0 16px;} .jp-nav-link{display:none;}}
+  </style>
+</head>
+<body>
+
+<header class="jp-header">
+  <div class="jp-header-inner">
+    <a href="/" class="jp-logo">jobpeak<span>.</span></a>
+    <nav class="jp-header-nav">
+      <a href="/jobseeker_search.html" class="jp-nav-link">Find Jobs</a>
+      <a href="/post-a-job.html" class="jp-post-btn">Post a Job</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Free CDL Recruiting Resources</div>
+    <h1>Hire CDL Drivers<br><em>Faster &amp; Smarter</em></h1>
+    <p>Free tools, templates, and guides built specifically for trucking recruiters and fleet managers. No agency fees. No fluff.</p>
+  </div>
+</section>
+
+<div class="page-wrap">
+
+  <!-- FEATURED TOOL -->
+  <div class="featured-tool">
+    <div>
+      <h2>⚡ CDL Job Description Generator &amp; Optimizer</h2>
+      <p>Generate a complete, post-ready CDL job description in seconds — or paste your existing posting to score it out of 10 and see exactly what's hurting your applications. Built for trucking, not generic HR.</p>
+    </div>
+    <div class="featured-tool-btns">
+      <a class="btn-orange" href="/cdl-job-description-generator.html">Generate a Description &rarr;</a>
+      <a class="btn-ghost" href="/cdl-job-description-generator.html">Score My Posting</a>
+    </div>
+  </div>
+
+  <!-- TEMPLATES -->
+  <div class="resource-section">
+    <div class="section-label">Templates</div>
+    <h2 class="section-title">CDL Job Description Templates</h2>
+    <p class="section-sub">Copy-ready templates by freight type. Customize and post in under 5 minutes.</p>
+    <div class="resource-grid">
+      <a class="resource-card" href="/dry-van-cdl-driver.html">
+        <div class="resource-card-icon">🚛</div>
+        <h3>Dry Van CDL-A Driver</h3>
+        <p>OTR, Regional, and Local variations. No-touch, drop-and-hook, and live load language included.</p>
+        <span class="resource-card-tag">Template</span>
+      </a>
+      <a class="resource-card" href="/flatbed-cdl-driver.html">
+        <div class="resource-card-icon">🏗️</div>
+        <h3>Flatbed CDL-A Driver</h3>
+        <p>OTR and Regional variations. Tarping pay language, load securement, and 2026 pay benchmarks.</p>
+        <span class="resource-card-tag">Template</span>
+      </a>
+      <a class="resource-card" href="/refrigerated-reefer-cdl-driver.html">
+        <div class="resource-card-icon">❄️</div>
+        <h3>Refrigerated Reefer Driver</h3>
+        <p>OTR and Regional. Reefer fuel policy, temperature control, and load rejection language.</p>
+        <span class="resource-card-tag">Template</span>
+      </a>
+      <a class="resource-card" href="/tanker-cdl-driver.html">
+        <div class="resource-card-icon">⛽</div>
+        <h3>Tanker CDL-A Driver</h3>
+        <p>Liquid tanker and dry bulk. Endorsement language, HazMat overlay, and pay benchmarks.</p>
+        <span class="resource-card-tag">Template</span>
+      </a>
+      <a class="resource-card" href="/otr-cdl-driver.html">
+        <div class="resource-card-icon">🗺️</div>
+        <h3>OTR CDL-A Driver</h3>
+        <p>Solo and team variations. Miles, home time, and assigned equipment language.</p>
+        <span class="resource-card-tag">Template</span>
+      </a>
+      <a class="resource-card" href="/dedicated-cdl-driver.html">
+        <div class="resource-card-icon">📍</div>
+        <h3>Dedicated CDL-A Driver</h3>
+        <p>Home weekly and home daily. Single customer lane, predictable schedule, stability language.</p>
+        <span class="resource-card-tag">Template</span>
+      </a>
+      <a class="resource-card" href="/local-cdl-driver.html">
+        <div class="resource-card-icon">🏠</div>
+        <h3>Local CDL-A Driver</h3>
+        <p>Local delivery and P&amp;D LTL. Home daily, hourly pay, and schedule language.</p>
+        <span class="resource-card-tag">Template</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- GUIDES -->
+  <div class="resource-section">
+    <div class="section-label">Hiring Guides</div>
+    <h2 class="section-title">CDL Employer Guides</h2>
+    <p class="section-sub">Practical, no-fluff guides for trucking recruiters and fleet managers.</p>
+    <div class="resource-grid">
+      <a class="resource-card" href="/how-to-write-a-cdl-job-posting.html">
+        <div class="resource-card-icon">✍️</div>
+        <h3>How to Write a CDL Job Posting</h3>
+        <p>What to lead with, what to cut, and what kills applications before a driver finishes reading. The most common mistakes and how to fix them.</p>
+        <span class="resource-card-tag tag-guide">Guide</span>
+      </a>
+      <a class="resource-card" href="/cdl-job-description-generator.html">
+        <div class="resource-card-icon">⚡</div>
+        <h3>CDL Job Description Generator</h3>
+        <p>Enter your freight type, pay, and home time — get a complete, HTML-formatted job description ready to paste into your job posting.</p>
+        <span class="resource-card-tag tag-tool">Free Tool</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- POST CTA -->
+  <div class="post-cta-strip">
+    <div>
+      <h2>Ready to reach CDL drivers?</h2>
+      <p>Post your job on Jobpeak and get in front of drivers actively searching for trucking positions. No agency fee — you own the leads.</p>
+    </div>
+    <a href="/post-a-job.html">Post a Job &rarr;</a>
+  </div>
+
+</div>
+
+<footer class="jp-footer">
+  <div class="jp-footer-inner">
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <a href="/" class="jp-footer-brand">jobpeak<span>.</span></a>
+      <div style="font-size:12px;color:#545B6B;">Built to fix job search.</div>
+    </div>
+    <div class="jp-footer-links">
+      <a href="https://audiencetarget.ai/contact" target="_blank" rel="noopener">Contact Agency</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+      <a href="/terms-of-service.html">Terms &amp; Conditions</a>
+    </div>
+  </div>
+  <div class="jp-footer-inner jp-footer-seo">
+    <div class="jp-footer-seo-title">CDL Employer Resources</div>
+    <div class="jp-footer-seo-links">
+      <a href="/cdl-job-description-generator.html">Job Description Generator</a>
+      <a href="/dry-van-cdl-driver.html">Dry Van Template</a>
+      <a href="/flatbed-cdl-driver.html">Flatbed Template</a>
+      <a href="/refrigerated-reefer-cdl-driver.html">Reefer Template</a>
+      <a href="/tanker-cdl-driver.html">Tanker Template</a>
+      <a href="/otr-cdl-driver.html">OTR Template</a>
+      <a href="/dedicated-cdl-driver.html">Dedicated Template</a>
+      <a href="/local-cdl-driver.html">Local Template</a>
+      <a href="/how-to-write-a-cdl-job-posting.html">How to Write a CDL Job Posting</a>
+    </div>
+  </div>
+  <div class="jp-footer-inner jp-footer-copy">
+    <span>&copy; 2026 Digital Marketing Gen, Inc. All rights reserved.</span>
+    <span>75 S Middleneck Road, Great Neck, NY 11021 &middot; (516) 494-7447</span>
+  </div>
+</footer>
+
+</body>
+</html>
