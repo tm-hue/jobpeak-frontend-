@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://jobpeak.io/sitemap-jobs.xml
+Sitemap: https://jobpeak.io/sitemap.xml
