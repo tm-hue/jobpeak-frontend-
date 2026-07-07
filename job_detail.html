@@ -2,683 +2,720 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Free CDL Job Description Generator & Optimizer — Jobpeak</title>
-  <meta name="description" content="Generate or optimize a CDL truck driver job description in seconds. Free AI-powered tool for trucking recruiters. Dry Van, Flatbed, Tanker, OTR, Regional, Local and more.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23111318'/><text x='45' y='75' font-family='Archivo,sans-serif' font-size='80' font-weight='800' text-anchor='middle' fill='%23ffffff'>j</text><circle cx='85' cy='70' r='8' fill='%23F97316'/></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPO41zo918dmVLtEgKZCjTyCSHVaapGsw&libraries=places&callback=initLocationAutocomplete" async defer></script>
-  <script>
-  function initLocationAutocomplete() {
-    var input = document.getElementById("location");
-    if (!input) return;
-    var ac = new google.maps.places.Autocomplete(input, { types: ["(cities)"], componentRestrictions: { country: "us" } });
-    ac.addListener("place_changed", function() {
-      var place = ac.getPlace();
-      if (place && place.formatted_address) {
-        input.value = place.formatted_address.replace(", USA", "");
-      }
-    });
-  }
-  </script>
-  <style>
-    :root {
-      --bg:#FAFAFA;--white:#FFFFFF;--navy:#111318;
-      --orange:#F97316;--orange-hover:#EA6C0A;
-      --blue:#0A84FF;--blue-hover:#0070E0;
-      --border:#E4E6EA;--text:#0A0A0A;--sub:#666666;--mist:#F5F6F8;
-      --shadow-lg:0 12px 32px rgba(0,0,0,.09);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Work Sans',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;}
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23111318'/><text x='45' y='75' font-family='Archivo,sans-serif' font-size='80' font-weight='800' text-anchor='middle' fill='%23ffffff'>j</text><circle cx='85' cy='70' r='8' fill='%23F97316'/></svg>">
+    <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8LNYW43VBJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8LNYW43VBJ');
+</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Detail — Jobpeak</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F4F5F7;
+            --surface: #FFFFFF;
+            --border: #E4E6EA;
+            --text: #111318;
+            --text-2: #545B6B;
+            --text-3: #8892A4;
+            --accent: #0A84FF;
+            --accent-2: #E8F3FF;
+            --success: #00C07F;
+            --warn: #FF6B2B;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .topnav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-.5px; }
+        .brand span { color: #F97316; }
+        .nav-link { font-size:14px; font-weight:500; color:var(--text-2); text-decoration:none; padding:6px 12px; border-radius:8px; }
+        .nav-link:hover { background:var(--bg); color:var(--text); }
 
-    /* HEADER */
-    .jp-header{position:sticky;top:0;z-index:999;background:var(--white);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 32px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
-    .jp-header-inner{max-width:960px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
-    .jp-logo{font-family:'Archivo',sans-serif;font-size:22px;font-weight:800;color:var(--navy);text-decoration:none;letter-spacing:-.02em;}
-    .jp-logo span{color:var(--orange);}
-    .jp-header-nav{display:flex;align-items:center;gap:8px;}
-    .jp-nav-link{font-size:14px;font-weight:500;color:#545B6B;text-decoration:none;padding:6px 12px;border-radius:8px;transition:color .15s;}
-    .jp-nav-link:hover{color:var(--navy);}
-    .jp-post-btn{font-size:14px;font-weight:700;color:#fff;background:var(--blue);text-decoration:none;padding:8px 18px;border-radius:8px;transition:background .15s;}
-    .jp-post-btn:hover{background:var(--blue-hover);}
+        .page { max-width: 900px; margin: 0 auto; padding: 36px 24px 80px; display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+        @media (max-width: 720px) { .page { grid-template-columns: 1fr; } .sidebar { order: -1; } }
 
-    /* HERO */
-    .hero{background:var(--navy);padding:52px 32px 48px;text-align:center;}
-    .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(249,115,22,.15);color:var(--orange);font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:18px;}
-    .hero h1{font-family:'Archivo',sans-serif;font-size:clamp(30px,5vw,50px);font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.03em;margin-bottom:12px;}
-    .hero h1 em{font-style:normal;color:var(--orange);}
-    .hero p{color:#8892A4;font-size:17px;max-width:480px;margin:0 auto;}
+        /* BREADCRUMB */
+        .breadcrumb { grid-column: 1/-1; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-3); margin-bottom: 4px; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
 
-    /* TOOL WRAP */
-    .tool-wrap{max-width:820px;margin:-28px auto 56px;padding:0 20px;}
-    .tool-card{background:var(--white);border-radius:16px;box-shadow:var(--shadow-lg);border:1px solid var(--border);overflow:hidden;}
+        /* MAIN CARD */
+        .main-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow); }
 
-    /* MODE TABS */
-    .mode-tabs{display:flex;border-bottom:1px solid var(--border);}
-    .mode-tab{flex:1;padding:16px;font-size:14px;font-weight:700;color:var(--sub);background:var(--mist);border:none;cursor:pointer;font-family:'Work Sans',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;border-bottom:3px solid transparent;}
-    .mode-tab:first-child{border-right:1px solid var(--border);}
-    .mode-tab.active{background:var(--white);color:var(--navy);border-bottom-color:var(--orange);}
-    .mode-tab svg{flex-shrink:0;}
+        .job-header { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+        .job-logo {
+            width: 72px; height: 72px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            overflow: hidden;
+        }
+        .job-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .job-logo-placeholder { width:72px; height:72px; border-radius:12px; border:1px solid var(--border); background:var(--accent-2); display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
 
-    /* GENERATOR PANEL */
-    .panel{display:none;padding:32px 40px 28px;}
-    .panel.active{display:block;}
-    @media(max-width:600px){.panel{padding:22px 18px 20px;}}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-    @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
-    .field label{display:block;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#545B6B;margin-bottom:6px;}
-    .field select,.field input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Work Sans',sans-serif;color:var(--text);background:var(--white);appearance:none;transition:border-color .2s;}
-    .field select:focus,.field input:focus{outline:none;border-color:var(--orange);}
-    .select-wrap{position:relative;}
-    .select-wrap::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#545B6B;pointer-events:none;font-size:12px;}
-    .action-btn{width:100%;color:#fff;font-family:'Work Sans',sans-serif;font-size:15px;font-weight:700;padding:14px;border:none;border-radius:10px;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:9px;transition:background .2s,transform .1s;}
-    .action-btn-orange{background:var(--orange);}
-    .action-btn-orange:hover{background:var(--orange-hover);}
-    .action-btn:active{transform:scale(0.99);}
+        .job-title-block { flex: 1; }
+        .job-title { font-family: 'Archivo',sans-serif; font-size: 26px; font-weight: 800; letter-spacing:-.5px; line-height: 1.2; margin-bottom: 6px; }
+        .job-company { font-size: 16px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; }
+        .job-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tag {
+            font-size: 12px; font-weight: 600;
+            padding: 4px 10px; border-radius: 20px;
+            background: var(--bg); border: 1px solid var(--border);
+            color: var(--text-2);
+        }
+        .tag.pay { background: #F0FFF8; border-color: var(--success); color: #00965D; }
+        .tag.bonus { background: #FFF3EC; border-color: var(--warn); color: var(--warn); }
+        .tag.cdl { background: var(--accent-2); border-color: var(--accent); color: var(--accent); }
 
-    /* OPTIMIZER PANEL */
-    .opt-desc{font-size:14px;color:var(--sub);line-height:1.65;margin-bottom:18px;}
-    .opt-textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:16px;font-size:14px;font-family:'Work Sans',sans-serif;color:var(--text);resize:vertical;min-height:200px;transition:border-color .2s;line-height:1.7;}
-    .opt-textarea:focus{outline:none;border-color:var(--orange);}
-    .action-btn-navy{background:var(--navy);}
-    .action-btn-navy:hover{background:#1C2330;}
+        .divider { height: 1px; background: var(--border); margin: 24px 0; }
 
-    /* OUTPUT */
-    .output-area{border-top:1px solid var(--border);padding:28px 40px 32px;display:none;}
-    .output-area.visible{display:block;}
-    @media(max-width:600px){.output-area{padding:22px 18px;}}
-    .output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
-    .output-label{font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#545B6B;display:flex;align-items:center;gap:7px;}
-    .output-label .dot{width:7px;height:7px;background:#10B981;border-radius:50%;}
-    .copy-btn{background:var(--mist);border:1.5px solid var(--border);color:var(--text);font-size:13px;font-weight:600;padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'Work Sans',sans-serif;transition:background .15s;}
-    .copy-btn:hover{background:var(--border);}
-    .output-text{background:var(--mist);border:1px solid var(--border);border-radius:10px;padding:22px;font-size:15px;line-height:1.75;color:#545B6B;min-height:160px;}
-    .output-text strong{color:#111318;}
-    .output-text ul{padding-left:20px;margin:6px 0 12px;}
-    .output-text ul li{margin-bottom:4px;}
-    .output-text p{margin-bottom:10px;}
-    .loading-text{color:var(--sub);font-style:italic;display:flex;align-items:center;gap:10px;}
-    .spinner{width:15px;height:15px;border:2px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-    @keyframes spin{to{transform:rotate(360deg);}}
+        .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: 12px; }
 
-    /* SCORE DISPLAY */
-    .score-block{margin-bottom:20px;}
-    .score-row{display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;}
-    .score-badge{font-family:'Archivo',sans-serif;font-size:48px;font-weight:800;line-height:1;}
-    .score-badge.high{color:#10B981;}
-    .score-badge.mid{color:var(--orange);}
-    .score-badge.low{color:#EF4444;}
-    .score-label{font-size:14px;color:var(--sub);}
-    .score-bar-wrap{height:8px;background:var(--border);border-radius:100px;overflow:hidden;flex:1;min-width:120px;}
-    .score-bar{height:100%;border-radius:100px;transition:width 1s ease;}
-    .score-bar.high{background:#10B981;}
-    .score-bar.mid{background:var(--orange);}
-    .score-bar.low{background:#EF4444;}
-    .issues-list{list-style:none;padding:0;margin-bottom:0;}
-    .issues-list li{font-size:14px;color:var(--sub);padding:7px 0;border-bottom:1px solid var(--border);display:flex;gap:9px;line-height:1.5;}
-    .issues-list li:last-child{border-bottom:none;}
-    .issues-list li::before{content:'→';color:var(--orange);font-weight:700;flex-shrink:0;}
+        /* JOB DETAILS GRID */
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 500px) { .details-grid { grid-template-columns: 1fr; } }
+        .detail-item { display: flex; gap: 10px; align-items: flex-start; }
+        .detail-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .detail-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-3); }
+        .detail-val { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 1px; }
 
-    /* GATE WALL */
-    .gate-wall{margin-top:20px;background:var(--navy);border-radius:14px;padding:28px;text-align:center;}
-    .gate-wall h3{font-family:'Archivo',sans-serif;font-size:20px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:10px;}
-    .gate-wall p{font-size:14px;color:#8892A4;line-height:1.65;margin-bottom:20px;max-width:440px;margin-left:auto;margin-right:auto;}
-    .gate-cta{display:inline-block;background:var(--orange);color:#fff;font-weight:700;font-size:15px;padding:13px 28px;border-radius:9px;text-decoration:none;transition:background .2s;}
-    .gate-cta:hover{background:var(--orange-hover);}
-    .gate-sub{font-size:12px;color:#545B6B;margin-top:12px;}
+        /* DESCRIPTION */
+        .job-description { font-size: 15px; line-height: 1.75; color: var(--text-2); }
+        .job-description h1,.job-description h2,.job-description h3 { color:var(--text); margin:16px 0 8px; font-family:'Archivo',sans-serif; }
+        .job-description ul,.job-description ol { padding-left: 20px; margin: 8px 0; }
+        .job-description li { margin-bottom: 4px; }
+        .job-description strong { color: var(--text); }
 
-    /* POST CTA (generator) */
-    .post-cta{margin-top:20px;background:var(--navy);border-radius:12px;padding:20px 24px;display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
-    .post-cta.show{display:flex;}
-    .post-cta p{color:#8892A4;font-size:14px;}
-    .post-cta p strong{color:#fff;}
-    .post-cta a{background:var(--orange);color:#fff;font-weight:700;font-size:14px;padding:10px 20px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .2s;}
-    .post-cta a:hover{background:var(--orange-hover);}
+        /* FLYER */
+        .flyer-wrap { margin-top: 20px; }
+        .flyer-img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); }
 
-    /* TEMPLATE LINKS */
-    .templates-section{max-width:820px;margin:0 auto 64px;padding:0 20px;}
-    .section-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:7px;}
-    .section-title{font-family:'Archivo',sans-serif;font-size:24px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-.02em;}
-    .section-sub{color:var(--sub);font-size:15px;margin-bottom:22px;}
-    .template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:11px;}
-    .template-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:border-color .2s,box-shadow .2s;display:flex;align-items:center;gap:12px;background:var(--white);}
-    .template-card:hover{border-color:var(--orange);box-shadow:0 4px 14px rgba(249,115,22,.1);}
-    .template-icon{width:36px;height:36px;background:var(--mist);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-    .template-card h3{font-size:13px;font-weight:700;margin-bottom:2px;}
-    .template-card p{font-size:12px;color:var(--sub);}
+        /* SIDEBAR */
+        .sidebar { display: flex; flex-direction: column; gap: 16px; }
 
-    /* HOW IT WORKS */
-    .how-section{background:var(--navy);padding:56px 32px;}
-    .how-inner{max-width:820px;margin:0 auto;}
-    .how-section .section-label{color:rgba(249,115,22,.8);}
-    .how-section .section-title{color:#fff;margin-bottom:28px;}
-    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
-    @media(max-width:640px){.steps{grid-template-columns:1fr;gap:18px;}}
-    .step-num{font-family:'Archivo',sans-serif;font-size:40px;font-weight:800;color:rgba(249,115,22,.2);line-height:1;margin-bottom:9px;}
-    .step h3{font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;}
-    .step p{font-size:13px;color:#8892A4;line-height:1.65;}
+        .apply-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); }
+        .apply-btn {
+            display: block;
+            width: 100%;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Work Sans',sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all .15s;
+            box-shadow: 0 3px 12px rgba(10,132,255,.3);
+            margin-bottom: 12px;
+        }
+        .apply-btn:hover { background: #0070E0; transform: translateY(-1px); box-shadow: 0 5px 16px rgba(10,132,255,.4); }
+        .apply-note { font-size: 12px; color: var(--text-3); text-align: center; }
 
-    /* FAQ */
-    .faq-section{max-width:660px;margin:56px auto;padding:0 20px;}
-    .faq-item{border-bottom:1px solid var(--border);padding:18px 0;}
-    .faq-item h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px;}
-    .faq-item p{font-size:14px;color:var(--sub);line-height:1.7;}
+        .share-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+        .share-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+        .share-btns { display: flex; gap: 8px; }
+        .share-btn { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); font-size: 12px; font-weight: 600; cursor: pointer; text-align:center; color:var(--text-2); transition: all .15s; }
+        .share-btn:hover { background: var(--surface); border-color: var(--accent); color: var(--accent); }
 
-    /* FOOTER */
-    .jp-footer{background:var(--navy);color:#8892A4;font-size:13px;padding:32px 24px;}
-    .jp-footer-inner{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;}
-    .jp-footer-brand{font-family:'Archivo',sans-serif;font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.02em;}
-    .jp-footer-brand span{color:var(--orange);}
-    .jp-footer-links{display:flex;flex-wrap:wrap;gap:20px;}
-    .jp-footer-links a{color:#8892A4;text-decoration:none;transition:color .15s;}
-    .jp-footer-links a:hover{color:#fff;}
-    .jp-footer-copy{width:100%;max-width:960px;margin:20px auto 0;padding-top:20px;border-top:1px solid #1E2330;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;}
-    .jp-footer-copy span{font-size:12px;color:#545B6B;}
-    @media(max-width:600px){.jp-header{padding:0 16px;} .jp-nav-link{display:none;}}
-  </style>
+        .locations-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+        .loc-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+        .loc-tag { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text-2); }
+
+        /* Loading state */
+        .skeleton { background: linear-gradient(90deg, var(--bg) 0%, var(--border) 50%, var(--bg) 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .sk-line { height: 16px; margin-bottom: 8px; }
+        .sk-title { height: 32px; width: 60%; margin-bottom: 12px; }
+
+        /* Not found */
+        .not-found { grid-column: 1/-1; text-align: center; padding: 80px 24px; }
+        .not-found-icon { font-size: 48px; margin-bottom: 16px; }
+        .not-found-title { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; margin-bottom:8px; }
+        .not-found-sub { color: var(--text-2); margin-bottom:24px; }
+        /* STICKY APPLY BUTTON */
+        .apply-card.sticky {
+            position: fixed;
+            top: 76px; /* Below header (60px) + spacing */
+            right: calc(50% - 450px + 20px); /* Align with right column in 900px layout */
+            width: 340px;
+            z-index: 90;
+            animation: slideInSticky 0.3s ease-out;
+        }
+
+        @keyframes slideInSticky {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile: stick to top of viewport */
+        @media (max-width: 720px) {
+            .apply-card.sticky {
+                position: fixed;
+                top: 60px; /* Just below header */
+                left: 0;
+                right: 0;
+                width: 100%;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            }
+        }
+    </style>
 </head>
 <body>
 
+<!-- ========== JOBPEAK HEADER — replace existing <header> block on every page ========== -->
+<style>
+.jp-header { position:sticky; top:0; z-index:999; background:#fff; border-bottom:1px solid #E4E6EA; height:60px; display:flex; align-items:center; padding:0 32px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.jp-header-inner { max-width:900px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; }
+.jp-header-brand { font-family:'Archivo',sans-serif; font-size:22px; font-weight:800; color:#111318; text-decoration:none; flex-shrink:0; }
+.jp-header-brand span { color:#F97316; }
+.jp-header-nav { display:flex; align-items:center; gap:8px; }
+.jp-header-link { font-family:'Work Sans',sans-serif; font-size:14px; font-weight:500; color:#545B6B; text-decoration:none; padding:6px 12px; border-radius:8px; transition:color .15s; }
+.jp-header-link:hover { color:#111318; }
+.jp-header-post { font-family:'Work Sans',sans-serif; font-size:14px; font-weight:700; color:#fff; background:#0A84FF; text-decoration:none; padding:8px 18px; border-radius:8px; transition:background .15s; }
+.jp-header-post:hover { background:#0070E0; }
+@media(max-width:600px) { .jp-header { padding:0 16px; } .jp-header-link { display:none; } }
+</style>
+
 <header class="jp-header">
-  <div class="jp-header-inner">
-    <a href="/" class="jp-logo">jobpeak<span>.</span></a>
-    <nav class="jp-header-nav">
-      <a href="/jobseeker_search.html" class="jp-nav-link">Find Jobs</a>
-      <a href="/post-a-job.html" class="jp-post-btn">Post a Job</a>
-    </nav>
-  </div>
+    <div class="jp-header-inner">
+        <a href="/jobseeker_search.html" class="jp-header-brand">jobpeak<span>.</span></a>
+        <nav class="jp-header-nav">
+            <a href="/jobseeker_search.html" class="jp-header-link">Find Jobs</a>
+            <a href="/post-a-job.html" class="jp-header-post">Post a Job</a>
+        </nav>
+    </div>
 </header>
+<!-- ========== END HEADER ========== -->
 
-<section class="hero">
-  <div class="hero-eyebrow">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-    Free CDL Recruiting Tool
-  </div>
-  <h1>CDL Job Description<br><em>Generator & Optimizer</em></h1>
-  <p>Generate from scratch or score your existing posting. Built for trucking — not generic HR.</p>
-</section>
 
-<div class="tool-wrap">
-  <div class="tool-card">
-
-    <!-- MODE TABS -->
-    <div class="mode-tabs">
-      <button class="mode-tab active" id="tab-gen" onclick="switchMode('gen')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Generator
-      </button>
-      <button class="mode-tab" id="tab-opt" onclick="switchMode('opt')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-        Optimizer
-      </button>
+<div class="page" id="pageContent">
+    <!-- Filled by JS -->
+    <div style="grid-column:1/-1;padding:60px;text-align:center">
+        <div class="spinner" style="width:36px;height:36px;border:3px solid #E4E6EA;border-top-color:#0A84FF;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px"></div>
+        <div style="font-size:14px;color:#8892A4">Loading job…</div>
     </div>
-
-    <!-- GENERATOR PANEL -->
-    <div class="panel active" id="panel-gen">
-      <div class="form-grid">
-        <div class="field">
-          <label>Freight Type</label>
-          <div class="select-wrap">
-            <select id="freightType">
-              <option value="">Select freight type...</option>
-              <option value="dry_van">Dry Van</option>
-              <option value="flatbed">Flatbed</option>
-              <option value="reefer">Refrigerated (Reefer)</option>
-              <option value="tanker">Tanker</option>
-              <option value="hazmat">Hazmat</option>
-              <option value="intermodal">Intermodal / Container</option>
-              <option value="ltl">LTL / Less-Than-Truckload</option>
-              <option value="step_deck">Step Deck / Lowboy</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>Route Type</label>
-          <div class="select-wrap">
-            <select id="routeType">
-              <option value="">Select route type...</option>
-              <option value="otr">OTR (Over the Road)</option>
-              <option value="regional">Regional</option>
-              <option value="local">Local / Home Daily</option>
-              <option value="dedicated">Dedicated Lane</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>Pay Structure</label>
-          <div class="select-wrap">
-            <select id="payStructure">
-              <option value="">Select pay type...</option>
-              <option value="cpm">CPM (Cents Per Mile)</option>
-              <option value="hourly">Hourly</option>
-              <option value="percentage">Percentage of Load</option>
-              <option value="salary">Weekly Salary</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>Pay Rate</label>
-          <input type="text" id="payRate" placeholder="e.g. $0.58–$0.68 CPM or $28/hr" oninput="formatPayRate(this)" autocomplete="off">
-        </div>
-        <div class="field">
-          <label>Home Time</label>
-          <div class="select-wrap">
-            <select id="homeTime">
-              <option value="">Select home time...</option>
-              <option value="home_daily">Home Daily</option>
-              <option value="home_weekly">Home Weekly</option>
-              <option value="home_biweekly">Home Every 2 Weeks</option>
-              <option value="home_monthly">Home Monthly (OTR)</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>State / Location</label>
-          <input type="text" id="location" placeholder="e.g. Texas, Columbus OH, Nationwide">
-        </div>
-      </div>
-      <div class="field" style="margin-bottom:14px;">
-        <label>Endorsements Required</label>
-        <div class="select-wrap">
-          <select id="endorsements">
-            <option value="none">None — Standard CDL-A</option>
-            <option value="hazmat">HazMat (H)</option>
-            <option value="tanker">Tanker (N)</option>
-            <option value="hazmat_tanker">HazMat + Tanker (X)</option>
-            <option value="doubles">Doubles / Triples (T)</option>
-            <option value="passenger">Passenger (P)</option>
-          </select>
-        </div>
-      </div>
-      <button class="action-btn action-btn-orange" onclick="generateJD()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Generate Job Description
-      </button>
-    </div>
-
-    <!-- OPTIMIZER PANEL -->
-    <div class="panel" id="panel-opt">
-      <p class="opt-desc">Paste your existing CDL job description below. We'll score it out of 10 and show exactly what's hurting your applications — free. The rewrite is included when you post on Jobpeak.</p>
-      <textarea class="opt-textarea" id="optInput" placeholder="Paste your current job description here..."></textarea>
-      <button class="action-btn action-btn-navy" style="margin-top:12px;" onclick="optimizeJD()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        Score My Job Description
-      </button>
-    </div>
-
-    <!-- OUTPUT (shared) -->
-    <div class="output-area" id="outputArea">
-      <div class="output-header">
-        <div class="output-label"><span class="dot"></span> <span id="outputLabel">AI Generated — Ready to Copy</span></div>
-        <button class="copy-btn" id="copyBtn" onclick="copyOutput()" style="display:none;">Copy to Clipboard</button>
-      </div>
-      <div id="scoreBlock" class="score-block" style="display:none;"></div>
-      <div class="output-text" id="outputText">
-        <span class="loading-text"><span class="spinner"></span> Analyzing your job description...</span>
-      </div>
-      <div class="gate-wall" id="gateWall" style="display:none;">
-        <h3>Get the full rewrite free</h3>
-        <p>Post your job on Jobpeak and we'll rewrite it using everything the score found — optimized for CDL drivers, ready to go live immediately.</p>
-        <a class="gate-cta" href="/post-a-job.html">Post a Job & Get the Rewrite →</a>
-        <div class="gate-sub">Starting at $99/month · No agency fee · You own the leads</div>
-      </div>
-      <div class="post-cta" id="postCTA">
-        <p><strong>Ready to post?</strong> Reach verified CDL drivers on Jobpeak — no agency fees, no middleman.</p>
-        <a href="/post-a-job.html">Post This Job →</a>
-      </div>
-    </div>
-
-  </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 </div>
 
-<!-- TEMPLATE LINKS -->
-<section class="templates-section">
-  <div class="section-label">Browse by Freight Type</div>
-  <h2 class="section-title">CDL Job Description Templates</h2>
-  <p class="section-sub">Pre-written, copy-ready templates. Customize and post in under 5 minutes.</p>
-  <div class="template-grid">
-    <a class="template-card" href="dry-van-cdl-driver.html">
-      <div class="template-icon">🚛</div><div><h3>Dry Van Driver</h3><p>OTR, Regional & Local</p></div>
-    </a>
-    <a class="template-card" href="flatbed-cdl-driver.html">
-      <div class="template-icon">🏗️</div><div><h3>Flatbed Driver</h3><p>Tarping & securement included</p></div>
-    </a>
-    <a class="template-card" href="refrigerated-reefer-cdl-driver.html">
-      <div class="template-icon">❄️</div><div><h3>Reefer Driver</h3><p>Temperature-controlled freight</p></div>
-    </a>
-    <a class="template-card" href="tanker-cdl-driver.html">
-      <div class="template-icon">⛽</div><div><h3>Tanker Driver</h3><p>Liquid & dry bulk</p></div>
-    </a>
-    <a class="template-card" href="otr-cdl-driver.html">
-      <div class="template-icon">🗺️</div><div><h3>OTR Driver</h3><p>Long-haul, 48 states</p></div>
-    </a>
-    <a class="template-card" href="local-cdl-driver.html">
-      <div class="template-icon">🏠</div><div><h3>Local Driver</h3><p>Home daily, city routes</p></div>
-    </a>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how-section">
-  <div class="how-inner">
-    <div class="section-label">How It Works</div>
-    <h2 class="section-title">From blank page to posted job in minutes</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <h3>Pick your load type & route</h3>
-        <p>Dry Van, Flatbed, Tanker, OTR, Regional, Local — the generator knows the difference and writes accordingly.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <h3>Enter pay & home time</h3>
-        <p>CPM, hourly, or percentage. Home daily or OTR monthly. Your numbers get written in — no brackets left behind.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <h3>Copy and post</h3>
-        <p>One click to copy. Post directly on Jobpeak or use it anywhere. The description is yours, no attribution required.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="faq-section">
-  <div class="section-label">FAQ</div>
-  <h2 style="font-family:'Archivo',sans-serif;font-size:24px;font-weight:800;color:var(--navy);letter-spacing:-.02em;margin-bottom:22px;">Common questions</h2>
-  <div class="faq-item">
-    <h3>Is the generator actually free?</h3>
-    <p>Yes. No account, no credit card, no limit on generations. Generate as many descriptions as you need.</p>
-  </div>
-  <div class="faq-item">
-    <h3>What does the Optimizer score?</h3>
-    <p>Pay rate visibility, home time clarity, freight specificity, MVR standards, touch/no-touch status, equipment details, and overall driver-readability. It scores like a driver would read it — not like an HR rubric.</p>
-  </div>
-  <div class="faq-item">
-    <h3>Why is the rewrite gated behind posting?</h3>
-    <p>Because the best place for an optimized CDL job description is live on Jobpeak in front of drivers who are actively searching. The rewrite is included free with every job posting — it's not an upsell, it's part of the product.</p>
-  </div>
-  <div class="faq-item">
-    <h3>How is this different from Indeed's generator?</h3>
-    <p>Indeed's tool is built for every industry. Ours knows trucking — CPM vs hourly, home time by route type, endorsement requirements, tarping pay, DOT compliance language, and how drivers actually read job postings on their phones between loads.</p>
-  </div>
-</section>
-
-<footer class="jp-footer">
-  <div class="jp-footer-inner">
-    <div style="display:flex;flex-direction:column;gap:4px;">
-      <a href="/" class="jp-footer-brand">jobpeak<span>.</span></a>
-      <div style="font-size:12px;color:#545B6B;">Built to fix job search.</div>
-    </div>
-    <div class="jp-footer-links">
-      <a href="https://audiencetarget.ai/contact" target="_blank" rel="noopener">Contact Agency</a>
-      <a href="/privacy-policy.html">Privacy Policy</a>
-      <a href="/terms-of-service.html">Terms &amp; Conditions</a>
-    </div>
-  </div>
-  <div class="jp-footer-inner jp-footer-copy">
-    <span>© 2026 Digital Marketing Gen, Inc. All rights reserved.</span>
-    <span>75 S Middleneck Road, Great Neck, NY 11021 · (516) 494-7447</span>
-  </div>
-</footer>
-
 <script>
-  // ── MODE SWITCHER ──
-  let currentMode = 'gen';
-  function switchMode(mode) {
-    currentMode = mode;
-    document.getElementById('tab-gen').classList.toggle('active', mode === 'gen');
-    document.getElementById('tab-opt').classList.toggle('active', mode === 'opt');
-    document.getElementById('panel-gen').classList.toggle('active', mode === 'gen');
-    document.getElementById('panel-opt').classList.toggle('active', mode === 'opt');
-    // reset output
-    document.getElementById('outputArea').classList.remove('visible');
-    document.getElementById('scoreBlock').style.display = 'none';
-    document.getElementById('gateWall').style.display = 'none';
-    document.getElementById('postCTA').classList.remove('show');
-    document.getElementById('copyBtn').style.display = 'none';
-  }
+const API = 'https://jobpeak-production.up.railway.app';
 
-  // ── LABEL MAPS ──
-  const fL={dry_van:'Dry Van',flatbed:'Flatbed',reefer:'Refrigerated (Reefer)',tanker:'Tanker',hazmat:'Hazmat',intermodal:'Intermodal/Container',ltl:'LTL',step_deck:'Step Deck/Lowboy'};
-  const rL={otr:'OTR (Over the Road)',regional:'Regional',local:'Local / Home Daily',dedicated:'Dedicated Lane'};
-  const pL={cpm:'CPM (cents per mile)',hourly:'hourly rate',percentage:'percentage of load',salary:'weekly salary'};
-  const hL={home_daily:'home daily',home_weekly:'home weekly',home_biweekly:'home every 2 weeks',home_monthly:'home monthly (OTR)'};
-  const eL={none:'Standard CDL-A, no special endorsements',hazmat:'HazMat (H) required',tanker:'Tanker (N) required',hazmat_tanker:'HazMat + Tanker (X) required',doubles:'Doubles/Triples (T) required',passenger:'Passenger (P) required'};
+// ============================================================
+// WHATJOBS S2S CONVERSION TRACKING
+// ============================================================
+let wjClickID = null;
 
-  // ── GENERATOR ──
-  async function generateJD() {
-    const freight=document.getElementById('freightType').value;
-    const route=document.getElementById('routeType').value;
-    const pay=document.getElementById('payStructure').value;
-    const rate=document.getElementById('payRate').value;
-    const home=document.getElementById('homeTime').value;
-    const loc=document.getElementById('location').value;
-    const end=document.getElementById('endorsements').value;
-    if(!freight||!route){alert('Please select at least a Freight Type and Route Type.');return;}
-
-    const outputArea=document.getElementById('outputArea');
-    const outputText=document.getElementById('outputText');
-    outputArea.classList.add('visible');
-    document.getElementById('scoreBlock').style.display='none';
-    document.getElementById('gateWall').style.display='none';
-    document.getElementById('postCTA').classList.remove('show');
-    document.getElementById('copyBtn').style.display='none';
-    document.getElementById('outputLabel').textContent='AI Generated — Ready to Copy';
-    outputText.innerHTML='<span class="loading-text"><span class="spinner"></span> Writing your job description...</span>';
-    outputArea.scrollIntoView({behavior:'smooth',block:'start'});
-
-    const prompt=`You are a CDL truck driver recruiter writing a job description for a trucking job board. Output ONLY valid HTML — no markdown, no plain text, no explanation. The HTML will be rendered directly on the job detail page.
-
-Job details:
-- Freight type: ${fL[freight]||freight}
-- Route type: ${rL[route]||route}
-- Pay structure: ${pay?pL[pay]:'not specified'}
-- Pay rate: ${rate||'competitive — employer will specify'}
-- Home time: ${home?hL[home]:'not specified'}
-- Location: ${loc||'United States'}
-- Endorsements: ${eL[end]||'Standard CDL-A'}
-
-Output exactly this HTML structure. Replace every [bracketed placeholder] with real content. No brackets in final output.
-
-<p><strong>WHAT YOU GET</strong></p>
-<ul>
-<li>[Pay rate — lead with the number, e.g. $0.62 CPM or $28/hr]</li>
-<li>Weekly pay — direct deposit, on time</li>
-<li>[Health insurance details]</li>
-<li>Dental, vision, and life insurance</li>
-<li>401K with company match</li>
-<li>Paid holidays and PTO</li>
-<li>[Home time — specific based on route, e.g. "Home weekly — 34-hour restart at home"]</li>
-<li>Late-model assigned equipment — no truck sharing</li>
-</ul>
-
-<p><strong>ABOUT THE ROLE</strong></p>
-<p>[2-3 sentences. What kind of carrier is this. What makes this opportunity worth a driver's attention. Honest and specific — no corporate fluff.]</p>
-
-<p><strong>FREIGHT &amp; ROUTES</strong></p>
-<ul>
-<li>[Freight type — e.g. "Dry Van — no-touch, drop-and-hook"]</li>
-<li>[Geographic coverage — e.g. "48 contiguous states" or "Regional — 5-state Midwest territory"]</li>
-<li>[Load type specifics relevant to this freight]</li>
-<li>Consistent freight year-round — not spot market dependent</li>
-</ul>
-
-<p><strong>REQUIREMENTS</strong></p>
-<ul>
-<li>Valid Class A CDL${eL[end] !== 'none' && eL[end] !== 'Standard CDL-A, no special endorsements' ? ' — ' + eL[end] : ''}</li>
-<li>[Experience minimum — 1 year OTR / 6 months regional / recent grads considered for local]</li>
-<li>Clean MVR — no DUI/DWI, no more than 2 moving violations in 3 years</li>
-<li>Must pass DOT pre-employment drug screen and physical</li>
-<li>Age 21 or older (interstate commerce)</li>
-</ul>
-
-<p><strong>WHY DRIVE WITH US</strong></p>
-<ul>
-<li>✓ [Specific selling point based on freight and route type]</li>
-<li>✓ [Specific selling point — equipment, miles, dispatch support]</li>
-<li>✓ [Specific selling point — home time reliability]</li>
-<li>✓ [Specific selling point — pay structure or benefits advantage]</li>
-</ul>
-
-Output ONLY the HTML above. No preamble. No explanation. No code fences.`;
-
-    try {
-      const res=await fetch('https://jobpeak-production.up.railway.app/ai-search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
-      const data=await res.json();
-      const text=data.content?.[0]?.text||'Something went wrong. Please try again.';
-      // Output is HTML — render directly, matching job_detail.html .job-description styles
-      // Strip any accidental code fences Claude might add
-      const cleaned = text.replace(/^```html?\n?/i,'').replace(/\n?```$/,'').trim();
-      outputText.style.whiteSpace = 'normal';
-      outputText.style.fontFamily = 'Work Sans, sans-serif';
-      outputText.style.fontSize = '15px';
-      outputText.style.lineHeight = '1.75';
-      outputText.innerHTML = cleaned;
-      document.getElementById('postCTA').classList.add('show');
-      document.getElementById('copyBtn').style.display='block';
-    } catch(e){
-      outputText.textContent='Error generating. Please check your connection and try again.';
+// Capture wjClickID from URL on page load
+function captureWhatJobsClickID() {
+    const params = new URLSearchParams(window.location.search);
+    const clickID = params.get('wjClickID');
+    
+    if (clickID) {
+        wjClickID = clickID;
+        // Store in sessionStorage so it persists if user navigates away and comes back
+        sessionStorage.setItem('wjClickID', clickID);
+        console.log('WhatJobs Click ID captured:', clickID);
+    } else {
+        // Check if we have one in storage from earlier in the session
+        wjClickID = sessionStorage.getItem('wjClickID');
     }
-  }
-
-  // ── OPTIMIZER ──
-  async function optimizeJD() {
-    const jd=document.getElementById('optInput').value.trim();
-    if(!jd||jd.length<100){alert('Please paste a job description (at least a few sentences) to analyze.');return;}
-
-    const outputArea=document.getElementById('outputArea');
-    const outputText=document.getElementById('outputText');
-    outputArea.classList.add('visible');
-    document.getElementById('scoreBlock').style.display='none';
-    document.getElementById('gateWall').style.display='none';
-    document.getElementById('postCTA').classList.remove('show');
-    document.getElementById('copyBtn').style.display='none';
-    document.getElementById('outputLabel').textContent='Analyzing your job description...';
-    outputText.innerHTML='<span class="loading-text"><span class="spinner"></span> Scoring against CDL driver expectations...</span>';
-    outputArea.scrollIntoView({behavior:'smooth',block:'start'});
-
-    const prompt=`You are a CDL truck driver recruiting expert. Analyze this job description and score it from a driver's perspective.
-
-JOB DESCRIPTION TO ANALYZE:
-"""
-${jd}
-"""
-
-Return ONLY valid JSON in this exact format, nothing else:
-{
-  "score": 7.2,
-  "grade": "mid",
-  "summary": "One sentence overall assessment",
-  "issues": [
-    "Specific issue 1 — what's missing or wrong",
-    "Specific issue 2",
-    "Specific issue 3",
-    "Specific issue 4"
-  ]
 }
 
-Scoring criteria (each worth points):
-- Pay rate visible in first sentence (2 pts)
-- Home time stated clearly and specifically (2 pts)  
-- Freight type and load type specified (1 pt)
-- Touch/no-touch or tarping status stated (1 pt)
-- MVR standards explicit, not vague (1 pt)
-- Equipment year or model mentioned (1 pt)
-- No generic corporate filler language (1 pt)
-- Benefits listed with actual numbers not just "competitive" (1 pt)
+// Fire WhatJobs S2S conversion tracking
+async function fireWhatJobsConversion() {
+    if (!wjClickID) {
+        console.log('No WhatJobs Click ID - skipping conversion tracking');
+        return;
+    }
 
-grade must be: "high" (8-10), "mid" (5-7.9), or "low" (0-4.9)
-issues: list exactly 3-5 specific, actionable problems found. Be direct. If something is missing, say exactly what and why it hurts applications.
-Return ONLY the JSON object, no other text.`;
+    const authKey = '71ca00e950a5054cac5afc0cb89abcb3';
+    const trackingUrl = `https://api.whatjobs.com/api/v1/client/s2s/tracking?authKey=${authKey}&wjClickID=${wjClickID}`;
 
     try {
-      const res=await fetch('https://jobpeak-production.up.railway.app/ai-search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:prompt}]})});
-      const data=await res.json();
-      const raw=data.content?.[0]?.text||'{}';
-      const jsonMatch=raw.match(/\{[\s\S]*\}/);
-      if(!jsonMatch) throw new Error('parse fail');
-      const result=JSON.parse(jsonMatch[0]);
+        // Fire the conversion tracking (use fetch with no-cors to avoid CORS issues)
+        const response = await fetch(trackingUrl, {
+            method: 'GET',
+            mode: 'no-cors' // WhatJobs endpoint may not support CORS
+        });
+        
+        console.log('WhatJobs conversion tracked for Click ID:', wjClickID);
+        
+        // Clear the stored click ID after successful tracking
+        sessionStorage.removeItem('wjClickID');
+    } catch (error) {
+        console.error('WhatJobs conversion tracking error:', error);
+    }
+}
 
-      const score=parseFloat(result.score)||0;
-      const grade=result.grade||'mid';
-      const pct=Math.round((score/10)*100);
+// ============================================================
+// TALROO S2S CONVERSION TRACKING
+// ============================================================
+let tlrSid = null;
 
-      // render score
-      document.getElementById('scoreBlock').innerHTML=`
-        <div class="score-row">
-          <div class="score-badge ${grade}">${score.toFixed(1)}<span style="font-size:22px;color:#8892A4">/10</span></div>
-          <div style="flex:1;">
-            <div class="score-bar-wrap"><div class="score-bar ${grade}" style="width:${pct}%"></div></div>
-            <div class="score-label" style="margin-top:6px;">${result.summary||''}</div>
-          </div>
+// Capture tlr_sid from URL on page load
+function captureTalrooClickID() {
+    const params = new URLSearchParams(window.location.search);
+    const clickID = params.get('tlr_sid');
+    
+    if (clickID) {
+        tlrSid = clickID;
+        // Store in sessionStorage so it persists if user navigates away and comes back
+        sessionStorage.setItem('tlr_sid', clickID);
+        console.log('Talroo Click ID (tlr_sid) captured:', clickID);
+    } else {
+        // Check if we have one in storage from earlier in the session
+        tlrSid = sessionStorage.getItem('tlr_sid');
+    }
+}
+
+// Fire Talroo S2S conversion tracking
+async function fireTalrooConversion() {
+    if (!tlrSid) {
+        console.log('No Talroo Click ID - skipping conversion tracking');
+        return;
+    }
+
+    // Using conversion2.php for application completed events (default)
+    const trackingUrl = `https://www.jobs2careers.com/conversion2.php?tlr_sid=${tlrSid}&Link=true`;
+
+    try {
+        // Fire the conversion tracking (use fetch with no-cors to avoid CORS issues)
+        const response = await fetch(trackingUrl, {
+            method: 'GET',
+            mode: 'no-cors' // Talroo endpoint may not support CORS
+        });
+        
+        console.log('Talroo conversion tracked for tlr_sid:', tlrSid);
+        
+        // Clear the stored click ID after successful tracking
+        sessionStorage.removeItem('tlr_sid');
+    } catch (error) {
+        console.error('Talroo conversion tracking error:', error);
+    }
+}
+// ============================================================
+
+// Capture both click IDs immediately on page load
+captureWhatJobsClickID();
+captureTalrooClickID();
+
+async function loadJob() {
+    const params = new URLSearchParams(window.location.search);
+    // Support both new slug URLs (/jobs/45-slug) and old query params (?id=45)
+const pathMatch = window.location.pathname.match(/\/jobs\/(\d+)/);
+const jobId = pathMatch ? pathMatch[1] : params.get('id');
+    
+    if (!jobId) {
+        showNotFound('No job ID provided');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API}/jobs/${jobId}`);
+        if (!res.ok) throw new Error('Job not found');
+        const job = await res.json();
+        renderJob(job);
+    } catch(e) {
+        showNotFound(e.message);
+    }
+}
+
+function formatPay(job) {
+    if (!job.salary) return null;
+    return job.salary;
+}
+
+// ============================================================
+// GOOGLE FOR JOBS - JSON-LD STRUCTURED DATA
+// ============================================================
+function injectGoogleJobsSchema(job) {
+    // Remove any existing schema
+    const existingSchema = document.getElementById('google-jobs-schema');
+    if (existingSchema) existingSchema.remove();
+    
+    // Parse location
+    const location = job.hiring_location || job.location || '';
+    const locationParts = location.split(',').map(s => s.trim());
+    const city = locationParts[0] || '';
+    const state = locationParts[1] || '';
+    
+    // Parse salary for structured data
+    let baseSalary = null;
+    if (job.salary) {
+        const salaryClean = job.salary.replace(/[$,]/g, '');
+        const salaryNums = salaryClean.match(/[\d.]+/g);
+        if (salaryNums && salaryNums.length > 0) {
+            const salaryValue = parseFloat(salaryNums[salaryNums.length - 1]);
+            const unitText = {
+                'hourly': 'HOUR',
+                'weekly': 'WEEK', 
+                'annual': 'YEAR',
+                'cpm': 'HOUR',
+                'flat': 'WEEK'
+            }[job.pay_type] || 'YEAR';
+            
+            baseSalary = {
+                "@type": "MonetaryAmount",
+                "currency": "USD",
+                "value": {
+                    "@type": "QuantitativeValue",
+                    "value": salaryValue,
+                    "unitText": unitText
+                }
+            };
+        }
+    }
+    
+    // Employment type mapping
+    const employmentTypeMap = {
+        'full-time': 'FULL_TIME',
+        'part-time': 'PART_TIME',
+        'contract': 'CONTRACTOR',
+        'temporary': 'TEMPORARY'
+    };
+    const employmentType = employmentTypeMap[(job.job_type || '').toLowerCase()] || 'FULL_TIME';
+    
+    // Build the structured data
+    const schema = {
+        "@context": "https://schema.org/",
+        "@type": "JobPosting",
+        "title": job.title,
+        "description": job.description ? job.description.replace(/<[^>]*>/g, '') : job.title,
+        "identifier": {
+            "@type": "PropertyValue",
+            "name": "Jobpeak",
+            "value": `jobpeak-${job.id}`
+        },
+        "datePosted": job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        "validThrough": (() => {
+            const validDate = new Date();
+            validDate.setDate(validDate.getDate() + 30);
+            return validDate.toISOString().split('T')[0];
+        })(),
+        "employmentType": employmentType,
+        "hiringOrganization": {
+            "@type": "Organization",
+            "name": job.company,
+            "sameAs": job.logo_url ? `https://jobpeak.io/jobs/${job.id}` : undefined,
+            "logo": job.logo_url || undefined
+        },
+        "jobLocation": {
+            "@type": "Place",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": city,
+                "addressRegion": state,
+                "addressCountry": "US"
+            }
+        },
+        "applicantLocationRequirements": {
+            "@type": "Country",
+            "name": "US"
+        }
+    };
+    
+    // Add salary if available
+    if (baseSalary) {
+        schema.baseSalary = baseSalary;
+    }
+    
+    // Add apply URL
+    if (job.apply_url) {
+        schema.directApply = true;
+        schema.url = job.apply_url;
+    }
+    
+    // Inject into head
+    const script = document.createElement('script');
+    script.id = 'google-jobs-schema';
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(schema, null, 2);
+    document.head.appendChild(script);
+    
+    console.log('✅ Google for Jobs schema injected');
+}
+// ============================================================
+
+function renderJob(job) {
+    const pay = formatPay(job);
+    const locs = (() => { try { return JSON.parse(job.target_locations || '[]'); } catch { return []; } })();
+    
+    const tags = [];
+    if (pay) tags.push(`<span class="tag pay">💰 ${pay}</span>`);
+    if (job.bonus) tags.push(`<span class="tag bonus">🎁 ${job.bonus} Bonus</span>`);
+    if (job.job_type) tags.push(`<span class="tag">${job.job_type}</span>`);
+    if (job.cdl_class) tags.push(`<span class="tag cdl">CDL-${job.cdl_class}</span>`);
+    if (job.home_time) tags.push(`<span class="tag">🏠 ${job.home_time}</span>`);
+    if (job.route_type) tags.push(`<span class="tag">🗺️ ${job.route_type}</span>`);
+
+    const details = [];
+    if (job.hiring_location || job.location) details.push({ icon:'📍', label:'Hiring Location', val: job.hiring_location || job.location });
+    if (pay) details.push({ icon:'💵', label:'Pay', val: pay });
+    if (job.bonus) details.push({ icon:'🎁', label:'Signing Bonus', val: job.bonus });
+    if (job.category) details.push({ icon:'🏷️', label:'Category', val: job.category });
+    if (job.cdl_class) details.push({ icon:'🚛', label:'CDL Class', val: 'Class ' + job.cdl_class });
+    if (job.home_time) details.push({ icon:'🏠', label:'Home Time', val: job.home_time });
+    if (job.route_type) details.push({ icon:'🗺️', label:'Route Type', val: job.route_type });
+    if (job.experience_years != null) details.push({ icon:'📋', label:'Experience', val: job.experience_years + ' yr' + (job.experience_years !== 1 ? 's' : '') + ' min' });
+
+    const logoHtml = job.logo_url
+        ? `<div class="job-logo"><img src="${job.logo_url}" alt="${job.company} logo"></div>`
+        : `<div class="job-logo-placeholder">🏢</div>`;
+
+    const flyerHtml = job.flyer_url
+        ? `<div class="flyer-wrap"><div class="section-label">Recruitment Flyer</div><img class="flyer-img" src="${job.flyer_url}" alt="Recruitment flyer"></div>`
+        : '';
+
+    const locsHtml = locs.length > 0
+        ? `<div class="locations-card">
+            <div class="share-title">📍 Advertising In</div>
+            <div class="loc-list">${locs.map(l => `<span class="loc-tag">${l}</span>`).join('')}</div>
+           </div>`
+        : '';
+
+    document.title = `${job.title} at ${job.company} — Jobpeak`;
+
+    document.getElementById('pageContent').innerHTML = `
+        <div class="breadcrumb" style="grid-column:1/-1">
+            <a href="jobseeker_search.html">All Jobs</a>
+            <span>›</span>
+            <span>${job.category || 'Jobs'}</span>
+            <span>›</span>
+            <span>${job.title}</span>
         </div>
-        <ul class="issues-list">
-          ${(result.issues||[]).map(i=>`<li>${i}</li>`).join('')}
-        </ul>
-      `;
-      document.getElementById('scoreBlock').style.display='block';
-      document.getElementById('outputLabel').textContent='Score Complete';
-      outputText.style.display='none';
-      document.getElementById('gateWall').style.display='block';
 
-    } catch(e){
-      outputText.innerHTML='';
-      outputText.style.display='block';
-      outputText.textContent='Error analyzing description. Please try again.';
-    }
-  }
+        <!-- MAIN -->
+        <div class="main-card">
+            <div class="job-header">
+                ${logoHtml}
+                <div class="job-title-block">
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-tags">${tags.join('')}</div>
+                </div>
+            </div>
 
-  function copyOutput(){
-    // Copy the raw HTML so it pastes correctly into Quill / job builder
-    const html = document.getElementById('outputText').innerHTML;
-    // Also build plain text fallback
-    const plain = document.getElementById('outputText').innerText;
-    try {
-      const clipItem = new ClipboardItem({
-        'text/html': new Blob([html], {type:'text/html'}),
-        'text/plain': new Blob([plain], {type:'text/plain'})
-      });
-      navigator.clipboard.write([clipItem]).then(()=>{
-        const btn=document.getElementById('copyBtn');
-        btn.textContent='✓ Copied — Paste into Job Builder';
-        setTimeout(()=>btn.textContent='Copy to Clipboard',3000);
-      });
-    } catch(e){
-      // Fallback for browsers without ClipboardItem
-      navigator.clipboard.writeText(plain).then(()=>{
-        const btn=document.getElementById('copyBtn');
-        btn.textContent='✓ Copied!';
-        setTimeout(()=>btn.textContent='Copy to Clipboard',2000);
-      });
-    }
-  }
+            ${details.length > 0 ? `
+            <div class="divider"></div>
+            <div class="section-label">Position Details</div>
+            <div class="details-grid">
+                ${details.map(d => `
+                    <div class="detail-item">
+                        <div class="detail-icon">${d.icon}</div>
+                        <div>
+                            <div class="detail-label">${d.label}</div>
+                            <div class="detail-val">${d.val}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            ` : ''}
 
-  function formatPayRate(input) {
-    let val = input.value;
-    // If user typed a plain number like .65 or 65, format it
-    // Don't reformat if already has $ or CPM text — let them type freely
-    const raw = val.replace(/[$,]/g, '').trim();
-    const num = parseFloat(raw);
-    if (!isNaN(num) && raw === String(raw) && !val.includes('–') && !val.toUpperCase().includes('CPM') && !val.includes('/')) {
-      if (num < 2) {
-        // Looks like CPM — format as $0.XX CPM
-        input.value = '$' + num.toFixed(2) + ' CPM';
-        // Position cursor before " CPM"
-        setTimeout(() => {
-          const pos = input.value.indexOf(' CPM');
-          if (pos > -1) { input.setSelectionRange(pos, pos); }
-        }, 0);
-      } else if (num >= 10 && num <= 99) {
-        // Looks like hourly — format as $XX/hr
-        input.value = '$' + num.toFixed(0) + '/hr';
-      }
+            <div class="divider"></div>
+            <div class="section-label">About the Role</div>
+            <div class="job-description">${job.description || '<p>No description provided.</p>'}</div>
+
+            ${flyerHtml}
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="apply-card">
+                <a href="${job.apply_url || '#'}" class="apply-btn" target="_self" rel="noopener noreferrer" id="applyBtn">
+                    Apply Now →
+                </a>
+                <div class="apply-note">You'll be taken to the application form</div>
+            </div>
+
+            <div class="share-card">
+                <div class="share-title">Share this job</div>
+                <div class="share-btns">
+                    <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+                    <button class="share-btn" onclick="shareEmail()">✉️ Email</button>
+                </div>
+            </div>
+
+            ${locsHtml}
+        </div>
+    `;
+
+    // Apply button — track WhatJobs + Talroo conversions then redirect
+    const applyBtn = document.getElementById('applyBtn');
+    if (applyBtn && job.apply_url) {
+        applyBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            // Also track the click in your backend for Jobpeak analytics
+            try {
+                const source = wjClickID ? 'whatjobs' : (tlrSid ? 'talroo' : 'direct');
+                await fetch(`${API}/jobs/${job.id}/click`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ source })
+                });
+            } catch (err) {
+                console.error('Click tracking error:', err);
+            }
+            
+            // BUILD APPLY URL WITH UTM PARAMETERS
+        let finalApplyUrl = job.apply_url;
+        
+        try {
+            // Get current URL parameters
+            const currentParams = new URLSearchParams(window.location.search);
+            
+            // Parse apply URL to add parameters
+            const applyUrl = new URL(job.apply_url);
+            
+            // Pass through Talroo tracking ID
+            if (tlrSid) {
+                applyUrl.searchParams.set('tlr_sid', tlrSid);
+            }
+            
+            // Pass through WhatJobs tracking ID
+            if (wjClickID) {
+                applyUrl.searchParams.set('wjClickID', wjClickID);
+            }
+            
+            // Pass through ALL UTM parameters from current page
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+                const value = currentParams.get(param);
+                if (value) {
+                    applyUrl.searchParams.set(param, value);
+                }
+            });
+            
+            finalApplyUrl = applyUrl.toString();
+            console.log('Redirecting to:', finalApplyUrl);
+        } catch (err) {
+            console.error('Error building apply URL:', err);
+            // Fallback to original URL if URL parsing fails
+            finalApplyUrl = job.apply_url;
+        }
+
+            // Redirect to apply URL with parameters
+            window.location.href = finalApplyUrl;
+        });
     }
-  }
-</script>
+    
+    // Inject Google for Jobs structured data
+    injectGoogleJobsSchema(job);
+}
+
+function showNotFound(msg) {
+    document.getElementById('pageContent').innerHTML = `
+        <div class="not-found">
+            <div class="not-found-icon">🔍</div>
+            <div class="not-found-title">Job Not Found</div>
+            <div class="not-found-sub">${msg || "This job may have been removed or the link is incorrect."}</div>
+            <a href="jobseeker_search.html" class="apply-btn" style="display:inline-block;text-decoration:none;max-width:200px;margin:0 auto">Browse All Jobs</a>
+        </div>
+    `;
+}
+
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'));
+}
+function shareEmail() {
+    const title = document.querySelector('.job-title')?.textContent || 'Job';
+    window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Check out this job: ' + window.location.href)}`;
+}
+// STICKY APPLY BUTTON ON SCROLL
+window.addEventListener('scroll', () => {
+    const applyCard = document.querySelector('.apply-card');
+    const sidebar = document.querySelector('.sidebar');
+    
+    if (!applyCard || !sidebar) return;
+    
+    const sidebarRect = sidebar.getBoundingClientRect();
+    const headerHeight = 60;
+    
+    // On desktop: stick when sidebar scrolls past header
+    // On mobile: stick immediately when scrolling down
+    const isMobile = window.innerWidth <= 720;
+    
+    if (isMobile) {
+        // Mobile: stick to top after scrolling 10px
+        if (window.scrollY > 10) {
+            applyCard.classList.add('sticky');
+        } else {
+            applyCard.classList.remove('sticky');
+        }
+    } else {
+        // Desktop: stick when sidebar reaches top
+        if (sidebarRect.top <= headerHeight + 16) {
+            applyCard.classList.add('sticky');
+        } else {
+            applyCard.classList.remove('sticky');
+        }
+    }
+});
+    
+loadJob();
+
+    </script>
+
+<style>
+.jp-footer { background:#111318; color:#8892A4; font-family:'Work Sans',sans-serif; font-size:13px; margin-top:60px; padding:32px 24px; }
+.jp-footer-inner { max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; }
+.jp-footer-links { display:flex; flex-wrap:wrap; align-items:center; gap:20px; }
+.jp-footer-links a { color:#8892A4; text-decoration:none; transition:color .15s; }
+.jp-footer-links a:hover { color:#fff; }
+.jp-footer-copy { width:100%; max-width:900px; margin:20px auto 0; padding-top:20px; border-top:1px solid #1E2330; display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; }
+.jp-footer-copy span { font-size:12px; color:#545B6B; }
+</style>
+<footer class="jp-footer">
+    <div class="jp-footer-inner">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+            <a href="/" style="font-family:'Archivo',sans-serif;font-size:18px;font-weight:800;color:#fff;text-decoration:none;">jobpeak<span style="color:#F97316;">.</span></a>
+            <div style="font-size:12px;color:#545B6B;">Built to fix job search.</div>
+        </div>
+        <div class="jp-footer-links">
+            <a href="https://audiencetarget.ai/contact" target="_blank" rel="noopener">Contact Agency</a>
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <a href="/terms-of-service.html">Terms &amp; Conditions</a>
+        </div>
+    </div>
+    <div class="jp-footer-inner jp-footer-copy">
+        <span>© 2026 Digital Marketing Gen, Inc. All rights reserved.</span>
+        <span>75 S Middleneck Road, Great Neck, NY 11021 · (516) 494-7447</span>
+    </div>
+</footer>
 </body>
 </html>
