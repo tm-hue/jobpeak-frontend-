@@ -41,4 +41,7 @@
   <!-- EMPLOYER GUIDES -->
   <url><loc>https://www.jobpeak.io/how-to-write-a-cdl-job-posting.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
+  <url><loc>https://www.jobpeak.io/cdl-hiring-cost.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.jobpeak.io/cdl-requirements-by-state.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
 </urlset>
