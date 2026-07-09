@@ -850,6 +850,18 @@ function initAutocomplete() {
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
+// ── Internal tool password gate ──
+const ADMIN_PASSWORD = 'jobpeak2026';
+if (!sessionStorage.getItem('jp_admin_authenticated')) {
+    const pw = prompt('Enter admin password:');
+    if (pw !== ADMIN_PASSWORD) {
+        alert('Access denied');
+        window.location.href = '/';
+    } else {
+        sessionStorage.setItem('jp_admin_authenticated', 'true');
+    }
+}
+
 const API = 'https://jobpeak-production.up.railway.app';
 
 // ── Quill rich text editor ──
@@ -1804,13 +1816,19 @@ if (!hiringLoc) {
             alert(`✓ Job "${payload.title}" updated successfully!\n\nChanges will sync to XML feeds in ~15 minutes.`);
             window.location.href = '/admin.html';
         } else {
-            // Existing flow: go to checkout
-            window._pendingJobId = result.job?.id;
-            window._pendingJobTitle = payload.title;
-            window._pendingLocCount = checkedLocs.length;
-            window._pendingCategory = payload.category || 'other';
-            updateBundleCards(window._pendingCategory);
-            window.location.href = `/checkout.html?job=${result.job.id}`;
+            // Internal tool — activate directly, no Stripe involved
+            document.getElementById('loadingSub').textContent = 'Activating job…';
+            const activateRes = await fetch(`${API}/admin/activate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ jobId: result.job.id, amount: 225, key: 'jobpeak2026' })
+            });
+            const activateData = await activateRes.json();
+            if (activateData.success) {
+                window.location.href = `/payment_success.html?job=${result.job.id}&admin=true`;
+            } else {
+                alert('Activation failed: ' + activateData.error);
+            }
         }
 
     } catch (err) {
