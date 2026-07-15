@@ -253,21 +253,13 @@
           <!-- ── A2P SMS CONSENT — optional, never blocks submission ── -->
           <hr class="section-divider">
 
-          <div class="sms-consent-block">
-            <div class="sms-consent-row">
-              <input type="checkbox" id="smsConsent">
-              <div class="sms-consent-text">
-                <strong>Receive text updates about this job</strong>
-                <span class="sms-optional-tag">Optional</span><br>
-                By checking this box, I consent to receive job-related text messages from Jobpeak, including application status updates and recruiter communications. Message frequency varies. Msg &amp; data rates may apply. Reply <strong>HELP</strong> for help, <strong>STOP</strong> to cancel. Consent is not a condition of applying.
-              </div>
-            </div>
-          </div>
-
           <div class="legal-note">
             By submitting this form, you agree to our
             <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> and
-            <a href="/terms-of-service.html" target="_blank">Terms &amp; Conditions</a>.
+            <a href="/terms-of-service.html" target="_blank">Terms &amp; Conditions</a>. Your information will be shared with the hiring company for the purposes of this application.
+          </div>
+          <div class="legal-note" style="margin-top:6px;">
+            <em>Note: Part of this application process includes an AI-assisted conversation (Max) to help assess your fit for this role.</em>
           </div>
 
           <button class="submit-btn" id="submitBtn" onclick="submitApplication()" style="margin-top:16px;">
@@ -467,7 +459,6 @@
         city: document.getElementById('city').value.trim(),
         state: document.getElementById('state').value.trim().toUpperCase(),
         zip: document.getElementById('zip').value.trim() || null,
-        smsConsent: document.getElementById('smsConsent').checked,  // captured but never required
         screenerAnswers
       };
 
