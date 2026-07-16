@@ -54,6 +54,10 @@ function initAutocomplete() {
             --radius-lg: 16px;
             --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
             --shadow-lg: 0 4px 24px rgba(0,0,0,.1);
+            --text-secondary: var(--text-2);
+            --text-muted: var(--text-3);
+            --accent-light: var(--accent-2);
+            --green: var(--success);
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -369,6 +373,20 @@ function initAutocomplete() {
         /* CDL-SPECIFIC TOGGLE */
         .cdl-fields { display: none; }
         .cdl-fields.show { display: block; }
+
+        /* SCREENER QUESTIONS */
+        .screener-section { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; margin-top: 20px; }
+        .screener-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .screener-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5; }
+        .screener-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .screener-item { display: flex; align-items: flex-start; gap: 10px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: all .15s; }
+        .screener-item:hover { border-color: var(--accent); }
+        .screener-item.selected { border-color: var(--accent); background: var(--accent-light); }
+        .screener-item input[type="checkbox"] { accent-color: var(--accent); margin-top: 2px; flex-shrink: 0; width: 16px; height: 16px; }
+        .screener-item-text { font-size: 13px; font-weight: 600; color: var(--text); }
+        .screener-item-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .screener-note { font-size: 11px; color: var(--text-muted); margin-top: 12px; display: flex; align-items: center; gap: 6px; }
+        .screener-category-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
 
         /* LOCATION PREVIEW HEADER */
         .loc-preview-hdr {
@@ -733,14 +751,48 @@ function initAutocomplete() {
                 <label>Minimum Experience <span class="opt">(years)</span></label>
                 <input type="number" id="experienceYears" placeholder="e.g., 1" min="0" max="20">
             </div>
+
+            <div class="screener-section">
+                <div class="screener-title">✅ CDL Screener Questions <span class="opt" style="font-weight:400;font-size:11px">(native Jobpeak apply form)</span></div>
+                <div class="screener-sub">Select which qualifications to screen for. Leave Application Link blank below to use these — candidates apply through Jobpeak's own form instead of an external link.</div>
+
+                <div class="screener-category-label">Core Qualifications</div>
+                <div class="screener-grid" style="margin-bottom:16px;">
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_cdla" value="cdla"><div><div class="screener-item-text">Valid CDL-A Required</div><div class="screener-item-sub">Auto-reject without CDL-A</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_experience" value="experience"><div><div class="screener-item-text">Minimum Experience</div><div class="screener-item-sub">Filter by years of OTR/local experience</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_accidents" value="accidents"><div><div class="screener-item-text">Clean MVR Required</div><div class="screener-item-sub">Screen for preventable accidents</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_location" value="location"><div><div class="screener-item-text">Must Report to Location</div><div class="screener-item-sub">Confirm daily commute willingness</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_drug" value="drug"><div><div class="screener-item-text">Drug Screening Consent</div><div class="screener-item-sub">Pre-employment drug test required</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_hometime" value="hometime"><div><div class="screener-item-text">Home Time Preference</div><div class="screener-item-sub">Match on home daily/weekly/OTR</div></div></label>
+                </div>
+
+                <div class="screener-category-label">Required Endorsements</div>
+                <div class="screener-grid" style="margin-bottom:16px;">
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_hazmat" value="hazmat"><div><div class="screener-item-text">Hazmat</div><div class="screener-item-sub">Valid Hazmat endorsement required</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_tanker" value="tanker"><div><div class="screener-item-text">Tanker</div><div class="screener-item-sub">Valid Tanker endorsement required</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_doubles" value="doubles"><div><div class="screener-item-text">Doubles/Triples</div><div class="screener-item-sub">Doubles/Triples endorsement required</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_twic" value="twic"><div><div class="screener-item-text">TWIC Card</div><div class="screener-item-sub">Valid TWIC card required</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_passenger" value="passenger"><div><div class="screener-item-text">Passenger</div><div class="screener-item-sub">Passenger endorsement required</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_schoolbus" value="schoolbus"><div><div class="screener-item-text">School Bus</div><div class="screener-item-sub">School Bus endorsement required</div></div></label>
+                </div>
+
+                <div class="screener-category-label">Driver Type</div>
+                <div class="screener-grid">
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_companydriver" value="companydriver"><div><div class="screener-item-text">Company Driver</div><div class="screener-item-sub">W-2 employee position</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_owneroperator" value="owneroperator"><div><div class="screener-item-text">Owner Operator</div><div class="screener-item-sub">Driver must have own authority or truck</div></div></label>
+                    <label class="screener-item" onclick="toggleScreener(this)"><input type="checkbox" id="sq_leasepurchase" value="leasepurchase"><div><div class="screener-item-text">Lease Purchase</div><div class="screener-item-sub">Lease-to-own program available</div></div></label>
+                </div>
+
+                <div class="screener-note">💡 Selected questions appear on the apply form automatically — no setup needed</div>
+            </div>
         </div>
 
         <!-- CARD 4: APPLY URL -->
         <div class="card">
-            <div class="card-title"><span class="icon">🔗</span>Application Link</div>
+            <div class="card-title"><span class="icon">🔗</span>Application Link <span class="opt" style="font-weight:400;font-size:13px;margin-left:4px">optional</span></div>
             <div class="field">
-                <input type="url" id="applyUrl" placeholder="https://intelliapp.driverapponline.com/c/yourcompany?uri_b=ia_yourcompanyinc_123456789" required>
-                <div class="hint">Candidates click "Apply Now" and land here. Paste your GHL form, Indeed, or company page link.</div>
+                <input type="url" id="applyUrl" placeholder="https://intelliapp.driverapponline.com/c/yourcompany?uri_b=ia_yourcompanyinc_123456789">
+                <div class="hint">Paste your GHL form, ATS, or company page link — or leave blank to use Jobpeak's native application form (recommended for own-brand hiring).</div>
             </div>
         </div>
 
@@ -909,6 +961,17 @@ function handleCategoryChange() {
     if (document.getElementById('hiringLocation').value.trim()) {
         generateLocations();
     }
+}
+
+function toggleScreener(label) {
+    const cb = label.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    label.classList.toggle('selected', cb.checked);
+}
+
+function getSelectedScreeners() {
+    return Array.from(document.querySelectorAll('.screener-item input[type="checkbox"]'))
+        .filter(cb => cb.checked).map(cb => cb.value);
 }
 
 // ── Radius selector ──
@@ -1681,8 +1744,8 @@ function saveDraft() {
 // ── Submit ──
 // ── Submit ──
 async function submitJob() {
-    // Validate
-    const required = ['jobTitle','companyName','hiringLocation','applyUrl'];
+    // Validate — Application Link is optional (falls back to native Jobpeak apply form)
+    const required = ['jobTitle','companyName','hiringLocation'];
     for (const id of required) {
         if (!document.getElementById(id).value.trim()) {
             document.getElementById(id).focus();
@@ -1784,6 +1847,7 @@ if (!hiringLoc) {
             homeTime: document.getElementById('homeTime')?.value || null,
             routeType: document.getElementById('routeType')?.value || null,
             experienceYears: document.getElementById('experienceYears')?.value ? parseInt(document.getElementById('experienceYears').value) : null,
+            screenerQuestions: JSON.stringify(getSelectedScreeners()),
         };
 
         let res;
