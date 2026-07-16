@@ -288,6 +288,13 @@
     let currentJob = null;
     let zipTimer = null;
 
+    // Capture Talroo/WhatJobs tracking IDs — persists across the form fill
+    const _urlParams = new URLSearchParams(window.location.search);
+    const _tlrSid = _urlParams.get('tlr_sid') || sessionStorage.getItem('tlr_sid');
+    const _wjClickID = _urlParams.get('wjClickID') || sessionStorage.getItem('wjClickID');
+    if (_tlrSid) sessionStorage.setItem('tlr_sid', _tlrSid);
+    if (_wjClickID) sessionStorage.setItem('wjClickID', _wjClickID);
+
     const screenerLabels = {
       cdla: 'Do you have a valid CDL?',
       experience: 'How many years of verifiable tractor-trailer experience do you have?',
@@ -470,6 +477,16 @@
         });
         const data = await res.json();
         if (!data.success) throw new Error(data.error || 'Application failed');
+
+        // Fire Talroo/WhatJobs S2S conversions — only on confirmed submission
+        if (_tlrSid) {
+          fetch('https://www.jobs2careers.com/conversion2.php?tlr_sid=' + _tlrSid + '&Link=true', { method: 'GET', mode: 'no-cors' });
+          sessionStorage.removeItem('tlr_sid');
+        }
+        if (_wjClickID) {
+          fetch('https://api.whatjobs.com/api/v1/client/s2s/tracking?authKey=71ca00e950a5054cac5afc0cb89abcb3&wjClickID=' + _wjClickID, { method: 'GET', mode: 'no-cors' });
+          sessionStorage.removeItem('wjClickID');
+        }
 
         document.getElementById('applyContent').style.display = 'none';
         document.getElementById('successMessage').textContent =
