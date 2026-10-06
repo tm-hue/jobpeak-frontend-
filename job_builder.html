@@ -259,7 +259,19 @@ function initAutocomplete() {
         .loc-chip.checked { background: var(--accent); border-color: var(--accent); color: #fff; }
         .loc-chip.primary { background: #FFF3EC; border-color: var(--warn); color: var(--warn); }
         .loc-chip.primary.checked { background: var(--warn); color: #fff; }
-        .loc-chip input[type="checkbox"] { display: none; }
+                .loc-chip input[type="checkbox"] { display: none; }
+        .loc-chip.custom { border-style: dashed; }
+        .loc-chip.custom.checked { border-color: #0058B8; }
+        .loc-chip .custom-tag { opacity: .6; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+
+        /* CUSTOM LOCATIONS */
+        .custom-loc-wrap { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+        .custom-mode { display: flex; flex-wrap: wrap; gap: 16px; margin: 10px 0; }
+        .custom-mode label { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--text); cursor: pointer; }
+        .custom-loc-actions { display: flex; align-items: center; gap: 10px; }
+        .custom-loc-summary { font-size: 12px; color: var(--text-2); margin-top: 10px; }
+        .custom-loc-errors { margin-top: 8px; padding: 10px 12px; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; font-size: 12px; color: #991B1B; line-height: 1.6; }
+        .custom-loc-errors-title { font-weight: 700; margin-bottom: 4px; }
 
         /* RADIUS SELECTOR */
         .radius-opts { display: flex; gap: 8px; }
@@ -870,8 +882,24 @@ function initAutocomplete() {
                         <button class="loc-action-btn" onclick="selectAllLocs(false)">Clear All</button>
                     </div>
                 </div>
-                <div class="locations-grid" id="locGrid"></div>
+                                <div class="locations-grid" id="locGrid"></div>
                 <div class="hint" style="margin-top:8px">Uncheck any locations you don't want to advertise in</div>
+            </div>
+
+            <!-- Custom locations -->
+            <div class="custom-loc-wrap">
+                <label for="customLocInput">Custom Locations <span class="opt">(optional · one per line, "City, ST")</span></label>
+                <textarea id="customLocInput" rows="6" placeholder="Farmingdale, NY&#10;Hicksville, NY&#10;Bay Shore, NY"></textarea>
+                <div class="custom-mode">
+                    <label><input type="radio" name="customMode" value="replace" checked onchange="mergeLocations()"> Replace suggestions (use only my list)</label>
+                    <label><input type="radio" name="customMode" value="add" onchange="mergeLocations()"> Add to suggestions</label>
+                </div>
+                <div class="custom-loc-actions">
+                    <button class="btn btn-ghost" type="button" onclick="applyCustomLocations()">Apply list</button>
+                    <button class="loc-action-btn" type="button" onclick="clearCustomLocations()">Clear custom</button>
+                </div>
+                <div class="hint">Replace only takes effect once at least one custom location is applied. Spelled-out states, ZIPs, or missing commas are flagged, not dropped.</div>
+                <div id="customLocStatus"></div>
             </div>
         </div>
 
@@ -1646,10 +1674,10 @@ function renderLocations() {
             ? `<span style="opacity:.5;font-size:10px;margin-left:2px" title="Worker density score">${l.demoScore}%</span>`
             : '';
         return `
-        <label class="loc-chip ${l.checked ? 'checked' : ''} ${l.d < 5 ? 'primary' : ''}" onclick="toggleLoc(${i})">
+                <label class="loc-chip ${l.checked ? 'checked' : ''} ${typeof l.d === 'number' && l.d < 5 ? 'primary' : ''} ${l.custom ? 'custom' : ''}" onclick="toggleLoc(${i})">
             <input type="checkbox" ${l.checked ? 'checked' : ''}>
             ${l.city}, ${l.state}
-            <span style="opacity:.6;font-size:11px">${l.d}mi</span>
+            ${typeof l.d === 'number' ? `<span style="opacity:.6;font-size:11px">${l.d}mi</span>` : '<span class="custom-tag">custom</span>'}
             ${demoHint}
         </label>`;
     }).join('');
@@ -1662,6 +1690,130 @@ function toggleLoc(i) {
 }
 
 let selectedLocations = [];
+let suggestedLocations = [];   // last output of generateLocations()
+let customLocations = [];      // chips from the Custom Locations box
+let lastAppliedCustomText = '';
+let lastCustomErrorCount = 0;
+
+function locKey(l) { return l.city.toLowerCase() + '|' + l.state; }
+
+function getCustomMode() {
+    const r = document.querySelector('input[name="customMode"]:checked');
+    return r ? r.value : 'add';
+}
+
+// Combine suggestions + custom chips into selectedLocations (the array submitJob reads)
+function mergeLocations() {
+    const replace = getCustomMode() === 'replace' && customLocations.length > 0;
+    const base = replace ? [] : suggestedLocations;
+    const seen = new Set();
+    const out = [];
+    [...base, ...customLocations].forEach(l => {
+        const k = locKey(l);
+        if (!seen.has(k)) { seen.add(k); out.push(l); }
+    });
+    selectedLocations = out;
+    renderLocations();
+}
+
+// Strict "City, ST" — matches what parseLocString()/stateFullName() expect in the feeds
+function parseCustomLine(raw) {
+    const s = raw.replace(/\s+/g, ' ').trim();
+    const m = s.match(/^([^,]+?)\s*,\s*([A-Za-z]{2})$/);
+    if (!m) return { error: 'needs "City, ST" with a 2-letter state (e.g. "Austin, TX")' };
+    const city = m[1].trim();
+    const state = m[2].toUpperCase();
+    if (!STATE_CENTERS[state]) return { error: `"${state}" is not a US state abbreviation` };
+    if (!/^\p{L}[\p{L}\p{M} .'’\-]*$/u.test(city)) return { error: 'city contains unsupported characters' };
+    return { city, state };
+}
+
+function applyCustomLocations() {
+    const input = document.getElementById('customLocInput');
+    const lines = input.value.split(/\r?\n/);
+    const errors = [];
+    const seen = new Set();
+    const next = [];
+    let dupes = 0;
+
+    lines.forEach((raw, idx) => {
+        if (!raw.trim()) return;
+        const r = parseCustomLine(raw);
+        if (r.error) { errors.push({ line: idx + 1, text: raw.trim(), reason: r.error }); return; }
+        const k = locKey(r);
+        if (seen.has(k)) { dupes++; return; }
+        seen.add(k);
+        // Keep checked/score state for locations that were already applied
+        const prev = customLocations.find(l => locKey(l) === k);
+        next.push(prev || { city: r.city, state: r.state, demoScore: null, checked: true, custom: true });
+    });
+
+    customLocations = next;
+    lastAppliedCustomText = input.value.trim();
+    lastCustomErrorCount = errors.length;
+    renderCustomStatus(next.length, dupes, errors);
+    mergeLocations();
+    scoreCustomLocations(next.filter(l => l.demoScore === null)); // optional: delete this line to skip scoring
+}
+
+function renderCustomStatus(applied, dupes, errors) {
+    const el = document.getElementById('customLocStatus');
+    el.innerHTML = '';
+    if (!applied && !dupes && !errors.length) return;
+
+    const summary = document.createElement('div');
+    summary.className = 'custom-loc-summary';
+    summary.textContent = `${applied} custom location${applied === 1 ? '' : 's'} applied` +
+        (dupes ? ` · ${dupes} duplicate line${dupes === 1 ? '' : 's'} skipped` : '');
+    el.appendChild(summary);
+
+    if (errors.length) {
+        const box = document.createElement('div');
+        box.className = 'custom-loc-errors';
+        const title = document.createElement('div');
+        title.className = 'custom-loc-errors-title';
+        title.textContent = `${errors.length} line${errors.length === 1 ? '' : 's'} NOT added. Fix and click Apply again:`;
+        box.appendChild(title);
+        errors.forEach(e => {
+            const row = document.createElement('div');
+            row.textContent = `Line ${e.line}: "${e.text}": ${e.reason}`;
+            box.appendChild(row);
+        });
+        el.appendChild(box);
+    }
+}
+
+function clearCustomLocations() {
+    document.getElementById('customLocInput').value = '';
+    customLocations = [];
+    lastAppliedCustomText = '';
+    lastCustomErrorCount = 0;
+    renderCustomStatus(0, 0, []);
+    mergeLocations();
+}
+
+function customListIsApplied() {
+    return document.getElementById('customLocInput').value.trim() === lastAppliedCustomText;
+}
+
+// Optional: score custom chips via the existing /demographics endpoint (unknown cities come back as 50)
+async function scoreCustomLocations(locs) {
+    if (!locs.length) return;
+    const category = document.getElementById('category').value || 'other';
+    try {
+        const cityParams = locs.map(l => `${l.city}, ${l.state}`).join('|');
+        const res = await fetch(`${API}/demographics?cities=${encodeURIComponent(cityParams)}&category=${category}`);
+        const data = await res.json();
+        const scores = data.scores || {};
+        locs.forEach(l => {
+            const v = scores[`${l.city}, ${l.state}`];
+            if (v !== undefined) l.demoScore = Math.round(v);
+        });
+        renderLocations();
+    } catch (err) {
+        console.warn('Custom location scoring unavailable:', err);
+    }
+}
 
 async function generateLocations() {
     const loc = document.getElementById('hiringLocation').value.trim();
@@ -1715,10 +1867,11 @@ const coords = (lat && lng) ? { lat, lon: lng } : parseLocation(loc);
         console.warn('Demographics unavailable, using distance:', err);
         selectedLocations = inRadius
             .sort((a, b) => a.d - b.d).slice(0, 20)
-            .map(c => ({ city: c.city, state: c.state, d: c.d, demoScore: null, checked: true }));
+                        .map(c => ({ city: c.city, state: c.state, d: c.d, demoScore: null, checked: true }));
     }
 
-    renderLocations();
+    suggestedLocations = selectedLocations;
+    mergeLocations();
 }
 
 function selectAllLocs(v) {
@@ -1792,6 +1945,15 @@ if (!hiringLoc) {
 
 // If no locations generated (0 radius matches), allow posting with just hiring location
 // This covers rural areas where 25MI generates nothing
+
+// Custom locations guard
+if (!customListIsApplied()) {
+    alert('Your Custom Locations list has changed since you last clicked "Apply list".\n\nClick Apply list (or Clear custom) before posting.');
+    return;
+}
+if (lastCustomErrorCount > 0 && !confirm(`${lastCustomErrorCount} custom location line(s) failed validation and will NOT be posted.\n\nPost anyway?`)) {
+    return;
+}
 
     // Show loading
     const overlay = document.getElementById('overlay');
@@ -2160,7 +2322,11 @@ async function loadJobForEdit(jobId) {
         if (job.target_locations) {
             try {
                 const locs = JSON.parse(job.target_locations);
-                if (locs.length > 0) {
+                                if (locs.length > 0) {
+                    // Load the saved list as custom locations (Replace mode) so saving doesn't overwrite it with fresh suggestions
+                    document.getElementById('customLocInput').value = locs.join('\n');
+                    document.querySelector('input[name="customMode"][value="replace"]').checked = true;
+                    applyCustomLocations();
                     // Wait a bit for Google Maps to load
                     setTimeout(() => generateLocations(), 500);
                 }
