@@ -150,6 +150,24 @@
 .form-job-title { font-family: 'Archivo', sans-serif; font-size: 20px; font-weight: 800; line-height: 1.2; }
 .form-job-meta { font-size: 14px; color: var(--text-2); margin-top: 4px; }
 .form-card-title { font-size: 18px; font-weight: 700; margin: 4px 0 8px; }
+        .brand-band { grid-column: 1/-1; border-radius: var(--radius-lg); padding: 28px; display: flex; gap: 28px; align-items: center; color: #fff; }
+.brand-band-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.brand-co { display: flex; align-items: center; gap: 12px; }
+.brand-logo { width: 56px; height: 56px; border-radius: 10px; background: #fff; overflow: hidden; flex-shrink: 0; }
+.brand-logo img { width: 100%; height: 100%; object-fit: contain; }
+.brand-co-name { font-size: 16px; font-weight: 700; }
+.brand-title { font-family: 'Archivo', sans-serif; font-size: 32px; font-weight: 800; line-height: 1.1; }
+.brand-pay { font-size: 20px; font-weight: 700; }
+.brand-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.brand-chip { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 15px; background: rgba(255,255,255,.16); font-size: 14px; font-weight: 600; }
+.brand-chip.loc { background: #fff; color: #111318; }
+.brand-photo { flex: 0 0 300px; height: 200px; border-radius: 12px; background-size: cover; background-position: center; }
+.page.is-branded .job-header, .page.is-branded .job-header + .divider, .page.is-branded .form-job { display: none; }
+@media (max-width: 720px) {
+  .brand-band { order: -2; padding: 20px 16px; }
+  .brand-title { font-size: 24px; }
+  .brand-photo { display: none; }
+}
     
 
         .share-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
@@ -544,6 +562,27 @@ function renderJob(job) {
             <div class="apply-note">You'll be taken to the application form</div>
         </div>`;
 
+        const brand = job.brand_color || null;
+    const payUnit = { annual: '/yr', yearly: '/yr', weekly: '/week', hourly: '/hr' }[(job.pay_type || '').toLowerCase()] || '';
+    const brandChips = [
+        `<span class="brand-chip loc">📍 Hiring near ${landingCity || job.hiring_location || job.location || ''}</span>`,
+        job.home_time ? `<span class="brand-chip">Home ${job.home_time}</span>` : '',
+        job.route_type ? `<span class="brand-chip">${job.route_type}</span>` : '',
+        job.cdl_class ? `<span class="brand-chip">CDL-${job.cdl_class}${job.experience_years != null ? ', ' + job.experience_years + ' yr min' : ''}</span>` : ''
+    ].join('');
+    const brandBand = brand ? `
+        <div class="brand-band" style="background:${brand}">
+            <div class="brand-band-main">
+                <div class="brand-co">
+                    ${job.logo_url ? `<div class="brand-logo"><img src="${job.logo_url}" alt="${job.company} logo"></div>` : ''}
+                    <div class="brand-co-name">${job.company}</div>
+                </div>
+                <div class="brand-title">${job.title}</div>
+                ${pay ? `<div class="brand-pay">Earn ${pay}${payUnit}</div>` : ''}
+                <div class="brand-chips">${brandChips}</div>
+            </div>
+            ${job.hero_url ? `<div class="brand-photo" style="background-image:url('${job.hero_url}')"></div>` : ''}
+        </div>` : '';
     document.getElementById('pageContent').innerHTML = `
         <div class="breadcrumb" style="grid-column:1/-1">
             <a href="jobseeker_search.html">All Jobs</a>
@@ -553,6 +592,7 @@ function renderJob(job) {
             <span>${job.title}</span>
         </div>
 
+                ${brandBand}
         <!-- MAIN -->
         <div class="main-card">
             <div class="job-header">
@@ -603,6 +643,18 @@ function renderJob(job) {
         </div>
     `;
 
+            if (brand) {
+        const pc = document.getElementById('pageContent');
+        pc.classList.add('is-branded');
+        const fc = pc.querySelector('.form-card');
+        if (fc) {
+            fc.style.borderTop = '4px solid ' + (job.accent_color || brand);
+            if (job.recruiter_name) {
+                const t = fc.querySelector('.form-card-title');
+                if (t) t.insertAdjacentHTML('afterend', `<div class="form-job-meta" style="margin:-4px 0 10px">${job.recruiter_name} from our recruiting team will reach out.</div>`);
+            }
+        }
+    }
         if (job.ghl_form_id) {
         document.getElementById('pageContent').classList.add('has-form');
         const frame = document.getElementById('inline-' + job.ghl_form_id);
