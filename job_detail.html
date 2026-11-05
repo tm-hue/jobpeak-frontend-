@@ -574,7 +574,7 @@ function renderJob(job) {
     const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
     const payUnit = { annual: '/yr', yearly: '/yr', weekly: '/week', hourly: '/hr' }[(job.pay_type || '').toLowerCase()] || '';
     const brandChips = [
-        `<span class="brand-chip loc">📍 Hiring near ${landingCity || job.hiring_location || job.location || ''}</span>`,
+                `<span class="brand-chip loc">📍 ${landingCity ? 'Hiring near ' + landingCity : (job.hiring_area ? 'Hiring in ' + job.hiring_area : 'Hiring near ' + (job.hiring_location || job.location || ''))}</span>`,
         job.home_time ? `<span class="brand-chip">Home ${cap(job.home_time)}</span>` : '',
         job.route_type ? `<span class="brand-chip">${cap(job.route_type)}</span>` : '',
         job.cdl_class ? `<span class="brand-chip">CDL-${job.cdl_class}${job.experience_years != null ? ', ' + job.experience_years + ' yr min' : ''}</span>` : ''
